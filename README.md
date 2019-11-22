@@ -5,7 +5,7 @@
 <!-- IMAGEM -->
 
 <p align="center">
-  <a href="https://github.com/biancad2/trabalhoraspagem">
+  <a href="https://github.com/biancad2/BDLControle">
     <img src="/frontend/src/assets/logo.png" alt="Logo" width="130" height="130">
   </a>
  
@@ -78,7 +78,7 @@ Para a construção do sistema, foram utilizadas as tecnologias:
 
 Bianca Duarte - bianca.duarte.barreto@hotmail.com - +55(13)97413-8414 
 
-Link do projeto: [https://github.com/biancad2/trabalhoraspagem](https://github.com/biancad2/trabalhoraspagem)
+Link do projeto: [https://github.com/biancad2/BDLControle](https://github.com/biancad2/BDLControle)
 
 
 
