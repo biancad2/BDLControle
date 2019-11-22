@@ -14,7 +14,7 @@
   <p align="center">
     Sistema de controle de frotas, desenvolvido para o Projeto Integrado Multidisciplinar por: Bianca Duarte, Dayana Rafanini, Leonardo Francisco, Lucas Nathan e Miguel Maciel. 
     <br />
-    <a href="https://github.com/biancad2/trabalhoraspagemc"><strong>Veja os documentos »</strong></a>
+    <a href="https://github.com/biancad2/BDLControle"><strong>Veja os documentos »</strong></a>
   </p>
 </p>
 
