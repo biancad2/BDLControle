@@ -46,6 +46,7 @@ Para a construção do sistema, foram utilizadas as tecnologias:
 * [Node.js](https://nodejs.org/en/)
 * [Bootstrap](https://getbootstrap.com/)
 * [C#](https://www.w3schools.com/cs/)
+* [MySQL](https://www.mysql.com)
 
 
 
