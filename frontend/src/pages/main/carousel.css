@@ -1,0 +1,56 @@
+/* CUSTOMIZA O CAROUSEL
+-------------------------------------------------- */
+
+/* Classe base do carousel */
+.carousel{
+    margin-bottom: 2rem;
+}
+/* Legenda */
+carousel-caption {
+    bottom: 2rem;
+    z-index: 10;
+}
+.sustentavel{
+    background-color: rgba(70,76,73,.8);
+}
+
+.gastos{
+    
+    background-color: rgba(0,123,255,.8);
+}
+
+.botao-um{
+    background-color: #98C0B9;
+    border-color: #fff;
+}
+/* Imagem */
+.item-carousel {
+    width:100%;
+    height: 35rem;
+    background-color: #777;
+}
+.item-carousel > img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    min-width: 100%;
+    width: 100%;
+    height: 100%;
+}
+
+
+
+/* CSS RESPONSIVE
+-------------------------------------------------- */
+
+@media (min-width: 40em) {
+  /* Aumenta o tamanho do conteúdo do carousel */
+  .capt {
+    margin-bottom: 1.25rem;
+    font-size: 1rem;
+    line-height: 1.8em;
+  }
+.sustentavel{
+    width: 45rem;
+}
+}
