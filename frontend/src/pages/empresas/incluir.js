@@ -26,6 +26,7 @@ export default class Create extends Component {
         this.onChangeQtVeic = this.onChangeQtVeic.bind(this);
         this.onChangeResponsavel = this.onChangeResponsavel.bind(this);
         this.onChangeDtValidade = this.onChangeDtValidade.bind(this);
+        this.onChangeStatus = this.onChangeStatus.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
 
         this.state = {
@@ -42,8 +43,8 @@ export default class Create extends Component {
             cd_CEP: '',
             qt_veiculos: '',
             nm_responsavel: '',
-            dt_validadecontrato: ''
-
+            dt_validadecontrato: '',
+            ds_status: "Ativa"
         }
     }
    
@@ -117,6 +118,11 @@ export default class Create extends Component {
             dt_validadecontrato: e.target.value
         })
     }
+    onChangeStatus(e) {
+        this.setState({
+            ds_status: e.target.value
+        })
+    }
     onSubmit(e) {
         e.preventDefault();
         const obj = {
@@ -133,7 +139,8 @@ export default class Create extends Component {
             nr_celular: this.state.nr_celular,
             cd_CEP: this.state.cd_CEP,
             nm_responsavel: this.state.nm_responsavel,
-            dt_validadecontrato: this.state.dt_validadecontrato
+            dt_validadecontrato: this.state.dt_validadecontrato,
+            ds_status: this.state.ds_status
         };
         api.post('/empresas', obj)
             .then(res => console.log(res.data));
@@ -152,7 +159,8 @@ export default class Create extends Component {
             nr_celular: '',
             cd_CEP: '',
             nm_responsavel: '',
-            dt_validadecontrato: ''
+            dt_validadecontrato: '',
+            ds_status: "Ativa"
         })
     }
 

@@ -1,43 +1,41 @@
-const mySQL = require('mysql');
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
+const Sequelize = require('sequelize')
+const db = require('../database/db.js')
 
-const UserSchema = new mySQL.Schema({
-  name: {
-    type: String,
-    require: true
+module.exports = db.sequelize.define(
+  'user',
+  {
+    id_usuario: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
+    nm_usuario: {
+      type: Sequelize.STRING
+    },
+    nm_sobrenome: {
+      type: Sequelize.STRING
+    },
+    cd_cpf: {
+      type: Sequelize.STRING
+    },
+    cd_rg: {
+      type: Sequelize.STRING
+    },
+    nr_telefone: {
+      type: Sequelize.STRING
+    },
+    email: {
+      type: Sequelize.STRING
+    },
+    password: {
+      type: Sequelize.STRING
+    },
+    created: {
+      type: Sequelize.DATE,
+      defaultValue: Sequelize.NOW
+    }
   },
-  email: {
-    type: String,
-    unique: true,
-    required: true,
-    lowercase: true
-  },
-  password: {
-    type: String
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
+  {
+    timestamps: false
   }
-});
-
-UserSchema.pre("save", async function hashPassword(next) {
-  if (!this.isModified("password")) next();
-
-  this.password = await bcrypt.hash(this.password, 8);
-});
-
-UserSchema.methods = {
-  compareHash(hash) {
-    return bcrypt.compare(hash, this.password);
-  },
-
-  generateToken() {
-    return jwt.sign({ id: this.id }, "secret", {
-      expiresIn: 86400
-    });
-  }
-};
-
-mySQL.model("User", UserSchema);
+)

@@ -1,22 +1,21 @@
+drop database db_controle_frota;
+
 create database db_controle_frota;
 
 use db_controle_frota;
 
-create table tb_login_usuario_adm
-(
-	id_log_usuario int not null auto_increment primary key,
-    usuario int not null,
-    senha int not null,
-    id_usuario int
-);
 
-create table tb_usuario_adm
+create table users
 (
 	id_usuario int not null auto_increment primary key,
-    nome varchar(255) not null,
-    cpf varchar(15) not null,
-    telefone int not null,
-    email varchar(255) not null
+    nm_usuario varchar(255) not null,
+    nm_sobrenome varchar(255) not null,
+    cd_cpf varchar(15) not null,
+    cd_rg varchar(15) not null,
+    nr_telefone int not null,
+    email varchar(255) not null,
+    password varchar(255) not null,
+    created varchar(255) not null
 );
 
 
@@ -36,9 +35,10 @@ create table tb_empresa
     nr_telefone varchar(11) not null,
     nr_celular varchar(11) not null,
     nm_responsavel varchar(255) not null,
-    dt_validadecontrato date 
+    dt_validadecontrato date,
+    ds_status varchar(20) not null
 );
-
+select * from tb_empresa;
 insert tb_empresa(nm_empresa, cd_cnpj, ds_email, ds_endereco, sg_estado, num_endereco, nm_cidade, nr_telefone, nm_responsavel, cd_CEP, nr_celular, qt_veiculos) values ("NET", 11133434, "adenilson@net.com", "Av. Conselheiro Nébias", "SP", 555, "Santos", "139816544", "Adenilson", 11088310, "112231312", 100);
 
 create table tb_veiculo
@@ -61,11 +61,7 @@ create table tb_veiculo
     id_seguro int
 );
 
-insert tb_veiculo(id_marca ,id_modelo ,ds_proprietario ,id_empresa ,qt_cilindrada,qt_ano ,ds_cor, qt_quilometragem, qt_passageiros , qt_peso , ds_placa , nr_renavam ,ds_status ,id_frota ,id_seguro) values (
 
-insert tb_marca(marca) values ("BMW");
-insert tb_modelo(id_marca,desc_modelo) values (1, "Um modelo ai 2009")
-SELECT * FROM TB_VEIC;
 
 create table tb_veic(
 	    id int not null auto_increment primary key,
@@ -85,11 +81,6 @@ create table tb_veic(
     
 );
 
-alter table tb_veic
-add constraint fk_empresa foreign key (id_empresa) references tb_empresa(id_empresa);
-
-alter table tb_veic
-add constraint fk_frota foreign key (id_frota) references tb_frota(id_frota);
 
 create table tb_locacao
 (
@@ -107,18 +98,12 @@ create table tb_motorista
     sobrenome_motorista varchar(255) not null,
     cd_cnh char(11) not null,
     cd_cpf char(11) not null,
+    password varchar(255) not null,
     cd_rg varchar(14) not null,
     nr_telefone varchar(11),
     nr_celular varchar(11) not null,
     cat_cnh varchar(2) not null, 
-    foto_motorista varchar(255) not null,
-    hr_entrada time,
-    hr_saida time,
-    ic_seg boolean,
-    ic_ter boolean,
-    ic_quar boolean,
-    ic_quin boolean,
-    ic_sex boolean,
+    foto_motorista varchar(255),
     cd_cep int,
     ds_endereco varchar (255) not null,
     sg_estado char(2) not null,
@@ -127,7 +112,6 @@ create table tb_motorista
     ds_email varchar(255) not null,
     id_empresa int
 );
-
 
 
 create table tb_viagem
@@ -144,7 +128,6 @@ create table tb_viagem
     id_empresa int,
     id_motorista int
 );
-insert into tb_viagem (end_origem, cidade_origem, data_saida, end_destino, cidade_destino, data_chegada, km, id_veiculo, id_empresa, id_motorista) values ("rua pipipi", "Santos", 10112019, "Rua popopo", "São Vicente", 18112019,1000, 1, 1, 1);
 
 create table teste(
 	id int not null auto_increment primary key,
@@ -153,11 +136,6 @@ create table teste(
     business_gst_number int
     );
     
-    insert into teste ( id, person_name, business_name, business_gst_number) values (1, "bia", "rica", 2);
-        insert into teste ( id, person_name, business_name, business_gst_number) values (2, "bia2", "rica", 2);
-            insert into teste ( id, person_name, business_name, business_gst_number) values (3, "bia3", "rica", 2)
-    select * from teste
-
 create table tb_produto
 (
     id_produto int not null auto_increment primary key,
@@ -249,10 +227,7 @@ create table tb_seguro
     id_veiculo int not null
 );
 
-alter table tb_login_usuario_adm
-add constraint fk_user_login foreign key (id_usuario) references tb_usuario_adm (id_usuario);
 
-    
 alter table tb_seguro 
 add constraint fk_seguveicu foreign key (id_veiculo) references tb_veiculo(id_veiculo);
 
@@ -314,6 +289,12 @@ add constraint fk_marca foreign key (id_marca) references tb_marca (id_marca);
 alter table tb_viagem
 add constraint fk_viagemempresa foreign key (id_empresa) references tb_empresa(id_empresa);
 
+alter table tb_veic
+add constraint fk_empresa foreign key (id_empresa) references tb_empresa(id_empresa);
+
+alter table tb_veic
+add constraint fk_frota foreign key (id_frota) references tb_frota(id_frota);
+
 #DELIMITER $$
 #create trigger tr_data_vencimento after insert 
 #	on tb_empresa
@@ -332,22 +313,10 @@ insert tb_frota(desc_frota) values ("Moto");
 insert tb_frota(desc_frota) values ("Ônibus");
 insert tb_frota(desc_frota) values ("Van");
 
-select * from tb_frota
+insert tb_marca(marca) values ("BMW");
+insert tb_modelo(id_marca,desc_modelo) values (1, "Um modelo ai 2009");
 
-
-
-
-
-select * from tb_empresa
-
-create database db_veic;
-
-use db_veic;
-
-create table tb_veic(
-	id int auto_increment not null primary key,
-    nome varchar(255),
-    ano varchar(5)
-);
-
+ insert tb_veiculo(id_marca ,id_modelo ,ds_proprietario ,id_empresa ,qt_cilindrada,qt_ano ,ds_cor, qt_quilometragem, qt_passageiros , qt_peso , ds_placa , nr_renavam ,ds_status ,id_frota ) values (1, 1, "Empresa", 1, 1, 2010, "Roxo", 121312, 5, 200, "AAA-000", "121312123", "Disponível", 1);
+ 
+ insert into tb_viagem (end_origem, cidade_origem, data_saida, end_destino, cidade_destino, data_chegada, km, id_veiculo, id_empresa, id_motorista) values ("rua pipipi", "Santos", "2019-11-12", "Rua popopo", "São Vicente", "2019-11-12",1000, 2, 1, 1);
 

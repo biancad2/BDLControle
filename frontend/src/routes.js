@@ -15,7 +15,9 @@ import CreateMotorista from './pages/motoristas/incluir';
 import Viagens from './pages/viagens';
 import EditViagem from './pages/viagens/alterar';
 import CreateViagem from './pages/viagens/incluir';
-import { isAuthenticated } from "./services/auth";
+import Login from './components/Login'
+import Register from './components/Register'
+
 
 
 
@@ -24,7 +26,9 @@ export default function Routes() {
         <BrowserRouter>
 
            <Route path="/" component={Header} />
-           <Route path="/" exact component={Main}/>
+           <Route exact path="/register" component={Register} />
+            <Route exact path="/login" component={Login} />
+            <Route path="/main" exact component={Main}/>
            <Route path="/empresas"  component={Empresas}/>
            <Route path="/incluir-empresa"  component={Create}/>
            <Route path="/alterar-empresa/:id"  component={Edit}/>

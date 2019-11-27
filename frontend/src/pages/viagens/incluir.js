@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import api from '../../services/api'
-import listarEmpresas from './listEmpresas'
-import Select from 'react-select';
+import ListEmpresas from './listEmpresas'
+
 
 
 export default class CreateViagens extends Component {
@@ -18,7 +18,7 @@ export default class CreateViagens extends Component {
         this.onChangeVeiculo = this.onChangeVeiculo.bind(this);
         this.onChangeMotorista = this.onChangeMotorista.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
-        //this.state = {empresas: []};
+        
         this.state = {
             id_empresa: '',
             id_motorista: '',
@@ -29,12 +29,28 @@ export default class CreateViagens extends Component {
             end_destino: '',
             cidade_destino: '',
             data_chegada: '',
-            km: ''
+            km: '',
+            empresas: []
         }
     }
-    //<label for="inputEmpresa">Selecionar empresa*</label>
-      //                  <select name="idEmpresa" class="form-control" id="idEmpresa"  tabindex="" required value={this.state.id_empresa}
-       //             onChange={this.onChangeEmpresa} onClick={'./listarEmpresas'}></select>
+    componentDidMount() {
+        api.get('/empresas/')
+        .then(response => {
+          this.setState({ empresas: response.data });
+
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+
+    loadEmpresas(){
+        return this.state.empresas.map(function(object, i){
+            return <ListEmpresas obj={object} key={i} />;
+        });
+        
+      }
+   
     onChangeEmpresa(e) {
         this.setState({
             id_empresa: e.target.value
@@ -132,9 +148,12 @@ export default class CreateViagens extends Component {
                  <h2>Informações </h2>
                 <div class="form-row">
                     <div class="form-group col-md-3">
-                        <label for="inputEmpresa">Selecionar empresa*</label>
-                        <input type="text" class="form-control" id="idEmpresa"  tabindex="" required value={this.state.id_empresa}
-                    onChange={this.onChangeEmpresa} />
+                    <label for="inputEmpresa">Selecionar empresa*</label>
+                       <select name="idEmpresa" class="form-control" id="idEmpresa"  tabindex="" required value={this.state.id_empresa}
+               onChange={this.onChangeEmpresa}>
+                   <option value="">Selecionar...</option>
+                   {this.loadEmpresas()}
+               </select>
                     </div>
                     <div class="form-group col-md-3">
                         <label for="inputMotorista">ID Motorista*</label>

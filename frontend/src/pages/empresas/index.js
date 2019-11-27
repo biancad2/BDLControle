@@ -4,6 +4,7 @@ import './empresas.css';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import TableRow from './tableRow';
 
+import FilterResults from 'react-filter-search';
 
 import Logo from '../../assets/logobranco2.png';
 import Usuario from '../../assets/usuario-branco.png';
@@ -13,28 +14,47 @@ import Download from '../../assets/download.png';
 export default class Empresas extends Component{
     constructor(props) {
         super(props);
-        this.state = { empresas: [] };
+        this.state = { empresas: [], items: []  };
     }
-
+    filterList=(event)=>{
+        let items = this.state.empresas;
+        items = items.filter((item)=>{
+            return item.nm_empresa.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1 || item.cd_cnpj.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1 || item.ds_status.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1
+        });
+        this.setState({items: items});
+        console.log(items);
+    }
+    
+    filterStatus=(event)=>{
+        let items = this.state.empresas;
+        items = items.filter((item)=>{
+            return item.ds_status.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1 
+        });
+        this.setState({items: items});
+        console.log(items);
+    }
     
     componentDidMount() {
         api.get('/empresas/')
         .then(response => {
-          this.setState({ empresas: response.data });
+          this.setState({ empresas: response.data, items: response.data });
+          
         })
         .catch(function (error) {
           console.log(error);
         })
+        
     }
-
+   
     tabRow(){
         return this.state.empresas.map(function(object, i){
             return <TableRow obj={object} key={i} />;
         });
       }
-
-    
+     
+     
     render(){
+        
         return ( 
             <div>
                 <nav className="navbar navbar-expand-md navbar-dark bg-menu" id="menuu">
@@ -115,18 +135,18 @@ export default class Empresas extends Component{
                
                 <div className="formulario selecionar centro col-md-2">
                     <label for="disponibilidade"> Situação</label>
-                    <select name="categoria" id="categoria"  tabindex="7">
+                    <select name="categoria" id="categoria"  tabindex="7" onChange={this.filterList}>
                         <option value=""> Todos </option>
-                        <option value="dsponivel"> Ativas </option>
-                        <option value="desativada"> Desativadas </option>
+                        <option value="Ativa"> Ativas </option>
+                        <option value="Desativada"> Desativadas </option>
                     </select>
                 </div>
 
                 <div className="formulario busca col-md-2">
                     <label for="pesquisa"> Pesquisar	</label>
-                    <input type="text" name="pesquisa" id="pesquisa" size="9" minlength="6" maxlength="7" placeholder="Nome/CNPJ    " data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Você pode pesquisar a empresa pelo nome e CNPJ"/>
+                    <input type="text" name="pesquisa" id="pesquisar-cnpj" size="9" minlength="6" maxlength="7" placeholder="Nome/CNPJ" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Você pode pesquisar a empresa pelo nome e CNPJ" onChange={this.filterList}/>
                     <span id="box_icone_busca">
-                        <i id="icone_busca" className="fa fa-search" onclick="sua_funcao_aqui()"></i>
+                        <i id="icone_busca" className="fa fa-search"></i>
                     </span> 
                 </div>
             </form>
@@ -154,7 +174,12 @@ export default class Empresas extends Component{
                         </tr>
                     </thead>
                     <tbody>
-                    {this.tabRow() }
+               
+                    {
+                    this.state.items.map(function(item, i){
+                        return <TableRow obj={item} key={i} />;
+                    })
+                }
                 </tbody>
             </table>
         </div>

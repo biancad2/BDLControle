@@ -6010,6 +6010,11 @@ jsx-ast-utils@^2.1.0, jsx-ast-utils@^2.2.1:
     array-includes "^3.0.3"
     object.assign "^4.1.0"
 
+jwt-decode@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/jwt-decode/-/jwt-decode-2.2.0.tgz#7d86bd56679f58ce6a84704a657dd392bba81a79"
+  integrity sha1-fYa9VmefWM5qhHBKZX3TkruoGnk=
+
 keycode@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/keycode/-/keycode-2.2.0.tgz#3d0af56dc7b8b8e5cba8d0a97f107204eec22b04"
@@ -8345,6 +8350,11 @@ react-error-overlay@^6.0.3:
   version "6.0.3"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-6.0.3.tgz#c378c4b0a21e88b2e159a3e62b2f531fd63bf60d"
   integrity sha512-bOUvMWFQVk5oz8Ded9Xb7WVdEi3QGLC8tH7HmYP0Fdp4Bn3qw0tRFmr5TW6mvahzvmrK4a6bqWGfCevBflP+Xw==
+
+react-filter-search@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/react-filter-search/-/react-filter-search-1.0.8.tgz#4ffb4ebfcfbd6ddcf36a3922d430f1cc0afdbf94"
+  integrity sha512-yhzdCO3wVPA+oz8Y82tBkU5XRJPX7QyJtxiX15Ecb1pADxjdzEp1HRhwRcTKvta0J3dWCDSiF6A1q5OWjJrQjA==
 
 react-input-autosize@^2.2.2:
   version "2.2.2"

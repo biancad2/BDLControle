@@ -24,6 +24,8 @@ export default class CreateMotorista extends Component {
         this.onChangeNrEnd = this.onChangeNrEnd.bind(this);
         this.onChangeCidade = this.onChangeCidade.bind(this);
         this.onChangeEmail = this.onChangeEmail.bind(this);
+        this.onChangeFoto = this.onChangeFoto.bind(this);
+
 
         this.onSubmit = this.onSubmit.bind(this);
 
@@ -41,7 +43,8 @@ export default class CreateMotorista extends Component {
             num_endereco: '',
             sg_estado: '',
             nm_cidade: '',
-            ds_email: ''
+            ds_email: '',
+            foto_motorista:''
         }
     }
     
@@ -115,6 +118,12 @@ export default class CreateMotorista extends Component {
             ds_email: e.target.value
         })
     }
+
+    onChangeFoto(e) {
+        this.setState({
+            foto_motorista: e.target.value
+        })
+    }
     onSubmit(e) {
         e.preventDefault();
         const obj = {
@@ -131,7 +140,8 @@ export default class CreateMotorista extends Component {
             num_endereco: this.state.num_endereco,
             sg_estado: this.state.sg_estado,
             nm_cidade: this.state.nm_cidade,
-            ds_email: this.state.ds_email
+            ds_email: this.state.ds_email,
+            foto_motorista: this.state.foto_motorista,
         };
 
 
@@ -152,10 +162,18 @@ export default class CreateMotorista extends Component {
             num_endereco: '',
             sg_estado: '',
             nm_cidade: '',
-            ds_email: ''
+            ds_email: '',
+            ic_seg:true,
+            ic_ter:true,
+            ic_quar: true,
+            ic_quin: true,
+            ic_sex: true, 
+            ic_sab: true,
+            ic_dom: true,  
+            foto_motorista:''
         })
     }
-
+ 
     render() {
         return (
             <div>
@@ -286,53 +304,9 @@ export default class CreateMotorista extends Component {
                     </div>
                     <div class="custom-file col-md-4">
                      <label class="custom-file-label" for="customFile">Selecionar foto do motorista</label>
-                    <input type="file" class="custom-file-input" id="customFile"/>
+                    <input type="file" class="custom-file-input" id="customFile " value={this.state.foto_motorista} onChange={this.onChangeFoto}/>
                 </div>
              
-                </div>
-             </fieldset>
-             <fieldset>
-                 <h2> Horário de trabalho</h2>
-                 <div class="form-row">
-                     <div class="form-group col-md-1.5">
-                         <label for="hora-entrada">Hora entrada:</label>
-                         <input type="time" name="hora-entrada" id="hora-entrada" class="form-control"/>
-                    </div>
-                    <div class="form-group col-md-1.5">
-                        <label for="hora-entrada">Hora saída:</label>
-                        <input type="time" name="hora-saida" id="hora-saida" class="form-control"/>
-                    </div>
-                 </div>
-                  <div class="form-row" id="semana">
-                      <h3>Dias da semana:</h3>
-                     <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="seg"/>
-                        <label class="custom-control-label" for="seg">Segunda</label>
-                    </div>
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="ter"/>
-                        <label class="custom-control-label" for="ter">Terça</label>
-                    </div>
-                        <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="qua"/>
-                        <label class="custom-control-label" for="qua">Quarta</label>
-                    </div>
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="qui"/>
-                        <label class="custom-control-label" for="qui">Quinta</label>
-                    </div>
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="sex"/>
-                        <label class="custom-control-label" for="sex">Sexta</label>
-                    </div>
-                        <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="sab"/>
-                        <label class="custom-control-label" for="sab">Sábado</label>
-                    </div>
-                        <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="dom"/>
-                        <label class="custom-control-label" for="dom">Domingo</label>
-                    </div>
                 </div>
              </fieldset>
              <fieldset>
