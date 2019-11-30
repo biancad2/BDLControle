@@ -25,15 +25,6 @@ export default class Empresas extends Component{
         console.log(items);
     }
     
-    filterStatus=(event)=>{
-        let items = this.state.empresas;
-        items = items.filter((item)=>{
-            return item.ds_status.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1 
-        });
-        this.setState({items: items});
-        console.log(items);
-    }
-    
     componentDidMount() {
         api.get('/empresas/')
         .then(response => {
@@ -58,7 +49,7 @@ export default class Empresas extends Component{
         return ( 
             <div>
                 <nav className="navbar navbar-expand-md navbar-dark bg-menu" id="menuu">
-                <Link className="navbar-brand" to="#">
+                <Link className="navbar-brand" to="/main">
                     <img src={Logo}/>
                 </Link>
                 <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,7 +58,7 @@ export default class Empresas extends Component{
                 <div className="collapse navbar-collapse" id="navbarCollapse">
                     <ul className="navbar-nav mr-auto">
                         <li className="nav-item">
-                            <Link className="nav-link" to="index.html">Home</Link>
+                            <Link className="nav-link" to="/main">Home</Link>
                         </li>
                         <li className="nav-item active">
                             <Link className="nav-link" to="#">Empresas<span className="sr-only">(atual)</span></Link>
@@ -137,8 +128,8 @@ export default class Empresas extends Component{
                     <label for="disponibilidade"> Situação</label>
                     <select name="categoria" id="categoria"  tabindex="7" onChange={this.filterList}>
                         <option value=""> Todos </option>
-                        <option value="Ativa"> Ativas </option>
-                        <option value="Desativada"> Desativadas </option>
+                        <option value="Ativa"> Ativa </option>
+                        <option value="Encerrada"> Encerrada </option>
                     </select>
                 </div>
 
@@ -164,12 +155,12 @@ export default class Empresas extends Component{
                             <th>Empresa</th>
                             <th className="cnpj">CNPJ</th>
                             <th>E-mail</th>
-                            <th>Nome para contato</th>
-                            <th>Telefone</th>
+                            <th>Nome p/ contato</th>
+                            <th className="telefone">Telefone</th>
                             <th>Celular</th>
                             <th>Endereço</th>
-                            <th>Qt. Veículos</th>
-                            <th className="contrato">Vencimento contrato</th>
+                            <th>Status</th>
+                            <th className="validade">Vencimento contrato</th>
                             <th> </th>
                         </tr>
                     </thead>

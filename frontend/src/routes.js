@@ -6,6 +6,7 @@ import Main from './pages/main';
 import Empresas from './pages/empresas/index';
 import Create from './pages/empresas/incluir';
 import Edit from './pages/empresas/alterar';
+import InfoEmpresas from './pages/empresas/informacoes';
 import Veiculos from './pages/veiculos';
 import EditVeiculos from './pages/veiculos/alterar';
 import CreateVeiculo from './pages/veiculos/incluir';
@@ -32,6 +33,7 @@ export default function Routes() {
            <Route path="/empresas"  component={Empresas}/>
            <Route path="/incluir-empresa"  component={Create}/>
            <Route path="/alterar-empresa/:id"  component={Edit}/>
+           <Route path="/info-empresa/:id"  component={InfoEmpresas}/>
            <Route path="/veiculos"  component={Veiculos}/>
            <Route path="/atualizar-veic/:id" component={EditVeiculos}/>
            <Route path="/incluir-veic/" component={CreateVeiculo}/>

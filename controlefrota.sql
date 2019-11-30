@@ -26,7 +26,6 @@ create table tb_empresa
     cd_cnpj int not null,
     ds_email varchar(255) not null,
     ds_endereco varchar (255) not null,
-    qt_veiculos int,
     sg_estado char(2) not null,
     num_endereco varchar(255) not null,
     ds_complemento varchar(255),
@@ -38,7 +37,8 @@ create table tb_empresa
     dt_validadecontrato date,
     ds_status varchar(20) not null
 );
-select * from tb_empresa;
+
+select * from tb_motorista;
 insert tb_empresa(nm_empresa, cd_cnpj, ds_email, ds_endereco, sg_estado, num_endereco, nm_cidade, nr_telefone, nm_responsavel, cd_CEP, nr_celular, qt_veiculos) values ("NET", 11133434, "adenilson@net.com", "Av. Conselheiro Nébias", "SP", 555, "Santos", "139816544", "Adenilson", 11088310, "112231312", 100);
 
 create table tb_veiculo
@@ -80,7 +80,6 @@ create table tb_veic(
     id_seguro int
     
 );
-
 
 create table tb_locacao
 (

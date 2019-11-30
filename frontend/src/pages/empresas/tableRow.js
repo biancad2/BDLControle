@@ -2,15 +2,17 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../services/api';
 
+import './empresas.css';
+
 class TableRow extends Component {
 
   constructor(props) {
         super(props);
         this.delete = this.delete.bind(this);
-        this.desativar = this.desativar.bind(this);
         this.onChangeStatus = this.onChangeStatus.bind(this);
+        //this.verificar = this.verificar.bind(this);
         this.state = ({
-          ds_status: ''
+          ds_status: this.props.obj.ds_status
       })
     }
     delete() {
@@ -20,31 +22,64 @@ class TableRow extends Component {
            )
             .catch(err => console.log(err))
     }
-    desativar(){
-      this.setState({
-        ds_status: "Desativada"
-      })
-    }
-    onChangeStatus(e) {
-      this.setState({
-          ds_status: e.target.value
-      })
+  componentDidMount(){
+    //{this.verificar}
+  //}
+  //verificar(){
+    //if(this.state.ds_status == "Desativada"){
+      //document.querySelectorAll("tr").classList.add("desativada")
+    //}
   }
+    onChangeStatus(e) {
+      if(this.state.ds_status === "Encerrada"){
+        this.setState({ds_status: "Ativa"})
+        this.state.ds_status= "Ativa"
+      
+      }else{
+        if(this.state.ds_status === ''){
+          this.setState({ds_status: "Ativa"})
+          this.state.ds_status= "Ativa"
+        
+        }else{
+          this.setState ({ds_status: "Encerrada"})
+          this.state.ds_status= "Encerrada"
+          
+        }
+        
+      }
+     
+        const obj = {
+          
+          ds_status: this.state.ds_status
+        };
+
+        api.put('/empresas/' + this.props.obj.id_empresa, obj)
+            .then(res => console.log(res.data));
+            window.location.reload()
+        
+    }
+
+
   render() {
     return (
+    
       <tr key={this.props.obj.id_empresa}>
-      <td >{this.props.obj.id_empresa}</td>
+      <td className="id">{this.props.obj.id_empresa}</td>
       <td>{this.props.obj.nm_empresa}</td>
       <td>{this.props.obj.cd_cnpj}</td>
       <td>{this.props.obj.ds_email}</td>
       <td>{this.props.obj.nm_responsavel}</td>
-      <td>{this.props.obj.nr_telefone}</td>
+      <td className="telefone">{this.props.obj.nr_telefone}</td>
       <td>{this.props.obj.nr_celular}</td>
-      <td>{this.props.obj.sg_estado}, {this.props.obj.nm_cidade} - {this.props.obj.ds_endereco}, {this.props.obj.num_endereco} - {this.props.obj.ds_complemento}</td>
-      <td>{this.props.obj.qt_veiculos}</td>
+      <td>{this.props.obj.sg_estado}, {this.props.obj.nm_cidade} - {this.props.obj.ds_endereco}, {this.props.obj.num_endereco}  {this.props.obj.ds_complemento}</td>
       <td>{this.props.obj.ds_status}</td>
-      <td>{this.props.obj.dt_validadecontrato}</td>
-      <td><Link to={`./alterar-empresa/${this.props.obj.id_empresa}`}><button className="edit"></button></Link><button className="rem" onClick={this.delete}></button><button className="rem" onClick={this.onChangeStatus} value="Desativada" ></button></td>
+      <td className="validade">{this.props.obj.dt_validadecontrato}</td>
+      <td className="icones">
+        <Link to={`./alterar-empresa/${this.props.obj.id_empresa}`}><button className="editar"></button></Link>
+        <Link to={`./info-empresa/${this.props.obj.id_empresa}`}><button className="info"></button></Link>
+        <button className="rem" onClick={this.delete}></button>
+        <button className="desativar" onClick={this.onChangeStatus} ></button>
+      </td>
   </tr>
     );
   }

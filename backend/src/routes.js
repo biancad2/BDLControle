@@ -22,6 +22,15 @@ connection.connect(function(err){
     console.log("Connected to MySQL Server!");
 });
 
+routes.get("/nr-veic", function(req, res){
+    connection.query('select COUNT(*) as qt_veiculos from tb_veiculo', function(err, rows, fields){
+        if (!err)
+            res.json(rows);
+        else
+            res.json(err);
+    })
+});
+
 routes.get("/empresas", function(req, res){
     connection.query('select * from tb_empresa', function(err, rows, fields){
         if (!err)
@@ -51,6 +60,7 @@ routes.get("/empresas-cnpj/:cnpj", function(req, res){
 });
 
 routes.post("/empresas", function(req, res){
+ 
     connection.query('insert tb_empresa set ?', req.body, function(err, rows, fields){
         if (!err)
             res.json(rows);
@@ -77,9 +87,24 @@ routes.put("/empresas/:id", function(req, res){
             res.json(err);
     })
 });
-
+routes.get("/motoristas-empresa/:id", function(req, res){
+    connection.query('select * from tb_motorista where id_empresa = ?', [req.params.id] ,function(err, rows, fields){
+        if (!err)
+            res.json(rows);
+        else
+            res.json(err);
+    })
+});
+routes.get("/veiculos-empresa/:id/:cat", function(req, res){
+    connection.query('select * from tb_veiculo where id_empresa = ' +  req.params.id + ' and id_frota = ' + req.params.cat, function(err, rows, fields){
+        if (!err)
+            res.json(rows);
+        else
+            res.json(err);
+    })
+});
 routes.get("/veiculos", function(req, res){
-    connection.query('select * from tb_veic', function(err, rows, fields){
+    connection.query('select * from tb_veiculo', function(err, rows, fields){
         if (!err)
             res.json(rows);
         else
@@ -88,7 +113,7 @@ routes.get("/veiculos", function(req, res){
 });
 
 routes.get("/veiculos/:id", function(req, res){
-    connection.query('select * from tb_veic where id = ?', [req.params.id], function(err, rows, fields){
+    connection.query('select * from tb_veiculo where id_veiculo = ?', [req.params.id], function(err, rows, fields){
         if (!err)
             res.json(rows);
         else
@@ -141,6 +166,7 @@ routes.get("/motoristas/:id", function(req, res){
             res.json(err);        
     })
 });
+
 
 routes.post("/motoristas", function(req, res){
     connection.query('insert tb_motorista set ?', req.body, function(err, rows, fields){

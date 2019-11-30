@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import api from '../../services/api'
 import './empresas.css';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import ListEmpresas from '../viagens/listEmpresas'
+
 
 import Logo from '../../assets/logobranco2.png';
 import Usuario from '../../assets/usuario-branco.png';
@@ -44,9 +46,23 @@ export default class CreateMotorista extends Component {
             sg_estado: '',
             nm_cidade: '',
             ds_email: '',
-            foto_motorista:''
+            foto_motorista:'', 
+            password: '',
+            empresas: []
         }
     }
+    componentDidMount(){
+        api.get('/empresas/')
+        .then(response => {
+          this.setState({ empresas: response.data });
+
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+ 
+   
     
     onChangeEmpresa(e) {
         this.setState({
@@ -142,6 +158,7 @@ export default class CreateMotorista extends Component {
             nm_cidade: this.state.nm_cidade,
             ds_email: this.state.ds_email,
             foto_motorista: this.state.foto_motorista,
+            password: this.state.cd_cpf
         };
 
 
@@ -163,14 +180,8 @@ export default class CreateMotorista extends Component {
             sg_estado: '',
             nm_cidade: '',
             ds_email: '',
-            ic_seg:true,
-            ic_ter:true,
-            ic_quar: true,
-            ic_quin: true,
-            ic_sex: true, 
-            ic_sab: true,
-            ic_dom: true,  
-            foto_motorista:''
+            foto_motorista:'',
+            password:''
         })
     }
  
@@ -304,7 +315,8 @@ export default class CreateMotorista extends Component {
                     </div>
                     <div class="custom-file col-md-4">
                      <label class="custom-file-label" for="customFile">Selecionar foto do motorista</label>
-                    <input type="file" class="custom-file-input" id="customFile " value={this.state.foto_motorista} onChange={this.onChangeFoto}/>
+                    <input type="file" class="custom-file-input" id="fotoMotorista " ref="fotoMotorista" value={this.state.foto_motorista} onChange={this.onChangeFoto}/>
+                    <div className="algo" ref="divizinha"></div>
                 </div>
              
                 </div>
@@ -349,16 +361,20 @@ export default class CreateMotorista extends Component {
                  </div>
                  </fieldset>
              <div class="form-row">
-            <div class="form-group  col-md-2">
-                    <label for="empresa"> Nome da empresa*</label>
-                    <select name="empresa" class="form-control" id="empresa"  tabindex="">
-                        <option value=""> Selecione... </option>
-                    </select>
-                </div>
+             <div class="form-group col-md-3">
+                    <label for="inputEmpresa">Selecionar empresa*</label>
+                       <select  class="form-control" id="idEmpresa"  tabindex="" required value={this.state.id_empresa}
+               onChange={this.onChangeEmpresa}>
+                   <option value="">Selecionar...</option>
+                   { this.state.empresas.map(empresa =>(
+                        <option value={empresa.id_empresa}>{empresa.nm_empresa}</option>
+                        
+                   ))}
+               </select>
+                    </div>
                 <div class="form-group col-md-3">
-                <label for="inputCNPJ">CNPJ*</label>
-                <input type="text" class="form-control" id="inputCNPJ"  value={this.state.id_empresa}
-                            onChange={this.onChangeEmpresa}/>
+                <label for="inputCNPJ">ID*</label>
+                <input type="text" class="form-control" id="inputCNPJ"  value={this.state.id_empresa} ref="cnpj"/>
                 </div> 
                  
                  

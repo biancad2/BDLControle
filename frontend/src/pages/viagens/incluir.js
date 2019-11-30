@@ -30,7 +30,9 @@ export default class CreateViagens extends Component {
             cidade_destino: '',
             data_chegada: '',
             km: '',
-            empresas: []
+            empresas: [],
+            motoristas: [],
+            veiculos: []
         }
     }
     componentDidMount() {
@@ -43,18 +45,28 @@ export default class CreateViagens extends Component {
           console.log(error);
         });
     }
-
-    loadEmpresas(){
-        return this.state.empresas.map(function(object, i){
-            return <ListEmpresas obj={object} key={i} />;
-        });
-        
-      }
    
+    
     onChangeEmpresa(e) {
         this.setState({
             id_empresa: e.target.value
         })
+        api.get('/motoristas-empresa/'+e.target.value)
+          .then(response => {
+            this.setState({ motoristas: response.data });
+            console.log(response)
+          })
+          .catch(function(error){
+            console.log(error);
+          })
+          api.get('/veiculos-empresa/'+e.target.value)
+          .then(response => {
+            this.setState({ veiculos: response.data });
+            console.log(response)
+          })
+          .catch(function(error){
+            console.log(error);
+          })
     }
     onChangeOrigem(e) {
         this.setState({
@@ -147,23 +159,38 @@ export default class CreateViagens extends Component {
              <fieldset>
                  <h2>Informações </h2>
                 <div class="form-row">
-                    <div class="form-group col-md-3">
+                <div class="form-group col-md-3">
                     <label for="inputEmpresa">Selecionar empresa*</label>
-                       <select name="idEmpresa" class="form-control" id="idEmpresa"  tabindex="" required value={this.state.id_empresa}
+                       <select  class="form-control" id="idEmpresa"  tabindex="" required value={this.state.id_empresa}
                onChange={this.onChangeEmpresa}>
                    <option value="">Selecionar...</option>
-                   {this.loadEmpresas()}
+                   { this.state.empresas.map(empresa =>(
+                        <option value={empresa.id_empresa}>{empresa.nm_empresa}</option>
+                        
+                   ))}
                </select>
                     </div>
                     <div class="form-group col-md-3">
-                        <label for="inputMotorista">ID Motorista*</label>
-                        <input type="text" class="form-control" id="inputMotorista" placeholder="Id do motorista" required value={this.state.id_motorista}
-                            onChange={this.onChangeMotorista}/>
+                    <label for="inputMotorista">Selecionar motorista*</label>
+                       <select  class="form-control" id="motorista"  tabindex="" required value={this.state.id_motorista}
+               onChange={this.onChangeMotorista}>
+                   <option value="">Selecionar...</option>
+                   { this.state.motoristas.map(motorista =>(
+                        <option value={motorista.id_motorista}>{motorista.nm_motorista}</option>
+                        
+                   ))}
+               </select>
                     </div>
-                    <div class="form-group vcol-md-2">
-                        <label for="inputIdVeiculo">Id Veiculo*</label>
-                        <input type="text" class="form-control" id="inputIdVeiculo" placeholder="Ex: 00.000.000-0" required value={this.state.id_veiculo}
-                            onChange={this.onChangeVeiculo}/>
+                    <div class="form-group col-md-3">
+                    <label for="inputVeiculo">Selecionar veiculo*</label>
+                       <select  class="form-control" id="veiculo"  tabindex="" required value={this.state.id_veiculo}
+               onChange={this.onChangeVeiculo}>
+                   <option value="">Selecionar...</option>
+                   { this.state.veiculos.map(veiculo =>(
+                        <option value={veiculo.id_veiculo}>{veiculo.ds_placa}</option>
+                        
+                   ))}
+               </select>
                     </div>
                     <div class="form-group col-md-3">
                         <label for="inputEndOrigem">Endereço de Origem*</label>

@@ -27,7 +27,9 @@ export default class Main extends Component{
           nm_usuario: '',
           nm_sobrenome: '',
           email: '',
-          errors: {}
+          errors: {},
+          nrVeiculos: [],
+          motoristas: []
         }
       }
     componentDidMount() {
@@ -42,7 +44,24 @@ export default class Main extends Component{
                 email: decoded.email
               })
         }
-        
+        api.get('/nr-veic')
+        .then(response => {
+          this.setState({ nrVeiculos: response.data[0].qt_veiculos });
+          console.log(response)
+          
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+        api.get('/motoristas')
+        .then(response => {
+          this.setState({ motoristas: response.data });
+          console.log(response)
+
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
         
       }
 
@@ -238,7 +257,7 @@ export default class Main extends Component{
                     <div className="col-md-3">
                         <div className="card card-body align-items-center">
                             <p className="card-text"><a href="#"><img src={Card1} title="em viagem"></img>  Veículos </a></p>
-                            <p id="veiculos-viagem" className="numero">5500</p>
+                            <p id="veiculos-viagem" className="numero">{this.state.nrVeiculos}</p>
                         </div>
                     </div>
 

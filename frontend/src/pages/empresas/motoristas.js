@@ -49,9 +49,6 @@ class TableRow extends Component {
             {this.props.obj.cat_cnh}
           </td>
           <td>
-            {this.state.nm_empresa}
-          </td>
-          <td>
             <Link to={"./atualizar-moto/"+this.props.obj.id_motorista} className="btn btn-primary edit"> <span class="sr-only">editar </span></Link>
           </td>
           <td>

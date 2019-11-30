@@ -39,7 +39,7 @@ export default class EditVeiculos extends Component {
         api.get('/veiculos/'+this.props.match.params.id)
           .then(response => {
               this.setState({ 
-                id: response.data[0].id,
+                id: response.data[0].id_veiculo,
                 id_empresa: response.data[0].id_empresa,
                 qt_ano: response.data[0].qt_ano,   
                 ds_cor: response.data[0].ds_cor,
