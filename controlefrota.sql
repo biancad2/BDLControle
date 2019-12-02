@@ -196,12 +196,12 @@ create table tb_marca
     marca varchar(255)
 );
 
-create table tb_produto_manutencao
+create table tb_produto
 (
-    id_prodmanut int not null auto_increment primary key,
-    id_produto int,
-    qt_produto int,
-    id_manutencao int
+    id_produto int not null auto_increment primary key,
+    qt_produto int not null,
+    nm_produto varchar(25),
+    ds_produto varchar(255)
 );
 
 

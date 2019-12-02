@@ -352,6 +352,55 @@ routes.put("/manutencoes/:id", function(req, res){
     })
 });
 
+
+
+
+routes.get("/estoques", function(req, res){
+    connection.query('select * from tb_produto', function(err, rows, fields){
+        if (!err)
+            res.json(rows);
+        else
+            res.json(err);
+    })
+});
+
+routes.get("/estoques/:id", function(req, res){
+    connection.query('select * from tb_produto where id_produto = ?', [req.params.id], function(err, rows, fields){
+        if (!err)
+            res.json(rows);
+        else
+            res.json(err);        
+    })
+});
+
+routes.post("/estoques", function(req, res){
+    connection.query('insert tb_produto set ?', req.body, function(err, rows, fields){
+        if (!err)
+            res.json(rows);
+        else
+            res.json(err);
+    })
+
+});
+
+routes.delete("/estoques/:id", function(req, res){
+    connection.query('delete from tb_produto where id_produto = ?', [req.params.id], function(err, rows, fields){
+        if(!err)
+            res.json(rows);
+        else
+            res.json(err);
+    })
+});
+
+routes.put("/estoques/:id", function(req, res){
+    connection.query('update tb_produto set ? where id_produto = ?', [req.body, req.params.id], function(err, rows, fields){
+        if (!err)
+            res.json(rows);
+        else
+            res.json(err);
+    })
+});
+
 routes.post("/sessions", function(req, res){
     connection.query('insert tb_viagem set ?', req.body, function(err, rows, fields){
         if (!err)
