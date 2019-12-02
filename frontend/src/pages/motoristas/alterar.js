@@ -1,5 +1,13 @@
 import React, { Component } from 'react';
 import api from '../../services/api'
+import jwt_decode from 'jwt-decode'
+import './motoristas.css';
+
+import {Link } from 'react-router-dom';
+import Logo from '../../assets/logobranco2.png';
+import Usuario from '../../assets/usuario-branco.png';
+import Notificacao from '../../assets/icone.png';
+import Download from '../../assets/download.png';
 
 export default class EditMotorista extends Component {
     constructor(props) {
@@ -36,11 +44,27 @@ export default class EditMotorista extends Component {
             num_endereco: '',
             sg_estado: '',
             nm_cidade: '',
-            ds_email: ''
+            ds_email: '',
+            nm_usuario: '',
+            nm_sobrenome: '',
+            email: '',
+            errors: {},
+            empresas: []
         };
     }
 
     async componentDidMount() {
+        if (localStorage.usertoken == null ){
+            alert("Faça login para continuar")
+        }else{
+            const token = localStorage.usertoken
+            const decoded = jwt_decode(token)
+            this.setState({
+                nm_usuario: decoded.nm_usuario,
+                nm_sobrenome: decoded.last_name,
+                email: decoded.email
+              })
+        }
         api.get('/motoristas/'+this.props.match.params.id)
           .then(response => {
               this.setState({ 
@@ -66,6 +90,14 @@ export default class EditMotorista extends Component {
           .catch(function (error) {
               console.log(error);
           })
+          api.get('/empresas/')
+          .then(response => {
+            this.setState({ empresas: response.data });
+  
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
     }
     
 
@@ -166,17 +198,94 @@ export default class EditMotorista extends Component {
 
         this.props.history.push('./index');
     }
-
+    logOut(e) {
+        e.preventDefault()
+        localStorage.removeItem('usertoken')
+        this.props.history.push(`./login`)
+      }
     render() {
-        return (
-            <main role="main" class="bg-light">
+        const loginRegLink = (
+            <ul className="navbar-nav">
+              <li className="nav-item">
+                <Link to="/login" className="nav-link">
+                  Login
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/register" className="nav-link">
+                  Register
+                </Link>
+              </li>
+            </ul>
+          )
+
+          const userLink = (
+
+            <div>
+            <nav className="navbar navbar-expand-md navbar-dark bg-menu" id="menuu">
+                        <Link class="navbar-brand" to="/main">
+                            <img src={Logo}></img>
+                        </Link>
+                        <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                            <span className="navbar-toggler-icon"></span>
+                        </button>
+                        <div className="collapse navbar-collapse" id="navbarCollapse">
+                            <ul className="navbar-nav mr-auto">
+                                <li className="nav-item ">
+                                    <Link className="nav-link" to="/main">Home </Link>
+                                </li>
+                                <li className="nav-item ">
+                                    <Link className="nav-link" to="/empresas">Empresas </Link>
+                                </li>
+                                <li className="nav-item dropdown">
+                                    <Link className="nav-link dropdown-toggle" to="/veiculos" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Veículos</Link>
+                                    <div className="dropdown-menu" aria-labelledby="dropdown01">
+                                        <Link className="dropdown-item" to="/veiculos">Todos</Link>
+                                        <Link className="dropdown-item" to="/veiculos-alugados">Alugados</Link>
+                                    </div>
+                                </li>
+                              <li className="nav-item active">
+                                    <Link className="nav-link" to="/motoristas">Motoristas <span className="sr-only">(atual)</span></Link>
+                                </li>
+                                <li className="nav-item ">
+                                    <Link className="nav-link" to="/viagens">Viagens</Link>
+                                </li>
+                                <li className="nav-item dropdown ">
+                                    <Link className="nav-link dropdown-toggle" to="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Despesas</Link>
+                                    <div className="dropdown-menu" aria-labelledby="dropdown04">
+                                        <Link className="dropdown-item" to="/multas">Multas </Link>
+                                        <Link className="dropdown-item" to="/manutencoes">Manutenções </Link>
+                                        <Link className="dropdown-item" to="/estoques">Estoque </Link>   
+                                    </div>
+                                </li>
+                            </ul>
+                            <ul className="usuario navbar-nav nav-link navbar-nav" id="usuario">
+                                <li className="download">
+                                    <Link to="#"><img src={Download}></img></Link>
+                                </li>
+                                <li className="nav-item dropdown">
+                                    <Link to="#" className="dropdown-toggle usuario-nome" to="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">  
+                                        <img src={Usuario}></img>
+                                        {this.state.nm_usuario}
+                                    </Link>
+                                    <div className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown04">
+                                      <Link className="dropdown-item" to="/perfil">Perfil</Link>
+                                      <Link className="dropdown-item" to="/contato">Contato</Link>
+                                        <Link className="dropdown-item" to="" onClick={this.logOut.bind(this)}>Sair</Link>
+                                        
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                  </nav> 
+                  <main role="main" class="bg-light">
             <div class="quadrado">Quadrado</div>
             <h1> Adicionar motorista </h1>
             
          <form id="formulario" onSubmit={this.onSubmit}>
              <fieldset>
                  <h2>Informações pessoais</h2>
-                <div class="form-row">
+                 <div class="form-row">
                     <div class="form-group col-md-3">
                         <label for="inputNome">Nome*</label>
                         <input type="text" class="form-control" id="inputNome" placeholder="Nome" required value={this.state.nm_motorista}
@@ -227,53 +336,10 @@ export default class EditMotorista extends Component {
                     </div>
                     <div class="custom-file col-md-4">
                      <label class="custom-file-label" for="customFile">Selecionar foto do motorista</label>
-                    <input type="file" class="custom-file-input" id="customFile"/>
+                    <input type="file" class="custom-file-input" id="fotoMotorista " ref="fotoMotorista" value={this.state.foto_motorista} onChange={this.onChangeFoto}/>
+                    <div className="algo" ref="divizinha"></div>
                 </div>
              
-                </div>
-             </fieldset>
-             <fieldset>
-                 <h2> Horário de trabalho</h2>
-                 <div class="form-row">
-                     <div class="form-group col-md-1.5">
-                         <label for="hora-entrada">Hora entrada:</label>
-                         <input type="time" name="hora-entrada" id="hora-entrada" class="form-control"/>
-                    </div>
-                    <div class="form-group col-md-1.5">
-                        <label for="hora-entrada">Hora saída:</label>
-                        <input type="time" name="hora-saida" id="hora-saida" class="form-control"/>
-                    </div>
-                 </div>
-                  <div class="form-row" id="semana">
-                      <h3>Dias da semana:</h3>
-                     <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="seg"/>
-                        <label class="custom-control-label" for="seg">Segunda</label>
-                    </div>
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="ter"/>
-                        <label class="custom-control-label" for="ter">Terça</label>
-                    </div>
-                        <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="qua"/>
-                        <label class="custom-control-label" for="qua">Quarta</label>
-                    </div>
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="qui"/>
-                        <label class="custom-control-label" for="qui">Quinta</label>
-                    </div>
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="sex"/>
-                        <label class="custom-control-label" for="sex">Sexta</label>
-                    </div>
-                        <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="sab"/>
-                        <label class="custom-control-label" for="sab">Sábado</label>
-                    </div>
-                        <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="dom"/>
-                        <label class="custom-control-label" for="dom">Domingo</label>
-                    </div>
                 </div>
              </fieldset>
              <fieldset>
@@ -316,17 +382,22 @@ export default class EditMotorista extends Component {
                  </div>
                  </fieldset>
              <div class="form-row">
-            <div class="form-group  col-md-2">
-                    <label for="empresa"> Nome da empresa*</label>
-                    <select name="empresa" class="form-control" id="empresa"  tabindex="">
-                        <option value=""> Selecione... </option>
-                    </select>
-                </div>
+             <div class="form-group col-md-3">
+                    <label for="inputEmpresa">Selecionar empresa*</label>
+                       <select  class="form-control" id="idEmpresa"  tabindex="" required value={this.state.id_empresa}
+               onChange={this.onChangeEmpresa}>
+                   <option value="">Selecionar...</option>
+                   { this.state.empresas.map(empresa =>(
+                        <option value={empresa.id_empresa}>{empresa.nm_empresa}</option>
+                        
+                   ))}
+               </select>
+                    </div>
                 <div class="form-group col-md-3">
-                <label for="inputCNPJ">CNPJ*</label>
-                <input type="text" class="form-control" id="inputCNPJ"  value={this.state.id_empresa}
-                            onChange={this.onChangeEmpresa}/>
+                <label for="inputCNPJ">ID*</label>
+                <input type="text" class="form-control" id="inputCNPJ"  value={this.state.id_empresa} ref="cnpj"/>
                 </div> 
+                 
                  
                  
             </div>
@@ -335,6 +406,13 @@ export default class EditMotorista extends Component {
             <button type="submit" class="btn btn-primary" id="cancelar">Cancelar</button>
         </form>
         </main>
+                    </div>
+          )
+        return (
+            <div>
+
+            {localStorage.usertoken==null ? this.props.history.push(`./login`)  : userLink}
+            </div>
         )
     }
 }

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import api from '../../services/api'
 import ListEmpresas from './listEmpresas'
+import jwt_decode from 'jwt-decode'
+import { Link } from 'react-router-dom';
 
 import Logo from '../../assets/logobranco2.png';
 import Usuario from '../../assets/usuario-branco.png';
@@ -35,7 +37,11 @@ export default class CreateViagens extends Component {
             km: '',
             empresas: [],
             motoristas: [],
-            veiculos: []
+            veiculos: [],
+            nm_usuario: '',
+            nm_sobrenome: '',
+            email: '',
+            errors: {}
         }
     }
     componentDidMount() {
@@ -150,183 +156,193 @@ export default class CreateViagens extends Component {
         })
     }
    
-   
+    logOut(e) {
+        e.preventDefault()
+        localStorage.removeItem('usertoken')
+        this.props.history.push(`./login`)
+      }
     render() {
+        const loginRegLink = (
+            <ul className="navbar-nav">
+              <li className="nav-item">
+                <Link to="/login" className="nav-link">
+                  Login
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/register" className="nav-link">
+                  Register
+                </Link>
+              </li>
+            </ul>
+          )
+          const userLink = (
+            <div>
+            <nav className="navbar navbar-expand-md navbar-dark bg-menu" id="menuu">
+                    <Link class="navbar-brand" to="/main">
+                        <img src={Logo}></img>
+                    </Link>
+                    <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                        <span className="navbar-toggler-icon"></span>
+                    </button>
+                    <div className="collapse navbar-collapse" id="navbarCollapse">
+                        <ul className="navbar-nav mr-auto">
+                            <li className="nav-item ">
+                                <Link className="nav-link" to="/main">Home </Link>
+                            </li>
+                            <li className="nav-item ">
+                                <Link className="nav-link" to="/empresas">Empresas </Link>
+                            </li>
+                            <li className="nav-item dropdown ">
+                                <Link className="nav-link dropdown-toggle" to="/veiculos" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Veículos</Link>
+                                <div className="dropdown-menu" aria-labelledby="dropdown01">
+                                    <Link className="dropdown-item" to="/veiculos">Todos </Link>
+                                    <Link className="dropdown-item" to="/veiculos-alugados">Alugados</Link>
+                                </div>
+                            </li>
+                          <li className="nav-item ">
+                                <Link className="nav-link" to="/motoristas">Motoristas</Link>
+                            </li>
+                            <li className="nav-item active">
+                                <Link className="nav-link" to="/viagens">Viagens <span className="sr-only">(atual)</span></Link>
+                            </li>
+                            <li className="nav-item dropdown ">
+                                <Link className="nav-link dropdown-toggle" to="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Despesas</Link>
+                                <div className="dropdown-menu" aria-labelledby="dropdown04">
+                                    <Link className="dropdown-item" to="/multas">Multas </Link>
+                                    <Link className="dropdown-item" to="/manutencoes">Manutenções </Link>
+                                    <Link className="dropdown-item" to="/estoques">Estoque </Link>   
+                                </div>
+                            </li>
+                        </ul>
+                        <ul className="usuario navbar-nav nav-link navbar-nav" id="usuario">
+                            <li className="download">
+                                <Link to="#"><img src={Download}></img></Link>
+                            </li>
+                            <li className="nav-item dropdown">
+                                <Link to="#" className="dropdown-toggle usuario-nome" to="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">  
+                                    <img src={Usuario}></img>
+                                    {this.state.nm_usuario}
+                                </Link>
+                                <div className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown04">
+                                  <Link className="dropdown-item" to="/perfil">Perfil</Link>
+                                  <Link className="dropdown-item" to="/contato">Contato</Link>
+                                    <Link className="dropdown-item" to="" onClick={this.logOut.bind(this)}>Sair</Link>
+                                    
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+              </nav> 
+                    <main role="main" class="bg-light">
+                    <div class="quadrado">Quadrado</div>
+                    <h1> Adicionar viagem </h1>
+                    
+                 <form id="formulario" onSubmit={this.onSubmit}>
+                     <fieldset>
+                         <h2>Informações </h2>
+                        <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="inputEmpresa">Selecionar empresa*</label>
+                               <select  class="form-control" id="idEmpresa"  tabindex="" required value={this.state.id_empresa}
+                       onChange={this.onChangeEmpresa}>
+                           <option value="">Selecionar...</option>
+                           { this.state.empresas.map(empresa =>(
+                                <option value={empresa.id_empresa}>{empresa.nm_empresa}</option>
+                                
+                           ))}
+                       </select>
+                       </div>
+                       <div class="form-group col-md-2">
+                        <label for="inputCNPJ">ID*</label>
+                        <input type="text" class="form-control" id="inputCNPJ"  value={this.state.id_empresa} ref="cnpj"/>
+                        </div> 
+                            
+                            </div>
+                            <div class="form-row">
+                            <div class="form-group col-md-6">
+                            <label for="inputMotorista">Selecionar motorista*</label>
+                               <select  class="form-control" id="motorista"  tabindex="" required value={this.state.id_motorista}
+                       onChange={this.onChangeMotorista}>
+                           <option value="">Selecionar...</option>
+                           { this.state.motoristas.map(motorista =>(
+                                <option value={motorista.id_motorista}>{motorista.nm_motorista}</option>
+                                
+                           ))}
+                       </select>
+                            </div>
+                            </div>
+                            <div class="form-row">
+                            <div class="form-group col-md-6">
+                            <label for="inputVeiculo">Selecionar veiculo*</label>
+                               <select  class="form-control" id="veiculo"  tabindex="" required value={this.state.id_veiculo}
+                       onChange={this.onChangeVeiculo}>
+                           <option value="">Selecionar...</option>
+                           { this.state.veiculos.map(veiculo =>(
+                                <option value={veiculo.id_veiculo}>{veiculo.ds_placa}</option>
+                                
+                           ))}
+                       </select>
+                            </div>
+                            </div>
+                            <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="inputEndOrigem">Endereço de Origem*</label>
+                                <input type="text" class="form-control" id="inputEndOrigem" placeholder="Ex: Rua Aleatoria, nº 0" required value={this.state.end_origem}
+                                    onChange={this.onChangeOrigem}/>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label for="inputCidadeOrigem">Cidade Origem*</label>
+                                <input type="text" class="form-control" id="inputCidadeOrigem" placeholder="Ex: Santos" required value={this.state.cidade_origem}
+                                    onChange={this.onChangeCidadeOrigem}/>
+                            </div>
+                            </div>
+                            <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="inputDtSaida">Data de saída(previsão)*</label>
+                                <input type="datetime-local" class="form-control" id="inputDtSaida" placeholder="Ex: 04102019" required value={this.state.data_saida}
+                                    onChange={this.onChangeDataSaida}/>
+                            </div>
+                            </div>
+                            <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="inputEndDestino">Endereço de Destino*</label>
+                                <input type="tel" class="form-control" id="inputEndDestino" placeholder="Ex: Rua Aleatória2, Nº 0" value={this.state.end_destino}
+                                    onChange={this.onChangeDestino}/>
+                            </div>
+                             <div class="form-group col-md-2">
+                                <label for="inputCidadeDestino">Cidade de Destino*</label>
+                                <input type="tel" class="form-control" id="inputCidadeDestino" placeholder="Ex: São Vicente" required value={this.state.cidade_destino}
+                                    onChange={this.onChangeCidadeDestino}/>
+                            </div>
+                            </div>
+                            <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="inputDtChegada">Data de chegada*</label>
+                                <input type="datetime-local" class="form-control" id="inputDtChegada" placeholder="Ex: 04102019" required value={this.state.data_chegada}
+                                    onChange={this.onChangeDtChegada}/>
+                            </div>
+                            </div>
+                            <div class="form-row">
+                            <div class="form-group col-md-3">
+                                <label for="inputKM">Quilometragem *</label>
+                                <input type="text" class="form-control" id="inputKM" placeholder="Ex: 04102019" required value={this.state.km}
+                                    onChange={this.onChangeKM}/>
+                            </div>
+                        </div>
+                     </fieldset>
+                   
+                    <button type="submit" class="btn btn-primary" id="salvar">Salvar</button>
+                    <button type="submit" class="btn btn-primary" id="cancelar">Cancelar</button>
+                </form>
+                </main>
+                </div>
+          )
         return (
             <div>
-                <nav class="navbar navbar-expand-md navbar-dark bg-menu" id="menuu">
-                <a class="navbar-brand" href="#">
-                    <img src={Logo}/>
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarCollapse">
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="index.html">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/empresas">Empresas<span class="sr-only">(atual)</span></a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="veiculos.html" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Veículos</a>
-                            <div class="dropdown-menu" aria-labelledby="dropdown01">
-                                <a class="dropdown-item" href="veiculos.html">Todos</a>
-                                <a class="dropdown-item" href="veiculos-alugados.html">Alugados</a>
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="motoristas.html">Motoristas</a>
-                        </li>
-                        <li class="nav-item dropdown active">
-                            <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Viagens</a>
-                            <div class="dropdown-menu" aria-labelledby="dropdown03">
-                                <a class="dropdown-item" href="/viagens">Em andamento</a>
-                                <a class="dropdown-item" href="viagens-concluidas.html">Concluídas</a>
-   
-                            </div>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Despesas</a>
-                            <div class="dropdown-menu" aria-labelledby="dropdown04">
-                                <a class="dropdown-item" href="multas.html">Multas</a>
-                                <a class="dropdown-item" href="manutencoes.html">Manutenções</a>
-                                <a class="dropdown-item" href="estoque.html">Estoque</a>   
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Relatórios</a>
-                        </li>
-                    </ul>
-                   
-                    <ul class="usuario navbar-nav nav-link navbar-nav" id="usuario">
-                        <li class="download">
-                            <a href="#"><img src={Download}/></a>
-                        </li>
-                        <li class="nav-item notificacao dropdown-notifications">
-                            <a href="#" class="dropdown-toggle">
-                                <img src={Notificacao}/>
-                            </a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a href="#" class="dropdown-toggle usuario-nome" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">  
-                                <img src={Usuario}/> 
-                                Usuário
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="dropdown01">
-                                <a class="dropdown-item" href="#">Item 1</a>
-                                <a class="dropdown-item" href="#">Item 2</a>
-                                <a class="dropdown-item" href="#">Item 3</a>   
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-          </nav>
 
-            <main role="main" class="bg-light">
-            <div class="quadrado">Quadrado</div>
-            <h1> Adicionar viagem </h1>
-            
-         <form id="formulario" onSubmit={this.onSubmit}>
-             <fieldset>
-                 <h2>Informações </h2>
-                <div class="form-row">
-                <div class="form-group col-md-4">
-                    <label for="inputEmpresa">Selecionar empresa*</label>
-                       <select  class="form-control" id="idEmpresa"  tabindex="" required value={this.state.id_empresa}
-               onChange={this.onChangeEmpresa}>
-                   <option value="">Selecionar...</option>
-                   { this.state.empresas.map(empresa =>(
-                        <option value={empresa.id_empresa}>{empresa.nm_empresa}</option>
-                        
-                   ))}
-               </select>
-               </div>
-               <div class="form-group col-md-2">
-                <label for="inputCNPJ">ID*</label>
-                <input type="text" class="form-control" id="inputCNPJ"  value={this.state.id_empresa} ref="cnpj"/>
-                </div> 
-                    
-                    </div>
-                    <div class="form-row">
-                    <div class="form-group col-md-6">
-                    <label for="inputMotorista">Selecionar motorista*</label>
-                       <select  class="form-control" id="motorista"  tabindex="" required value={this.state.id_motorista}
-               onChange={this.onChangeMotorista}>
-                   <option value="">Selecionar...</option>
-                   { this.state.motoristas.map(motorista =>(
-                        <option value={motorista.id_motorista}>{motorista.nm_motorista}</option>
-                        
-                   ))}
-               </select>
-                    </div>
-                    </div>
-                    <div class="form-row">
-                    <div class="form-group col-md-6">
-                    <label for="inputVeiculo">Selecionar veiculo*</label>
-                       <select  class="form-control" id="veiculo"  tabindex="" required value={this.state.id_veiculo}
-               onChange={this.onChangeVeiculo}>
-                   <option value="">Selecionar...</option>
-                   { this.state.veiculos.map(veiculo =>(
-                        <option value={veiculo.id_veiculo}>{veiculo.ds_placa}</option>
-                        
-                   ))}
-               </select>
-                    </div>
-                    </div>
-                    <div class="form-row">
-                    <div class="form-group col-md-4">
-                        <label for="inputEndOrigem">Endereço de Origem*</label>
-                        <input type="text" class="form-control" id="inputEndOrigem" placeholder="Ex: Rua Aleatoria, nº 0" required value={this.state.end_origem}
-                            onChange={this.onChangeOrigem}/>
-                    </div>
-                    <div class="form-group col-md-2">
-                        <label for="inputCidadeOrigem">Cidade Origem*</label>
-                        <input type="text" class="form-control" id="inputCidadeOrigem" placeholder="Ex: Santos" required value={this.state.cidade_origem}
-                            onChange={this.onChangeCidadeOrigem}/>
-                    </div>
-                    </div>
-                    <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="inputDtSaida">Data de saída(previsão)*</label>
-                        <input type="datetime-local" class="form-control" id="inputDtSaida" placeholder="Ex: 04102019" required value={this.state.data_saida}
-                            onChange={this.onChangeDataSaida}/>
-                    </div>
-                    </div>
-                    <div class="form-row">
-                    <div class="form-group col-md-4">
-                        <label for="inputEndDestino">Endereço de Destino*</label>
-                        <input type="tel" class="form-control" id="inputEndDestino" placeholder="Ex: Rua Aleatória2, Nº 0" value={this.state.end_destino}
-                            onChange={this.onChangeDestino}/>
-                    </div>
-                     <div class="form-group col-md-2">
-                        <label for="inputCidadeDestino">Cidade de Destino*</label>
-                        <input type="tel" class="form-control" id="inputCidadeDestino" placeholder="Ex: São Vicente" required value={this.state.cidade_destino}
-                            onChange={this.onChangeCidadeDestino}/>
-                    </div>
-                    </div>
-                    <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="inputDtChegada">Data de chegada*</label>
-                        <input type="datetime-local" class="form-control" id="inputDtChegada" placeholder="Ex: 04102019" required value={this.state.data_chegada}
-                            onChange={this.onChangeDtChegada}/>
-                    </div>
-                    </div>
-                    <div class="form-row">
-                    <div class="form-group col-md-3">
-                        <label for="inputKM">Quilometragem *</label>
-                        <input type="text" class="form-control" id="inputKM" placeholder="Ex: 04102019" required value={this.state.km}
-                            onChange={this.onChangeKM}/>
-                    </div>
-                </div>
-             </fieldset>
-           
-            <button type="submit" class="btn btn-primary" id="salvar">Salvar</button>
-            <button type="submit" class="btn btn-primary" id="cancelar">Cancelar</button>
-        </form>
-        </main>
-        </div>
+            {localStorage.usertoken==null ? this.props.history.push(`./login`)  : userLink}
+            </div>
         )
     }
 }

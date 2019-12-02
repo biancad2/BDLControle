@@ -39,7 +39,7 @@ class TableRow extends Component {
 
           <td className="icones">
             <Link to={"./atualizar-veic/"+this.props.obj.id_veiculo} > <button className=" editar"></button></Link>
-            <Link to={`./info-veic/${this.props.obj.id_empresa}`}><button className="info"></button></Link>
+            <Link to={`./info-veic/${this.props.obj.id_veiculo}`}><button className="info"></button></Link>
             <button onClick={this.delete} className=" rem"><span class="sr-only">remover </span></button>
             <button className="desativar" onClick={this.onChangeStatus} ></button>
       </td>

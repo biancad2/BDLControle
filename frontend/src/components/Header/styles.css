@@ -39,18 +39,21 @@ body {
   
   
   /* Usuário */
-  .notificacao, .download{
+  .notificacao{
       margin-right: 5%;
   }
   .notificacao li > a, .usuario li > a{
       color: #fff;
       text-decoration: none;
   }
+
   .notificacao img{
       width: 45% !important;
       height: auto !important;
   }
-  
+  .download{
+      margin-right: 15%;
+  }
   .usuario{
       text-align: right;
   }

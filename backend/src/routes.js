@@ -128,6 +128,15 @@ routes.get("/veiculos", function(req, res){
     })
 });
 
+routes.get("/veiculos-locacao", function(req, res){
+    connection.query('select * from tb_veiculo where ds_proprietario = "locacao"', function(err, rows, fields){
+        if (!err)
+            res.json(rows);
+        else
+            res.json(err);
+    })
+});
+
 routes.get("/veiculos/:id", function(req, res){
     connection.query('select * from tb_veiculo where id_veiculo = ?', [req.params.id], function(err, rows, fields){
         if (!err)

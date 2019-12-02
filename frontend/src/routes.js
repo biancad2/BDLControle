@@ -22,6 +22,10 @@ import CreateMulta from './pages/despesas/multas/incluir';
 import Manutencoes from './pages/despesas/manutencoes';
 import EditManutencao from './pages/despesas/manutencoes/alterar';
 import CreateManutencao from './pages/despesas/manutencoes/incluir';
+import Estoques from './pages/despesas/estoque';
+import EditEstoque from './pages/despesas/estoque/alterar';
+import CreateEstoque from './pages/despesas/estoque/incluir';
+import Profile from './components/Profile';
 import Login from './components/Login'
 import Register from './components/Register'
 
@@ -36,6 +40,7 @@ export default function Routes() {
            <Route exact path="/register" component={Register} />
             <Route exact path="/login" component={Login} />
             <Route path="/main" exact component={Main}/>
+            <Route exact path="/perfil"  component={Profile}/>
            <Route path="/empresas"  component={Empresas}/>
            <Route path="/incluir-empresa"  component={Create}/>
            <Route path="/alterar-empresa/:id"  component={Edit}/>
@@ -55,6 +60,9 @@ export default function Routes() {
            <Route path="/manutencoes"  component={Manutencoes}/>
            <Route path="/atualizar-manutencao/:id" component={EditManutencao}/>
            <Route path="/incluir-manutencao/" component={CreateManutencao}/>
+           <Route path="/estoques"  component={Estoques}/>
+           <Route path="/atualizar-estoque/:id" component={EditEstoque}/>
+           <Route path="/incluir-estoque/" component={CreateEstoque}/>
         </BrowserRouter>
     );
 }

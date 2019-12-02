@@ -29,7 +29,7 @@ create table tb_empresa
     sg_estado char(2) not null,
     num_endereco varchar(255) not null,
     ds_complemento varchar(255),
-    cd_CEP int not null, 
+    cd_CEP varchar(10), 
     nm_cidade varchar(255) not null,
     nr_telefone varchar(11) not null,
     nr_celular varchar(11) not null,
@@ -37,6 +37,8 @@ create table tb_empresa
     dt_validadecontrato date,
     ds_status varchar(20) not null
 );
+
+
 select * from tb_frota;
 select * from tb_motorista;
 insert tb_empresa(nm_empresa, cd_cnpj, ds_email, ds_endereco, sg_estado, num_endereco, nm_cidade, nr_telefone, nm_responsavel, cd_CEP, nr_celular, qt_veiculos) values ("NET", 11133434, "adenilson@net.com", "Av. Conselheiro Nébias", "SP", 555, "Santos", "139816544", "Adenilson", 11088310, "112231312", 100);
@@ -137,20 +139,6 @@ create table teste(
     business_gst_number int
     );
     
-create table tb_produto
-(
-    id_produto int not null auto_increment primary key,
-    nome_produto varchar(255) not null,
-    descricao_produto varchar(255) not null,
-    valor_produto int not null,
-    categoria varchar(255) not null,
-    qt_total int not null,
-    qt_produto int not null,
-    id_empresa int not null
-);
-
-
-
 create table tb_abastecimento
 (
     id_abastecimento int not null auto_increment primary key,
@@ -203,7 +191,6 @@ create table tb_produto
     nm_produto varchar(25),
     ds_produto varchar(255)
 );
-
 
 create table tb_frota
 (
@@ -268,9 +255,6 @@ add constraint fk_manutveic foreign key (id_veiculo) references tb_veiculo(id_ve
 
 alter table tb_abastecimento 
 add constraint fk_abastveic foreign key (id_veiculo) references tb_veiculo(id_veiculo);
-
-alter table tb_produto
-add constraint fk_prodempresa foreign key (id_empresa) references tb_empresa(id_empresa);
 
 alter table tb_estacionamento 
 add constraint fk_estacveic foreign key (id_veiculo) references tb_veiculo(id_veiculo);

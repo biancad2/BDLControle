@@ -41,7 +41,7 @@ main{
 
 
 /* Usuário */
-.notificacao, .download{
+.notificacao, .download, .usuario{
     margin-right: 5%;
 }
 .notificacao li > a, .usuario li > a{
@@ -64,6 +64,7 @@ main{
 }
 .navbar .usuario{
     float: right;
+    margin-right: 10%;
 }
 
 
