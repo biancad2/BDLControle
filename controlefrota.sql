@@ -37,7 +37,7 @@ create table tb_empresa
     dt_validadecontrato date,
     ds_status varchar(20) not null
 );
-
+select * from tb_frota;
 select * from tb_motorista;
 insert tb_empresa(nm_empresa, cd_cnpj, ds_email, ds_endereco, sg_estado, num_endereco, nm_cidade, nr_telefone, nm_responsavel, cd_CEP, nr_celular, qt_veiculos) values ("NET", 11133434, "adenilson@net.com", "Av. Conselheiro Nébias", "SP", 555, "Santos", "139816544", "Adenilson", 11088310, "112231312", 100);
 
@@ -89,7 +89,6 @@ create table tb_locacao
     id_veiculo int not null
 );
 
-
 create table tb_motorista
 (
     id_motorista int not null auto_increment primary key,
@@ -125,8 +124,11 @@ create table tb_viagem
     km int not null,
     id_veiculo int,
     id_empresa int,
-    id_motorista int
+    id_motorista int,
+    dt_iniciada datetime,
+    dt_finalizada datetime
 );
+
 
 create table teste(
 	id int not null auto_increment primary key,
@@ -181,8 +183,10 @@ create table tb_manutencao
     causa varchar(255) not null,
     valor_manut int not null,
     km int not null,
-    id_veiculo int
+    id_veiculo int,
+    dt_manutencao datetime
 );
+
 
 
 
@@ -204,7 +208,7 @@ create table tb_produto_manutencao
 create table tb_frota
 (
     id_frota int not null auto_increment primary key,
-    desc_frota varchar(255) not null
+    ds_frota varchar(255) not null
     
 );
 
@@ -226,6 +230,17 @@ create table tb_seguro
     id_veiculo int not null
 );
 
+create table tb_multa
+(
+	id_multa int not null auto_increment primary key,
+    dt_infracao datetime not null,
+    ds_infracao varchar(255),
+    id_veiculo int not null,
+    ds_gravidade varchar(255) not null,
+    qt_preco double,
+    id_motorista int,
+    ds_status varchar(20)
+);
 
 alter table tb_seguro 
 add constraint fk_seguveicu foreign key (id_veiculo) references tb_veiculo(id_veiculo);
@@ -294,6 +309,11 @@ add constraint fk_empresa foreign key (id_empresa) references tb_empresa(id_empr
 alter table tb_veic
 add constraint fk_frota foreign key (id_frota) references tb_frota(id_frota);
 
+alter table tb_multa
+add constraint fk_veiculomulta foreign key (id_veiculo) references tb_veiculo(id_veiculo);
+
+alter table tb_multa
+add constraint fk_motoristamulta foreign key (id_motorista) references tb_motorista(id_motorista);
 #DELIMITER $$
 #create trigger tr_data_vencimento after insert 
 #	on tb_empresa
@@ -304,13 +324,14 @@ add constraint fk_frota foreign key (id_frota) references tb_frota(id_frota);
 #		insert into tb_empresa(dt_validadecontrato) values (@dt_vc);
  #   end$$
 #DELIMITER ;
-
-insert tb_frota(desc_frota) values ("Caminhão");
-insert tb_frota(desc_frota) values ("Caminhonete");
-insert tb_frota(desc_frota) values ("Carro");
-insert tb_frota(desc_frota) values ("Moto");
-insert tb_frota(desc_frota) values ("Ônibus");
-insert tb_frota(desc_frota) values ("Van");
+select * from tb_veiculo;
+select * from tb_viagem;
+insert tb_frota(ds_frota) values ("Caminhão");
+insert tb_frota(ds_frota) values ("Caminhonete");
+insert tb_frota(ds_frota) values ("Carro");
+insert tb_frota(ds_frota) values ("Moto");
+insert tb_frota(ds_frota) values ("Ônibus");
+insert tb_frota(ds_frota) values ("Van");
 
 insert tb_marca(marca) values ("BMW");
 insert tb_modelo(id_marca,desc_modelo) values (1, "Um modelo ai 2009");

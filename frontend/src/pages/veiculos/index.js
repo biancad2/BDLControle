@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import api from '../../services/api'
 import TableRow from './tableRow';
-import './empresas.css';
+import './veiculos.css';
 
 
 import Logo from '../../assets/logobranco2.png';
@@ -14,98 +14,152 @@ class Veiculos extends Component {
     
     constructor(props) {
         super(props);
-        this.state = {veiculos: []};
+        this.state = {veiculos: [], categorias:[], items: []};
     }
 
      componentDidMount() {
         api.get('/veiculos/')
         .then(response => {
-          this.setState({ veiculos: response.data });
+          this.setState({ veiculos: response.data, items: response.data });
         })
         .catch(function (error) {
           console.log(error);
         })
+        api.get('/categorias/')
+        .then(response => {
+          this.setState({ categorias: response.data });
+
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
-    
+    filterList=(event)=>{
+        let items = this.state.veiculos;
+        items = items.filter((item)=>{
+            return item.id_frota.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1  || item.ds_status.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1  
+        });
+        this.setState({items: items});
+        console.log(items);
+    }
     tabRow(){
-        return this.state.veiculos.map(function(object, i){
-            return <TableRow obj={object} key={i} />;
+        return this.state.items.map(function(item, i){
+            return <TableRow obj={item} key={i} />;
         });
       }
   render() {
     return (
         <div >
-        <nav class="navbar navbar-expand-md navbar-dark bg-menu" id="menuu">
-                <a class="navbar-brand" href="#">
+        <nav className="navbar navbar-expand-md navbar-dark bg-menu" id="menuu">
+                <Link className="navbar-brand" to="#">
                     <img src={Logo}/>
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+                </Link>
+                <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span className="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarCollapse">
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="index.html">Home</a>
+                <div className="collapse navbar-collapse" id="navbarCollapse">
+                    <ul className="navbar-nav mr-auto">
+                        <li className="nav-item">
+                            <Link className="nav-link" to="/main">Home</Link>
                         </li>
-                        <li class="nav-item active">
-                            <a class="nav-link" href="empresas.html">Empresas<span class="sr-only">(atual)</span></a>
+                        <li className="nav-item ">
+                            <Link className="nav-link" to="/empresas">Empresas</Link>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="veiculos.html" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Veículos</a>
-                            <div class="dropdown-menu" aria-labelledby="dropdown01">
-                                <a class="dropdown-item" href="veiculos.html">Todos</a>
-                                <a class="dropdown-item" href="veiculos-alugados.html">Alugados</a>
+                        <li className="nav-item dropdown active">
+                            <Link className="nav-link dropdown-toggle" to="/veiculos" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Veículos</Link>
+                            <div className="dropdown-menu" aria-labelledby="dropdown01">
+                                <Link className="dropdown-item" to="/veiculs">Todos <span className="sr-only">(atual)</span></Link>
+                                <Link className="dropdown-item" to="/veiculos-alugados">Alugados</Link>
                             </div>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="motoristas.html">Motoristas</a>
+                        <li className="nav-item">
+                            <Link className="nav-link" to="/motoristas">Motoristas</Link>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Viagens</a>
-                            <div class="dropdown-menu" aria-labelledby="dropdown03">
-                                <a class="dropdown-item" href="viagens-andamento.html">Em andamento</a>
-                                <a class="dropdown-item" href="viagens-concluidas.html">Concluídas</a>
+                        <li className="nav-item dropdown">
+                            <Link className="nav-link dropdown-toggle" to="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Viagens</Link>
+                            <div className="dropdown-menu" aria-labelledby="dropdown03">
+                                <Link className="dropdown-item" to="/viagens">Em andamento</Link>
+                                <Link className="dropdown-item" to="viagens-concluidas.html">Concluídas</Link>
    
                             </div>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Despesas</a>
-                            <div class="dropdown-menu" aria-labelledby="dropdown04">
-                                <a class="dropdown-item" href="multas.html">Multas</a>
-                                <a class="dropdown-item" href="manutencoes.html">Manutenções</a>
-                                <a class="dropdown-item" href="estoque.html">Estoque</a>   
+                        <li className="nav-item dropdown">
+                            <Link className="nav-link dropdown-toggle" to="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Despesas</Link>
+                            <div className="dropdown-menu" aria-labelledby="dropdown04">
+                                <Link className="dropdown-item" to="multas.html">Multas</Link>
+                                <Link className="dropdown-item" to="manutencoes.html">Manutenções</Link>
+                                <Link className="dropdown-item" to="estoque.html">Estoque</Link>   
                             </div>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Relatórios</a>
+                        <li className="nav-item">
+                            <Link className="nav-link" to="#">Relatórios</Link>
                         </li>
                     </ul>
                    
-                    <ul class="usuario navbar-nav nav-link navbar-nav" id="usuario">
-                        <li class="download">
-                            <a href="#"><img src={Download}/></a>
+                    <ul className="usuario navbar-nav nav-link navbar-nav" id="usuario">
+                        <li className="download">
+                            <Link to="#"><img src={Download}/></Link>
                         </li>
-                        <li class="nav-item notificacao dropdown-notifications">
-                            <a href="#" class="dropdown-toggle">
+                        <li className="nav-item notificacao dropdown-notifications">
+                            <Link to="#" className="dropdown-toggle">
                                 <img src={Notificacao}/>
-                            </a>
+                            </Link>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a href="#" class="dropdown-toggle usuario-nome" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">  
+                        <li className="nav-item dropdown">
+                            <Link to="#" className="dropdown-toggle usuario-nome" to="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">  
                                 <img src={Usuario}/> 
                                 Usuário
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="dropdown01">
-                                <a class="dropdown-item" href="#">Item 1</a>
-                                <a class="dropdown-item" href="#">Item 2</a>
-                                <a class="dropdown-item" href="#">Item 3</a>   
+                            </Link>
+                            <div className="dropdown-menu" aria-labelledby="dropdown01">
+                                <Link className="dropdown-item" to="#">Item 1</Link>
+                                <Link className="dropdown-item" to="#">Item 2</Link>
+                                <Link className="dropdown-item" to="#">Item 3</Link>   
                             </div>
                         </li>
                     </ul>
                 </div>
           </nav>
-          <table className="table table-striped" style={{ marginTop: 20 }}>
-                    <thead>
+          <div className="quadrado">Quadrado</div>
+            <h1> Veículos </h1>
+
+            <form method="get" action="" className="centro row">
+                 <h2 className="filtrar">Filtrar</h2>
+               
+                <div className="formulario selecionar centro col-md-2">
+                    <label for="disponibilidade"> Situação</label>
+                    <select name="status" id="status"  tabindex="7" onChange={this.filterList}>
+                        <option value=""> Todos </option>
+                        <option value="Disponível"> Disponível </option>
+                        <option value="Viagem"> Em viagem </option>
+                        <option value="Encerrada"> Indisponível </option>
+                    </select>
+                </div>
+
+                <div className="formulario selecionar centro col-md-2">
+                    <label for="categoria"> Categoria</label>
+                    <select name="categoria" id="categoria"  tabindex="7" onChange={this.filterList}>
+                    <option value="">Selecionar...</option>
+                            { this.state.categorias.map(cat =>(
+                        <option value={cat.id_frota}>{cat.ds_frota}</option>
+                        ))}
+                    </select>
+                </div>
+
+                <div className="formulario busca col-md-2">
+                    <label for="pesquisa"> Pesquisar	</label>
+                    <input type="text" name="pesquisa" id="pesquisar-veic" size="9" minlength="6" maxlength="7" placeholder="Placa/Empresa" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Você pode pesquisar o veículo pela placa ou empresa associada." onChange={this.filterList}/>
+                    <span id="box_icone_busca">
+                        <i id="icone_busca" className="fa fa-search"></i>
+                    </span> 
+                </div>
+            </form>
+            <div className="adc-rem">
+                Adicionar veículo: 
+               <Link to={'./incluir-veic'}> <button className="adc"></button></Link>
+            </div>
+          <div className="table-responsive">
+          <table className="table  table-sm">
+                    <thead className="thead-dark">
                         <tr>
                             <th>ID</th>
                             <th>Placa</th>
@@ -113,13 +167,13 @@ class Veiculos extends Component {
                             <th>Ano</th>
                             <th>Cilindrada</th>
                             <th>Cor</th>
-                            <th colSpan="2">Ações</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>{this.tabRow() }
                     </tbody>
                 </table> 
-
+            </div>
           <Link to='./incluir-veic' className="nav-link">incluir</Link>
           
         </div>

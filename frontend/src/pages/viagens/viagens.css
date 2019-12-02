@@ -61,8 +61,13 @@ select{
     -moz-appearance: none;
     appearance: none;
 }
-
-
+.label-pesquisa{
+    width: 100%;
+    text-align: center !important;
+}
+.iniciar, .encerrar{
+    margin-right: 6%;
+}
 .selecionar{
     overflow:hidden; 
 }
@@ -82,6 +87,11 @@ select{
 label{
     width: 100%;
     text-align: center;
+}
+.adc:hover{
+    background-color: #0d6b0c;
+    text-decoration: none;
+    transition: 0.5s;
 }
 
 /* BUSCA */

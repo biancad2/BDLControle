@@ -40,6 +40,14 @@ routes.get("/empresas", function(req, res){
     })
 });
 
+routes.get("/categorias", function(req, res){
+    connection.query('select * from tb_frota', function(err, rows, fields){
+        if (!err)
+            res.json(rows);
+        else
+            res.json(err);
+    })
+});
 routes.get("/empresas/:id", function(req, res){
     connection.query('select * from tb_empresa where id_empresa = ?', [req.params.id], function(err, rows, fields){
         if (!err)
@@ -95,8 +103,16 @@ routes.get("/motoristas-empresa/:id", function(req, res){
             res.json(err);
     })
 });
-routes.get("/veiculos-empresa/:id/:cat", function(req, res){
-    connection.query('select * from tb_veiculo where id_empresa = ' +  req.params.id + ' and id_frota = ' + req.params.cat, function(err, rows, fields){
+//routes.get("/veiculos-empresa/:id/:cat", function(req, res){
+  //  connection.query('select * from tb_veiculo where id_empresa = ' +  req.params.id + ' and id_frota = ' + req.params.cat, function(err, rows, fields){
+    //    if (!err)
+      //      res.json(rows);
+        //else
+          //  res.json(err);
+    //})
+//});
+routes.get("/veiculos-empresa/:id", function(req, res){
+    connection.query('select * from tb_veiculo where id_empresa = ?', [req.params.id], function(err, rows, fields){
         if (!err)
             res.json(rows);
         else
@@ -141,7 +157,7 @@ routes.delete("/veiculos/:id", function(req, res){
 });
 
 routes.put("/veiculos/:id", function(req, res){
-    connection.query('update tb_veic set ? where id = ?', [req.body, req.params.id], function(err, rows, fields){
+    connection.query('update tb_veiculo set ? where id_veiculo = ?', [req.body, req.params.id], function(err, rows, fields){
         if (!err)
             res.json(rows);
         else
@@ -235,6 +251,100 @@ routes.delete("/viagens/:id", function(req, res){
 
 routes.put("/viagens/:id", function(req, res){
     connection.query('update tb_viagem set ? where id_viagem = ?', [req.body, req.params.id], function(err, rows, fields){
+        if (!err)
+            res.json(rows);
+        else
+            res.json(err);
+    })
+});
+
+
+
+routes.get("/multas", function(req, res){
+    connection.query('select * from tb_multa', function(err, rows, fields){
+        if (!err)
+            res.json(rows);
+        else
+            res.json(err);
+    })
+});
+
+routes.get("/multas/:id", function(req, res){
+    connection.query('select * from tb_multa where id_multa = ?', [req.params.id], function(err, rows, fields){
+        if (!err)
+            res.json(rows);
+        else
+            res.json(err);        
+    })
+});
+
+routes.post("/multas", function(req, res){
+    connection.query('insert tb_multa set ?', req.body, function(err, rows, fields){
+        if (!err)
+            res.json(rows);
+        else
+            res.json(err);
+    })
+
+});
+
+routes.delete("/multas/:id", function(req, res){
+    connection.query('delete from tb_multa where id_multa = ?', [req.params.id], function(err, rows, fields){
+        if(!err)
+            res.json(rows);
+        else
+            res.json(err);
+    })
+});
+
+routes.put("/multas/:id", function(req, res){
+    connection.query('update tb_multa set ? where id_multa = ?', [req.body, req.params.id], function(err, rows, fields){
+        if (!err)
+            res.json(rows);
+        else
+            res.json(err);
+    })
+});
+
+routes.get("/manutencoes", function(req, res){
+    connection.query('select * from tb_manutencao', function(err, rows, fields){
+        if (!err)
+            res.json(rows);
+        else
+            res.json(err);
+    })
+});
+
+routes.get("/manutencoes/:id", function(req, res){
+    connection.query('select * from tb_manutencao where id_manutencao = ?', [req.params.id], function(err, rows, fields){
+        if (!err)
+            res.json(rows);
+        else
+            res.json(err);        
+    })
+});
+
+routes.post("/manutencoes", function(req, res){
+    connection.query('insert tb_manutencao set ?', req.body, function(err, rows, fields){
+        if (!err)
+            res.json(rows);
+        else
+            res.json(err);
+    })
+
+});
+
+routes.delete("/manutencoes/:id", function(req, res){
+    connection.query('delete from tb_manutencao where id_manutencao = ?', [req.params.id], function(err, rows, fields){
+        if(!err)
+            res.json(rows);
+        else
+            res.json(err);
+    })
+});
+
+routes.put("/manutencoes/:id", function(req, res){
+    connection.query('update tb_manutencao set ? where id_manutencao = ?', [req.body, req.params.id], function(err, rows, fields){
         if (!err)
             res.json(rows);
         else

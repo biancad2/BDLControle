@@ -104,9 +104,10 @@ label{
 
 
 
-h2{
+.titulo-form{
     width: 100%;
-    text-align: center;
+    text-align: left;
+    font-size: 1.3rem
 }
 
 .filtrar{
@@ -152,14 +153,13 @@ td > img{
     width: 100%;
     font-size: 0.8rem;
 }
-.adc, .rem, .edit{
+.adc, .rem, .editar, .desativar, .info{
     background-repeat: no-repeat;
-    background-size:cover;
     height:1.6rem;
     width: 1.6rem;
     border-color: transparent;
     border-radius:50%; 
-   
+    margin-right: 5%;
 }
 .adc {
     background-image: url(../../assets/adc-branco.png);
@@ -169,16 +169,33 @@ td > img{
 }
 
 .rem{
-    background-image: url(../../assets/remover.png);
+    background-image: url(../../assets/desativar.png);
     background-color: #fd0505;
     background-size: cover;
     background-position:2% 0; 
 }
-
-.edit{
-    background-image: url(../../assets/editar.png);
+.desativar{
+    background-image: url(../../assets/desativar.png);
     background-color: #777272;
+    background-size: cover;
+    background-position:center;
+    margin-right:0 ;
+}
+.info{
+    background-image: url(../../assets/info.png);
+    background-color: #fcba03;
+    background-size: 90% 95%;
+    background-position:center;
+}
+.editar{
+    background-image: url(../../assets/editar.png);
+    background-color: #0a20ad;
+    background-size: 90% 90%;
+    background-position:center;
     
+}
+.icones{
+    width: 12%
 }
 
 @media (max-width: 1000px) {

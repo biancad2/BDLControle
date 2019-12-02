@@ -1,42 +1,43 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
-import api from '../../services/api'
+import api from '../../../services/api'
 import TableRow from './tableRow';
-import './viagens.css';
+import './multas.css';
 
 
-import Logo from '../../assets/logobranco2.png';
-import Usuario from '../../assets/usuario-branco.png';
-import Notificacao from '../../assets/icone.png';
-import Download from '../../assets/download.png';
+import Logo from '../../../assets/logobranco2.png';
+import Usuario from '../../../assets/usuario-branco.png';
+import Notificacao from '../../../assets/icone.png';
+import Download from '../../../assets/download.png';
 
-class Viagens extends Component {
+class Multas extends Component {
     
     constructor(props) {
         super(props);
-        this.state = {viagens: [], items:[]};
+        this.state = {multas: [], items:[]};
     }
 
      componentDidMount() {
-        api.get('/viagens/')
+        api.get('/multas/')
         .then(response => {
-          this.setState({ viagens: response.data, items: response.data });
+          this.setState({ multas: response.data, items: response.data });
         })
         .catch(function (error) {
           console.log(error);
         })
     }
     filterList=(event)=>{
-        let items = this.state.viagens;
+        let items = this.state.multas;
+        
         items = items.filter((item)=>{
            
-            return item.end_destino.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1 || item.end_origem.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1 || item.data_saida.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1 || item.data_chegada.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1
+            return item.ds_gravidade.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1 || item.id_multa.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1 || item.id_motorista.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1 || item.id_veiculo.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1 
         });
         this.setState({items: items});
         console.log(items);
     }
     tabRow(){
-        return this.state.viagens.map(function(object, i){
+        return this.state.multas.map(function(object, i){
             return <TableRow obj={object} key={i} />;
         });
       }
@@ -53,35 +54,35 @@ class Viagens extends Component {
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="index.html">Home</a>
+                            <a class="nav-link" href="/main">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/empresas">Empresas<span class="sr-only">(atual)</span></a>
+                            <a class="nav-link" href="/empresas">Empresas</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="veiculos.html" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Veículos</a>
+                            <a class="nav-link dropdown-toggle" href="/veiculos" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Veículos</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown01">
-                                <a class="dropdown-item" href="veiculos.html">Todos</a>
+                                <a class="dropdown-item" href="/veiculos">Todos</a>
                                 <a class="dropdown-item" href="veiculos-alugados.html">Alugados</a>
                             </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="motoristas.html">Motoristas</a>
+                            <a class="nav-link" href="/motoristas">Motoristas</a>
                         </li>
-                        <li class="nav-item dropdown active">
+                        <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Viagens</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown03">
                                 <a class="dropdown-item" href="/viagens">Em andamento</a>
-                                <a class="dropdown-item" href="viagens-concluidas.html">Concluídas</a>
+                                <a class="dropdown-item" href="multas-concluidas.html">Concluídas</a>
    
                             </div>
                         </li>
-                        <li class="nav-item dropdown">
+                        <li class="nav-item dropdown active">
                             <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Despesas</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown04">
-                                <a class="dropdown-item" href="multas.html">Multas</a>
-                                <a class="dropdown-item" href="manutencoes.html">Manutenções</a>
-                                <a class="dropdown-item" href="estoque.html">Estoque</a>   
+                                <a class="dropdown-item" href="/multas">Multas<span class="sr-only">(atual)</span></a>
+                                <a class="dropdown-item" href="/manutencoes">Manutenções</a>
+                                <a class="dropdown-item" href="/estoque">Estoque</a>   
                             </div>
                         </li>
                         <li class="nav-item">
@@ -113,7 +114,7 @@ class Viagens extends Component {
                 </div>
           </nav>
           <div className="quadrado">Quadrado</div>
-          <h1>Viagens</h1>
+          <h1>Multas</h1>
 
                       
           <form method="get" action="" className="centro row">
@@ -121,41 +122,42 @@ class Viagens extends Component {
                
                
 
-                <div className="formulario busca col-md-5">
+                 <div className="form-group col-md-3">
+                    <label for="inputGravidade" className="label-pesquisa"> Gravidade</label>
+                       <select  className="form-control" id="idGravidade" name="inputGravidade"  tabindex="" onChange={this.filterList}>
+                   <option value="">Selecionar...</option>
+                   <option value="leve">Leve</option>
+                   <option value="media">Média</option>
+                   <option value="grave">Grave</option>
+                   <option value="gravissima">Gravíssima</option>
+               </select>
+                    
+                    </div>
+                <div className="col-md-3">
                     <label for="pesquisa" className="label-pesquisa"> Pesquisar	</label> 
-                    <input type="text" name="pesquisa" id="pesquisar" size="9" minlength="6" maxlength="7" placeholder="Endereço" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Você pode pesquisar pelos endereços cadastrados" onChange={this.filterList}/>
-                    <span id="box_icone_busca">
-                        <i id="icone_busca" className="fa fa-search"></i>
-                    </span> 
-                </div>
-                <div className="col-md-5">
-                    <label for="pesquisa" className="label-pesquisa"> Pesquisar	</label> 
-                    <input type="datetime" name="pesquisa" id="pesquisarr" size="9" minlength="6" maxlength="7" placeholder="Endereço" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Você pode pesquisar pelos endereços cadastrados" onChange={this.filterList}/>
+                    <input type="datetime" name="pesquisa" id="pesquisarr" size="9" minlength="6" maxlength="7" placeholder="Pesquisar..." data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Você pode pesquisar pelo ID do motorista, do veículo e da multa" onChange={this.filterList}/>
                     <span id="box_icone_busca">
                         <i id="icone_busca" className="fa fa-search"></i>
                     </span> 
                 </div>
             </form>
             <div className="adc-rem">
-                Adicionar empresa: 
-               <Link to={'./incluir-viagem'}> <button className="adc"></button></Link>
+                Adicionar multa: 
+               <Link to={'./incluir-multa'}> <button className="adc"></button></Link>
             </div>
           <div className="table-responsive">
           <table className="table table-md" >
                     <thead className="thead-dark">
                         <tr>
                             <th>ID</th>
-                            <th>Empresa</th>
-                            <th>Veículo</th>
                             <th>Motorista</th>
-                            <th className="text-truncate">End. Origem</th>
-                            <th>Dt. Saída</th>
-                            <th className="text-truncate">End. Destino</th>
-                            <th>Dt. Chegada</th>
-                            <th>Dt. Iniciada</th>
-                            <th >Dt. Finalizada</th>
-                            <th>Iniciar</th>
-                            <th>Encerrar</th>
+                            <th>Placa</th>
+                            <th>Infração</th>
+                            <th>Descrição</th>
+                            <th>Gravidade</th>
+                            <th>Preço</th>
+                            <th>Status</th>
+                            <th>Pagar</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -174,4 +176,4 @@ class Viagens extends Component {
   }
 }
 
-export default Viagens;
+export default Multas;

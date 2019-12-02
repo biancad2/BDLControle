@@ -148,59 +148,60 @@ export default class Main extends Component{
             <div className="collapse navbar-collapse" id="navbarCollapse">
                 <ul className="navbar-nav mr-auto">
                     <li className="nav-item active">
-                        <a className="nav-link" href="#">Home <span className="sr-only">(atual)</span></a>
+                        <Link className="nav-link" to="#">Home <span className="sr-only">(atual)</span></Link>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link" href="/empresas">Empresas</a>
+                        <Link className="nav-link" to="/empresas">Empresas</Link>
                     </li>
                     <li className="nav-item dropdown">
-                        <a className="nav-link dropdown-toggle" href="veiculos.html" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Veículos</a>
+                        <Link className="nav-link dropdown-toggle" to="veiculos.html" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Veículos</Link>
                         <div className="dropdown-menu" aria-labelledby="dropdown01">
-                            <a className="dropdown-item" href="veiculos.html">Todos</a>
-                            <a className="dropdown-item" href="veiculos-alugados.html">Alugados</a>
+                            <Link className="dropdown-item" to="veiculos.html">Todos</Link>
+                            <Link className="dropdown-item" to="veiculos-alugados.html">Alugados</Link>
                         </div>
                     </li>
                   <li className="nav-item">
-                        <a className="nav-link" href="motoristas.html">Motoristas</a>
+                        <Link className="nav-link" to="motoristas.html">Motoristas</Link>
                     </li>
                     <li className="nav-item dropdown">
-                        <a className="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Viagens</a>
+                        <Link className="nav-link dropdown-toggle" to="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Viagens</Link>
                         <div className="dropdown-menu" aria-labelledby="dropdown03">
-                            <a className="dropdown-item" href="#">Item 1</a>
-                            <a className="dropdown-item" href="#">Item 2</a>
-                            <a className="dropdown-item" href="#">Item 3</a>   
+                            <Link className="dropdown-item" to="#">Item 1</Link>
+                            <Link className="dropdown-item" to="#">Item 2</Link>
+                            <Link className="dropdown-item" to="#">Item 3</Link>   
                         </div>
                     </li>
                     <li className="nav-item dropdown">
-                        <a className="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Despesas</a>
+                        <Link className="nav-link dropdown-toggle" to="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Despesas</Link>
                         <div className="dropdown-menu" aria-labelledby="dropdown04">
-                            <a className="dropdown-item" href="multas.html">Multas</a>
-                            <a className="dropdown-item" href="manutencoes.html">Manutenções</a>
-                            <a className="dropdown-item" href="estoque.html">Estoque</a>   
+                            <Link className="dropdown-item" to="multas.html">Multas</Link>
+                            <Link className="dropdown-item" to="manutencoes.html">Manutenções</Link>
+                            <Link className="dropdown-item" to="estoque.html">Estoque</Link>   
                         </div>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link" href="#">Relatórios</a>
+                        <Link className="nav-link" to="#">Relatórios</Link>
                     </li>
                 </ul>
                 <ul className="usuario navbar-nav nav-link navbar-nav" id="usuario">
                     <li className="download">
-                        <a href="#"><img src={Download}></img></a>
+                        <Link to="#"><img src={Download}></img></Link>
                     </li>
                     <li className="nav-item notificacao dropdown-notifications">
-                        <a href="#" className="dropdown-toggle">
+                        <Link to="#" className="dropdown-toggle">
                             <img src={Notificacao}></img>
-                        </a>
+                        </Link>
                     </li>
                     <li className="nav-item dropdown">
-                        <a href="#" className="dropdown-toggle usuario-nome" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">  
+                        <Link to="#" className="dropdown-toggle usuario-nome" to="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">  
                             <img src={Usuario}></img>
                             {this.state.nm_usuario}
-                        </a>
+                        </Link>
                         <div className="dropdown-menu" aria-labelledby="dropdown04">
-                            <a className="dropdown-item" href="#">Perfil</a>
-                            <a className="dropdown-item" href="" onClick={this.logOut.bind(this)}>Sair</a>
-                            <a className="dropdown-item" href="#">Item 3</a>   
+                          <Link className="dropdown-item" to="/perfil">Perfil</Link>
+                          <Link className="dropdown-item" to="/contato">Entre em contato com o suporte</Link>
+                            <Link className="dropdown-item" to="" onClick={this.logOut.bind(this)}>Sair</Link>
+                            
                         </div>
                     </li>
                 </ul>
@@ -256,26 +257,26 @@ export default class Main extends Component{
                 <div className="row">
                     <div className="col-md-3">
                         <div className="card card-body align-items-center">
-                            <p className="card-text"><a href="#"><img src={Card1} title="em viagem"></img>  Veículos </a></p>
+                            <p className="card-text"><Link to="#"><img src={Card1} title="em viagem"></img>  Veículos </Link></p>
                             <p id="veiculos-viagem" className="numero">{this.state.nrVeiculos}</p>
                         </div>
                     </div>
 
                     <div className="col-md-3">
                         <div className="card card-body align-items-center">
-                            <p className="card-text"><a href="#"><img src={Card2}></img>  Multas </a></p>
+                            <p className="card-text"><Link to="#"><img src={Card2}></img>  Multas </Link></p>
                             <p id="multas" className="numero">R$ 10.500,00</p>
                         </div>
                     </div>
                     <div className="col-md-3 ">
                         <div className="card card-body align-items-center">
-                            <p className="card-text"><a href="#" className="manutencoes"><img src={Card3}></img>Manutenções</a></p>
+                            <p className="card-text"><Link to="#" className="manutencoes"><img src={Card3}></img>Manutenções</Link></p>
                             <p id="manutencoes" className="numero">R$ 5.500,00</p>
                         </div>
                     </div>
                     <div className="col-md-3">
                         <div className="card card-body align-items-center">
-                            <p className="card-text"><a href="#"><img src={Card4}></img>  Despesas </a></p>
+                            <p className="card-text"><Link to="#"><img src={Card4}></img>  Despesas </Link></p>
                             <p id="despesas" className="numero">R$ 16.000,00</p>
 
                         </div>
@@ -299,8 +300,8 @@ export default class Main extends Component{
         <canvas className="my-4 w-100" id="myChart" width="900" height="380"></canvas>
     </main>
     <footer className="container" id="rodape">
-        <p className="float-right"><a href="#">Voltar ao topo</a></p>
-        <p>&copy; Companhia BDL &middot; <a href="#">Privacidade</a> &middot; <a href="#">Termos</a></p>
+        <p className="float-right"><Link to="#">Voltar ao topo</Link></p>
+        <p>&copy; Companhia BDL &middot; <Link to="#">Privacidade</Link> &middot; <Link to="#">Termos</Link></p>
     </footer>
     <script src="../../js/popper.js"></script>
     <script src="../../js/bootstrap.min.js"></script>

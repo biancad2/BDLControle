@@ -16,6 +16,12 @@ import CreateMotorista from './pages/motoristas/incluir';
 import Viagens from './pages/viagens';
 import EditViagem from './pages/viagens/alterar';
 import CreateViagem from './pages/viagens/incluir';
+import Multas from './pages/despesas/multas';
+import EditMulta from './pages/despesas/multas/alterar';
+import CreateMulta from './pages/despesas/multas/incluir';
+import Manutencoes from './pages/despesas/manutencoes';
+import EditManutencao from './pages/despesas/manutencoes/alterar';
+import CreateManutencao from './pages/despesas/manutencoes/incluir';
 import Login from './components/Login'
 import Register from './components/Register'
 
@@ -43,6 +49,12 @@ export default function Routes() {
            <Route path="/viagens"  component={Viagens}/>
            <Route path="/atualizar-viagem/:id" component={EditViagem}/>
            <Route path="/incluir-viagem/" component={CreateViagem}/>
+           <Route path="/multas"  component={Multas}/>
+           <Route path="/atualizar-multa/:id" component={EditMulta}/>
+           <Route path="/incluir-multa/" component={CreateMulta}/>
+           <Route path="/manutencoes"  component={Manutencoes}/>
+           <Route path="/atualizar-manutencao/:id" component={EditManutencao}/>
+           <Route path="/incluir-manutencao/" component={CreateManutencao}/>
         </BrowserRouter>
     );
 }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../services/api';
+import './veiculos.css';
 
 class TableRow extends Component {
 
@@ -35,12 +36,14 @@ class TableRow extends Component {
           <td>
             {this.props.obj.ds_cor}
           </td>
-          <td>
-            <Link to={"./atualizar-veic/"+this.props.obj.id_veiculo} className="btn btn-primary edit"> <span class="sr-only">editar </span></Link>
-          </td>
-          <td>
-            <button onClick={this.delete} className="btn btn-danger rem"><span class="sr-only">remover </span></button>
-          </td>
+
+          <td className="icones">
+            <Link to={"./atualizar-veic/"+this.props.obj.id_veiculo} > <button className=" editar"></button></Link>
+            <Link to={`./info-veic/${this.props.obj.id_empresa}`}><button className="info"></button></Link>
+            <button onClick={this.delete} className=" rem"><span class="sr-only">remover </span></button>
+            <button className="desativar" onClick={this.onChangeStatus} ></button>
+      </td>
+      
         </tr>
     );
   }
