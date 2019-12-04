@@ -23,6 +23,8 @@ export default class EditVeiculos extends Component {
         this.onChangePlaca = this.onChangePlaca.bind(this);
         this.onChangeStatus = this.onChangeStatus.bind(this);
         this.onChangeRenavam = this.onChangeRenavam.bind(this);
+        this.onChangeMarca = this.onChangeMarca.bind(this);
+        this.onChangeModelo = this.onChangeModelo.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
 
 
@@ -42,7 +44,11 @@ export default class EditVeiculos extends Component {
             nm_usuario: '',
             nm_sobrenome: '',
             email: '',
-            errors: {}
+            errors: {},
+            empresas: [], 
+            categorias: [],
+            marcas: [],
+            modelos: [],
         };
     }
 
@@ -73,7 +79,9 @@ export default class EditVeiculos extends Component {
               ds_placa: response.data[0].ds_placa,
               nr_renavam: response.data[0].nr_renavam,
               ds_status: response.data[0].ds_status,
-              id_frota: response.data[0].id_frota
+              id_frota: response.data[0].id_frota,
+              id_marca: response.data[0].id_marca,
+              id_modelo: response.data[0].id_modelo,
             });
                 console.log(response);
                 console.log(response.data.id);
@@ -81,9 +89,61 @@ export default class EditVeiculos extends Component {
           .catch(function (error) {
               console.log(error);
           })
+
+          api.get('/empresas/')
+          .then(response => {
+            this.setState({ empresas: response.data });
+  
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+          api.get('/categorias/')
+          .then(response => {
+            this.setState({ categorias: response.data });
+  
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+          api.get('/marcas/')
+          .then(response => {
+            this.setState({ marcas: response.data });
+  
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+          api.get('/modelos/')
+          .then(response => {
+            this.setState({ modelos: response.data });
+  
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+        
+        
     }
     
-
+    onChangeMarca(e){
+        this.setState({
+            id_marca: e.target.value
+        })
+        api.get('/modelos/'+e.target.value)
+          .then(response => {
+            this.setState({ modelos: response.data });
+            console.log(response)
+          })
+          .catch(function(error){
+            console.log(error);
+          })
+    }
+    onChangeModelo(e){
+        this.setState({
+            id_modelo: e.target.value
+        })
+    }
     onChangeEmpresa(e) {
         this.setState({
             id_empresa: e.target.value
@@ -105,6 +165,17 @@ export default class EditVeiculos extends Component {
         })
     }
     onChangeProprietario(e) {
+        if(e.target.value == "locacao"){
+            document.getElementById("idEmpresa").disabled=true;
+            document.getElementById("idEmpresa2").disabled=true;
+            this.setState({
+                id_empresa: 0
+            })
+            
+        }else{
+            document.getElementById("idEmpresa").disabled=false;
+            document.getElementById("idEmpresa2").disabled=false;
+        }
         this.setState({
             ds_proprietario: e.target.value
         })
@@ -158,7 +229,9 @@ export default class EditVeiculos extends Component {
             qt_peso: this.state.qt_peso,
             ds_placa: this.state.ds_placa,
             nr_renavam: this.state.nr_renavam,
-            ds_status: this.state.ds_status
+            ds_status: this.state.ds_status,
+            id_marca: this.state.id_marca,
+            id_modelo: this.state.id_modelo
         };
        
 
@@ -249,105 +322,153 @@ export default class EditVeiculos extends Component {
   </nav> 
   <main role="main" class="bg-light">
             <div class="quadrado">Quadrado</div>
-            <h1> Adicionar veículo </h1>
+            <h1> Alterar veículo: {this.state.ds_placa}</h1>
             
-         <form id="formulario" onSubmit={this.onSubmit}>
-             <fieldset>
-                 <h2>Informações empresa</h2>
-                 <div class="form-row">
-                     <div class="form-group  col-md-2">
-                        <label for="proprietario"> Proprietário*</label>
-                        <select name="proprietario" class="form-control" id="proprietario"  tabindex="1" required value={this.state.ds_proprietario}
-                            onChange={this.onChangeProprietario}>
-                            <option value=""> Selecione... </option>
-                            <option value="empresa"> Empresa </option>
-                            <option value="locacao">  Locação </option>
-                        </select>
-                     </div>
-                     <div class="form-group col-md-2">
-                        <label for="inputIDEmpresa">Empresa*</label>
-                        <input type="text" class="form-control" id="inputIDEmpresa" value={this.state.id_empresa}
-                            onChange={this.onChangeEmpresa}/>
-                     </div>
+            <form id="formulario" onSubmit={this.onSubmit}>
+         <fieldset>
+             <h2 className="titulo-form">Informações empresa</h2>
+             <div className="form-row">
+                 <div className="form-group  col-md-5">
+                    <label for="proprietario"> Proprietário*</label>
+                    <select name="proprietario" className="form-control" id="proprietario"  tabindex="1" required value={this.state.ds_proprietario}
+                        onChange={this.onChangeProprietario}>
+                        <option value=""> Selecione... </option>
+                        <option value="empresa"> Empresa </option>
+                        <option value="locacao">  Locação </option>
+                    </select>
                  </div>
-             </fieldset>
-             <fieldset>
-                 <h2>Veículo</h2>
-                 <div class="form-row">
-                    <div class="form-group col-md-2">
-                        <label for="categoria"> Categoria*</label>
-                        <select name="categoria" id="categoria" class="form-control" value={this.state.id_frota}
-                            onChange={this.onChangeIdFrota}>
-                            <option value=""> Selecione </option>
-                            <option value="1"> Caminhão </option>
-                            <option value="2">  Caminhonete </option>
-                            <option value="3"> Carro </option>
-                            <option value="4"> Moto </option>
-                            <option value="5"> Ônibus </option>
-                            <option value="6"> Van </option>
-                        </select>
-                    </div>
-                      <div class="form-group ano">
-                        <label for="inputAno">Ano do modelo</label>
-                        <input type="number" class="form-control" id="inputAno" placeholder="Ex.: 2009" value={this.state.qt_ano}
-                            onChange={this.onChangeAno}/>
-                     </div>
-                     <div class="form-group col-md-1">
-                        <label for="inputCor">Cor</label>
-                        <input type="text" class="form-control" id="inputCor" placeholder="Ex.: Prata" value={this.state.ds_cor}
-                            onChange={this.onChangeCor}/>
-                     </div> 
-                    <div class="form-group col-md-1">
-                        <label for="inputCilindrada">Cilindrada</label>
-                        <input type="number" class="form-control" id="inputCilindrada" placeholder="Ex.: 1.0" step="0.1" value={this.state.qt_cilindrada}
-                            onChange={this.onChangeCilindrada}/>
-                     </div> 
-                     <div class="form-group col-md-2">
-                        <label for="inputQuilometragem">Quilometragem</label>
-                        <input type="text" class="form-control" id="inputQuilometragem" name="inputQuilometragem" placeholder="Ex.: 15500" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Quantos KM o veículo percorreu"
-                        value={this.state.qt_quilometragem}
-                        onChange={this.onChangeKM}
-                        />
-                     </div> 
-                      <div class="form-group col-md-2">
-                        <label for="inputQtPassageiros">Qt passageiros</label>
-                        <input type="number" class="form-control" id="inputQtPassageiros" name="inputQtPassageiros" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Insira o limite de passageiros do veículo" placeholder="Ex.: 5"
-                        value={this.state.qt_passageiros}
-                        onChange={this.onChangePassageiros}
-                        />
-                     </div> 
-                    <div class="form-group col-md-2">
-                        <label for="inputQtPassageiros">Peso máximo</label>
-                        <input type="number" class="form-control" id="inputQtPassageiros" name="inputQtPassageiros" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Peso que o veículo suporta" placeholder="Ex.: 45 toneladas"
-                        value={this.state.qt_peso}
-                        onChange={this.onChangePeso}
-                        />
-                     </div> 
-                     <div class="form-group col-md-2">
-                        <label for="inputPlaca">Placa</label>
-                        <input type="text" class="form-control" id="inputPlaca" placeholder="Ex.: AAA-000" value={this.state.ds_placa}
-                            onChange={this.onChangePlaca}/>
-                     </div>
-                     <div class="form-group col-md-2">
-                        <label for="inputRenavam">Renavam</label>
-                        <input type="text" class="form-control" id="inputRenavam" placeholder="Ex.: 0123456789" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Pode ser encontrado no canto esquerdo do CRLV"
-                        value={this.state.nr_renavam}
-                        onChange={this.onChangeRenavam}
-                        /> 
-                     </div>
-                     <div class="form-group col-md-2">
-                        <label for="status"> Status*</label>
-                        <select name="status" id="status" class="form-control" value={this.state.ds_status}
-                            onChange={this.onChangeStatus}>
-                            <option value="ativado"> Disponível </option> 
-                            <option value="desativado"> Indisponível </option> 
-                        </select>
-                    </div>
                  </div>
-             </fieldset>
-            <button type="submit" class="btn btn-primary" id="salvar">Salvar</button>
-            <button type="submit" class="btn btn-primary" id="cancelar">Cancelar</button>
-        </form>
+
+                 <div className="form-row">
+            <div className="form-group col-md-5">
+                <label for="inputEmpresa">Selecionar empresa*</label>
+                   <select  className="form-control" id="idEmpresa"  tabindex="" required value={this.state.id_empresa}
+           onChange={this.onChangeEmpresa}>
+               <option value="">Selecionar...</option>
+               { this.state.empresas.map(empresa =>(
+                    <option value={empresa.id_empresa}>{empresa.nm_empresa}</option>
+                    
+               ))}
+           </select>
+                </div>
+                <div class="form-group col-md-2">
+            <label for="inputCNPJ">ID*</label>
+            <input type="text" class="form-control" id="idEmpresa2"  value={this.state.id_empresa} ref="cnpj"/>
+            </div> 
+                </div>
+         </fieldset>
+         <fieldset>
+             <h2 className="titulo-form">Veículo</h2>
+             <div className="form-row">
+                <div className="form-group col-md-5">
+                    <label for="categoria"> Categoria*</label>
+                    <select name="categoria" id="categoria" className="form-control" value={this.state.id_frota}
+                        onChange={this.onChangeIdFrota}>
+                            <option value="">Selecionar...</option>
+                        { this.state.categorias.map(cat =>(
+                    <option value={cat.id_frota}>{cat.ds_frota}</option>
+                    
+               ))}
+                    </select>
+                </div>
+                </div>
+                <div className="form-row">
+                <div className="form-group col-md-5">
+                    <label for="marca"> Marca*</label>
+                    <select name="marca" id="marca" className="form-control" value={this.state.id_marca}
+                        onChange={this.onChangeMarca}>
+                            <option value="">Selecionar...</option>
+                        { this.state.marcas.map(marca =>(
+                    <option value={marca.id_marca}>{marca.marca}</option>
+                    
+               ))}
+                    </select>
+                </div>
+                <div className="form-group col-md-5">
+                    <label for="modelo"> Modelo*</label>
+                    <select name="modelo" id="modelo" className="form-control" value={this.state.id_modelo}
+                        onChange={this.onChangeModelo}>
+                            <option value="">Selecionar...</option>
+                        { this.state.modelos.map(modelo =>(
+                    <option value={modelo.id_modelo}>{modelo.desc_modelo}</option>
+                    
+               ))}
+                    </select>
+                </div>
+                </div>
+                <div className="form-row">
+                  <div className="form-group col-md-3">
+                    <label for="inputAno">Ano do modelo</label>
+                    <input type="number" className="form-control" id="inputAno" placeholder="Ex.: 2009" value={this.state.qt_ano}
+                        onChange={this.onChangeAno}/>
+                 </div>
+                 <div className="form-group col-md-2">
+                 <label for="inputCilindrada">Cilindrada</label>
+                    <input type="number" className="form-control" id="inputCilindrada" placeholder="Ex.: 1.0" step="0.1" value={this.state.qt_cilindrada}
+                        onChange={this.onChangeCilindrada}/>
+                    
+                 </div> 
+                 </div>
+                 <div className="form-row">
+                <div className="form-group col-md-3">
+                <label for="inputCor">Cor</label>
+                    <input type="text" className="form-control" id="inputCor" placeholder="Ex.: Prata" value={this.state.ds_cor}
+                        onChange={this.onChangeCor}/>
+                 </div> 
+                 <div className="form-group col-md-2">
+                    <label for="inputQuilometragem">Quilometragem</label>
+                    <input type="text" className="form-control" id="inputQuilometragem" name="inputQuilometragem" placeholder="Ex.: 15500" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Quantos KM o veículo percorreu"
+                    value={this.state.qt_quilometragem}
+                    onChange={this.onChangeKM}
+                    />
+                 </div>
+                 </div>
+                 <div className="form-row"> 
+                  <div className="form-group col-md-3">
+                  <label for="inputQtPassageiros">Peso máximo</label>
+                    <input type="number" className="form-control" id="inputQtPassageiros" name="inputQtPassageiros" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Peso que o veículo suporta" placeholder="Ex.: 45 toneladas"
+                    value={this.state.qt_peso}
+                    onChange={this.onChangePeso}
+                    />
+                    
+                 </div> 
+                <div className="form-group col-md-2">
+                <label for="inputQtPassageiros">Qt passageiros</label>
+                    <input type="number" className="form-control" id="inputQtPassageiros" name="inputQtPassageiros" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Insira o limite de passageiros do veículo" placeholder="Ex.: 5"
+                    value={this.state.qt_passageiros}
+                    onChange={this.onChangePassageiros}
+                    />
+                 </div> 
+                 </div>
+                 <div className="form-row"> 
+                 <div className="form-group col-md-3">
+                 <label for="inputRenavam">Renavam</label>
+                    <input type="text" className="form-control" id="inputRenavam" placeholder="Ex.: 0123456789" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Pode ser encontrado no canto esquerdo do CRLV"
+                    value={this.state.nr_renavam}
+                    onChange={this.onChangeRenavam}
+                    /> 
+                 </div>
+                 <div className="form-group col-md-2">
+                    
+                    <label for="inputPlaca">Placa</label>
+                    <input type="text" className="form-control" id="inputPlaca" placeholder="Ex.: AAA-000" value={this.state.ds_placa}
+                        onChange={this.onChangePlaca}/>
+                 </div>
+                 </div>
+                 <div className="form-row"> 
+                 <div className="form-group col-md-5">
+                    <label for="status"> Status*</label>
+                    <select name="status" id="status" className="form-control" value={this.state.ds_status}
+                        onChange={this.onChangeStatus}>
+                        <option value="Ativo"> Disponível </option> 
+                        <option value="Encerrado"> Indisponível </option> 
+                    </select>
+                </div>
+             </div>
+         </fieldset>
+        <button type="submit" className="btn btn-primary" id="salvar">Salvar</button>
+        <button type="submit" className="btn btn-primary" id="cancelar">Cancelar</button>
+    </form>
         </main>
               </div>
           )

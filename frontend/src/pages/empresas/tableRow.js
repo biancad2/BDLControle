@@ -18,6 +18,7 @@ class TableRow extends Component {
     delete() {
         api.delete('/empresas/'+this.props.obj.id_empresa)
             .then(console.log('Deleted'),
+            window.location.reload()
            
            )
             .catch(err => console.log(err))

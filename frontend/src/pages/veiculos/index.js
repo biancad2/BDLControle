@@ -151,8 +151,8 @@ class Veiculos extends Component {
                     <select name="status" id="status"  tabindex="7" onChange={this.filterList}>
                         <option value=""> Todos </option>
                         <option value="Disponível"> Disponível </option>
-                        <option value="Viagem"> Em viagem </option>
-                        <option value="Encerrada"> Indisponível </option>
+                        <option value="Em viagem"> Em viagem </option>
+                        <option value="Desativado"> Desativado </option>
                     </select>
                 </div>
 
@@ -188,6 +188,7 @@ class Veiculos extends Component {
                             <th>Ano</th>
                             <th>Cilindrada</th>
                             <th>Cor</th>
+                            <th>Status</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -195,8 +196,6 @@ class Veiculos extends Component {
                     </tbody>
                 </table> 
             </div>
-          <Link to='./incluir-veic' className="nav-link">incluir</Link>
-          
         </div>
      
       )

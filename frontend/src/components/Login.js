@@ -69,12 +69,15 @@ class Login extends Component {
   .entrada{
       background-color: #060121;
       border: 1px solid #55ACFE;
-      
+      padding-left: 6%
   }
   
   .entrada::placeholder{
       color:  #55ACFE
   }
+  .fas{
+    color:  #55ACFE
+}
 
   p{margin-top: 2%}
   .cadastro{
@@ -86,6 +89,13 @@ class Login extends Component {
     background-color:#1E155C;
     color: #fff 
   }
+  .box_icone_busca2{
+    width: 25px;
+    height: 25px;
+    position: relative;
+    top: -1.9rem;
+    left: -44% ;
+}
 `}}></style>
         <div className="row">
           <div className="col-md-6 mt-5 mx-auto alinhar">
@@ -103,6 +113,9 @@ class Login extends Component {
                   value={this.state.email}
                   onChange={this.onChange}
                 />
+                <span className="box_icone_busca2">
+                  <i class="fas fa-user"></i>
+                </span> 
               </div>
               <div className="form-group">
                 <label htmlFor="password">Senha</label>
@@ -114,6 +127,9 @@ class Login extends Component {
                   value={this.state.password}
                   onChange={this.onChange}
                 />
+                 <span className="box_icone_busca2">
+                 <i class="fas fa-lock"></i>
+                </span> 
               </div>
               
               <button

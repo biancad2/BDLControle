@@ -10,6 +10,7 @@ import InfoEmpresas from './pages/empresas/informacoes';
 import Veiculos from './pages/veiculos';
 import EditVeiculos from './pages/veiculos/alterar';
 import CreateVeiculo from './pages/veiculos/incluir';
+import InfoVeiculos from './pages/veiculos/informacoes';
 import Motoristas from './pages/motoristas';
 import EditMotorista from './pages/motoristas/alterar';
 import CreateMotorista from './pages/motoristas/incluir';
@@ -25,6 +26,9 @@ import CreateManutencao from './pages/despesas/manutencoes/incluir';
 import Estoques from './pages/despesas/estoque';
 import EditEstoque from './pages/despesas/estoque/alterar';
 import CreateEstoque from './pages/despesas/estoque/incluir';
+import Locacoes from './pages/locacao';
+import EditLocacao from './pages/locacao/alterar';
+import CreateLocacao from './pages/locacao/incluir';
 import Profile from './components/Profile';
 import Login from './components/Login'
 import Register from './components/Register'
@@ -37,6 +41,7 @@ export default function Routes() {
         <BrowserRouter>
 
            <Route path="/" component={Header} />
+           <Route exact path="/" component={Login} />
            <Route exact path="/register" component={Register} />
             <Route exact path="/login" component={Login} />
             <Route path="/main" exact component={Main}/>
@@ -48,6 +53,7 @@ export default function Routes() {
            <Route path="/veiculos"  component={Veiculos}/>
            <Route path="/atualizar-veic/:id" component={EditVeiculos}/>
            <Route path="/incluir-veic/" component={CreateVeiculo}/>
+           <Route path="/info-veic/:id"  component={InfoVeiculos}/>
            <Route path="/motoristas"  component={Motoristas}/>
            <Route path="/atualizar-moto/:id" component={EditMotorista}/>
            <Route path="/incluir-moto/" component={CreateMotorista}/>
@@ -63,6 +69,9 @@ export default function Routes() {
            <Route path="/estoques"  component={Estoques}/>
            <Route path="/atualizar-estoque/:id" component={EditEstoque}/>
            <Route path="/incluir-estoque/" component={CreateEstoque}/>
+           <Route path="/veiculos-alugados"  component={Locacoes}/>
+           <Route path="/atualizar-locacao/:id" component={EditLocacao}/>
+           <Route path="/incluir-locacao/" component={CreateLocacao}/>
         </BrowserRouter>
     );
 }

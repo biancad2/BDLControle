@@ -23,7 +23,9 @@ export default class CreateVeiculo extends Component {
         this.onChangePlaca = this.onChangePlaca.bind(this);
         this.onChangeStatus = this.onChangeStatus.bind(this);
         this.onChangeRenavam = this.onChangeRenavam.bind(this);
-
+        this.onChangeMarca = this.onChangeMarca.bind(this);
+        this.onChangeModelo = this.onChangeModelo.bind(this);
+        this.cancelar = this.cancelar.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
 
         this.state = {
@@ -38,9 +40,11 @@ export default class CreateVeiculo extends Component {
             qt_peso: '',
             ds_placa: '',
             nr_renavam: '',
-            ds_status: '',
+            ds_status: 'Disponível',
             empresas: [], 
             categorias: [],
+            marcas: [],
+            modelos: [],
             nm_usuario: '',
             nm_sobrenome: '',
             email: '',
@@ -75,9 +79,35 @@ export default class CreateVeiculo extends Component {
         .catch(function (error) {
           console.log(error);
         });
+        api.get('/marcas/')
+        .then(response => {
+          this.setState({ marcas: response.data });
+
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
-    
+    onChangeMarca(e){
+        this.setState({
+            id_marca: e.target.value
+        })
+        api.get('/modelos/'+e.target.value)
+          .then(response => {
+            this.setState({ modelos: response.data });
+            console.log(response)
+          })
+          .catch(function(error){
+            console.log(error);
+          })
+    }
+    onChangeModelo(e){
+        this.setState({
+            id_modelo: e.target.value
+        })
+    }
     onChangeEmpresa(e) {
+        
         this.setState({
             id_empresa: e.target.value
         })
@@ -98,6 +128,17 @@ export default class CreateVeiculo extends Component {
         })
     }
     onChangeProprietario(e) {
+        if(e.target.value == "locacao"){
+            document.getElementById("idEmpresa").disabled=true;
+            document.getElementById("idEmpresa2").disabled=true;
+            this.setState({
+                id_empresa: 1
+            })
+            
+        }else{
+            document.getElementById("idEmpresa").disabled=false;
+            document.getElementById("idEmpresa2").disabled=false;
+        }
         this.setState({
             ds_proprietario: e.target.value
         })
@@ -139,6 +180,7 @@ export default class CreateVeiculo extends Component {
     }
     onSubmit(e) {
         e.preventDefault();
+        
         const obj = {
             id_empresa: this.state.id_empresa,
             qt_ano: this.state.qt_ano,
@@ -151,7 +193,9 @@ export default class CreateVeiculo extends Component {
             qt_peso: this.state.qt_peso,
             ds_placa: this.state.ds_placa,
             nr_renavam: this.state.nr_renavam,
-            ds_status: this.state.ds_status
+            ds_status: this.state.ds_status,
+            id_marca: this.state.id_marca,
+            id_modelo: this.state.id_modelo
         };
 
 
@@ -170,8 +214,13 @@ export default class CreateVeiculo extends Component {
             qt_peso: '',
             ds_placa: '',
             nr_renavam: '',
-            ds_status: ''
+            ds_status: '',
+            id_marca: '',
+            id_modelo: ''
         })
+    }
+    cancelar(){
+        this.props.history.push(`./veiculos`)
     }
     logOut(e) {
         e.preventDefault()
@@ -284,7 +333,7 @@ export default class CreateVeiculo extends Component {
                 </div>
                 <div class="form-group col-md-2">
             <label for="inputCNPJ">ID*</label>
-            <input type="text" class="form-control" id="inputCNPJ"  value={this.state.id_empresa} ref="cnpj"/>
+            <input type="text" class="form-control" id="idEmpresa2"  value={this.state.id_empresa} ref="cnpj"/>
             </div> 
                 </div>
          </fieldset>
@@ -298,6 +347,30 @@ export default class CreateVeiculo extends Component {
                             <option value="">Selecionar...</option>
                         { this.state.categorias.map(cat =>(
                     <option value={cat.id_frota}>{cat.ds_frota}</option>
+                    
+               ))}
+                    </select>
+                </div>
+                </div>
+                <div className="form-row">
+                <div className="form-group col-md-5">
+                    <label for="marca"> Marca*</label>
+                    <select name="marca" id="marca" className="form-control" value={this.state.id_marca}
+                        onChange={this.onChangeMarca}>
+                            <option value="">Selecionar...</option>
+                        { this.state.marcas.map(marca =>(
+                    <option value={marca.id_marca}>{marca.marca}</option>
+                    
+               ))}
+                    </select>
+                </div>
+                <div className="form-group col-md-5">
+                    <label for="modelo"> Modelo*</label>
+                    <select name="modelo" id="modelo" className="form-control" value={this.state.id_modelo}
+                        onChange={this.onChangeModelo}>
+                            <option value="">Selecionar...</option>
+                        { this.state.modelos.map(modelo =>(
+                    <option value={modelo.id_modelo}>{modelo.desc_modelo}</option>
                     
                ))}
                     </select>
@@ -367,14 +440,14 @@ export default class CreateVeiculo extends Component {
                     <label for="status"> Status*</label>
                     <select name="status" id="status" className="form-control" value={this.state.ds_status}
                         onChange={this.onChangeStatus}>
-                        <option value="Ativo"> Disponível </option> 
-                        <option value="Encerrado"> Indisponível </option> 
+                        <option value="Disponivel"> Disponível </option> 
+                        <option value="Indisponível"> Indisponível </option> 
                     </select>
                 </div>
              </div>
          </fieldset>
         <button type="submit" className="btn btn-primary" id="salvar">Salvar</button>
-        <button type="submit" className="btn btn-primary" id="cancelar">Cancelar</button>
+        <button type="submit" className="btn btn-primary" id="cancelar" onClick={this.cancelar}>Cancelar</button>
     </form>
     </main>
     </div>

@@ -87,10 +87,13 @@ create table tb_locacao
 (
 	id_locacao int not null auto_increment primary key,
     id_empresa int not null,
-    id_frota int not null,
-    id_veiculo int not null
+    id_veiculo int not null,
+    dt_alugada datetime not null,
+    dt_devolvida datetime,
+    vl_locacao double
 );
 
+select * from tb_locacao
 create table tb_motorista
 (
     id_motorista int not null auto_increment primary key,
@@ -272,9 +275,6 @@ add constraint fk_motoempresa foreign key (id_empresa) references tb_empresa (id
 alter table tb_locacao 
 add constraint fk_locaempresa foreign key (id_empresa) references tb_empresa (id_empresa);
 
-alter table tb_locacao 
-add constraint fk_locafrota foreign key (id_frota) references tb_frota (id_frota);
-
 alter table tb_locacao
 add constraint fk_locaveiculo foreign key (id_veiculo) references tb_veiculo (id_veiculo);
 
@@ -324,3 +324,4 @@ insert tb_modelo(id_marca,desc_modelo) values (1, "Um modelo ai 2009");
  
  insert into tb_viagem (end_origem, cidade_origem, data_saida, end_destino, cidade_destino, data_chegada, km, id_veiculo, id_empresa, id_motorista) values ("rua pipipi", "Santos", "2019-11-12", "Rua popopo", "São Vicente", "2019-11-12",1000, 2, 1, 1);
 
+select * from tb_veiculo
