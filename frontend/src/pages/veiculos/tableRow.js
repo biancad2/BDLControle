@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import api from '../../services/api';
 import './veiculos.css';
 import Logo from '../../assets/logobranco2.png';
-import Carro from '../../assets/Veiculos/carro-disponivel.png'
+
 class TableRow extends Component {
 
   constructor(props) {
@@ -69,7 +69,6 @@ class TableRow extends Component {
   render() {
     return (
         <tr>
-          {this.imagem}
           <td>
             {this.props.obj.id_veiculo}
           </td>

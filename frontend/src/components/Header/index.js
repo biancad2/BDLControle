@@ -13,8 +13,7 @@ const Header = () => (
             </ul>  
             <ul id="botoes">  
                 <li><a href="acessibilidade.html"> Acessibilidade </a></li>         
-                <li><a href="#" id="bt_contraste">Alto contraste</a></li>  
-                <li><a href="mapa.html"> Mapa do site </a></li>  
+                <li><a href="/mapa"> Mapa do site </a></li>  
             </ul>  
         </div>
 </header>

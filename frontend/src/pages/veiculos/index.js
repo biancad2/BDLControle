@@ -52,7 +52,7 @@ class Veiculos extends Component {
     filterList=(event)=>{
         let items = this.state.veiculos;
         items = items.filter((item)=>{
-            return item.id_frota.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1  || item.ds_status.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1  
+            return item.id_frota.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1  || item.ds_status.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1  || item.ds_placa.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1  
         });
         this.setState({items: items});
         console.log(items);

@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../services/api';
+import { confirmAlert } from 'react-confirm-alert';
 
 import './empresas.css';
+import './confirm.css';
 
 class TableRow extends Component {
 
@@ -16,12 +18,27 @@ class TableRow extends Component {
       })
     }
     delete() {
-        api.delete('/empresas/'+this.props.obj.id_empresa)
+      confirmAlert({
+        title: 'Confirmar',
+        message: 'Você tem certeza que quer excluir a empresa?.',
+        buttons: [
+          {
+            label: 'Yes',
+            onClick: () =>  api.delete('/empresas/'+this.props.obj.id_empresa)
             .then(console.log('Deleted'),
+            alert("Empresa " + this.props.obj.nm_empresa + " removida"),
             window.location.reload()
            
            )
             .catch(err => console.log(err))
+          },
+          {
+            label: 'No',
+            onClick: () => alert('Exclusão cancelada')
+          }
+        ]
+      });
+   
     }
   componentDidMount(){
     //{this.verificar}
@@ -76,8 +93,8 @@ class TableRow extends Component {
       <td>{this.props.obj.ds_status}</td>
       <td className="validade">{this.props.obj.dt_validadecontrato}</td>
       <td className="icones">
-        <Link to={`./alterar-empresa/${this.props.obj.id_empresa}`}><button className="editar"></button></Link>
-        <Link to={`./info-empresa/${this.props.obj.id_empresa}`}><button className="info"></button></Link>
+        <Link to={`/alterar-empresa/${this.props.obj.id_empresa}`}><button className="editar"></button></Link>
+        <Link to={`/info-empresa/${this.props.obj.id_empresa}`}><button className="info"></button></Link>
         <button className="rem" onClick={this.delete}></button>
         <button className="desativar" onClick={this.onChangeStatus} ></button>
       </td>

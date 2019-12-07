@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../services/api';
 
-
 class TableRow extends Component {
 
   constructor(props) {
@@ -51,11 +50,10 @@ class TableRow extends Component {
           <td>
             {this.state.nm_empresa}
           </td>
-          <td>
-            <Link to={"./atualizar-moto/"+this.props.obj.id_motorista} className="btn btn-primary edit"> <span class="sr-only">editar </span></Link>
-          </td>
-          <td>
-            <button onClick={this.delete} className="btn btn-danger rem"><span class="sr-only">remover </span></button>
+          <td className="icones">
+            <Link to={"/atualizar-moto/"+this.props.obj.id_motorista} ><button className=" edit"></button> <span class="sr-only">editar </span></Link>
+            <Link to={`/info-moto/${this.props.obj.id_motorista}`}><button className="info"></button></Link>
+            <button onClick={this.delete} className="rem"><span class="sr-only">remover </span></button>
           </td>
         </tr>
     );

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../services/api';
-import { parseISO, isAfter,  format, formatRelative, formatDistance, } from 'date-fns';
 class TableRow2 extends Component {
 
   constructor(props) {
@@ -99,7 +98,7 @@ class TableRow2 extends Component {
           </td>
           
           <td className="icones">
-            <Link to={"./atualizar-multa/"+this.props.obj.id_multa} > <button className=" edit"></button><span class="sr-only">editar </span></Link>
+            <Link to={"/atualizar-multa/"+this.props.obj.id_multa} > <button className=" edit"></button><span class="sr-only">editar </span></Link>
             <button onClick={this.delete} className=" rem"><span class="sr-only">remover </span></button>
           </td>
         </tr>

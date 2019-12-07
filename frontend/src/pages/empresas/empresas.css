@@ -265,6 +265,9 @@ h3:hover{
 .links-expandir{
     text-align: left;
 }
+.informacoes-veiculo{
+    display: none;
+}
 @media (max-width: 1000px) {
     
 }

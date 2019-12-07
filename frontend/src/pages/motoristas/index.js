@@ -15,7 +15,7 @@ class Motoristas extends Component {
     
     constructor(props) {
         super(props);
-        this.state = {motoristas: [],
+        this.state = {motoristas: [], items: [],
           nm_usuario: '',
           nm_sobrenome: '',
           email: '',
@@ -37,13 +37,20 @@ class Motoristas extends Component {
     }
         api.get('/motoristas/')
         .then(response => {
-          this.setState({ motoristas: response.data });
+          this.setState({ motoristas: response.data, items: response.data});
         })
         .catch(function (error) {
           console.log(error);
         })
     }
-    
+    filterList=(event)=>{
+      let items = this.state.veiculos;
+      items = items.filter((item)=>{
+          return item.cat_cnh.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1  || item.nm_motorista.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1  || item.cd_cpf.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1  
+      });
+      this.setState({items: items});
+      console.log(items);
+  }
     tabRow(){
         return this.state.motoristas.map(function(object, i){
             return <TableRow obj={object} key={i} />;
@@ -130,6 +137,40 @@ class Motoristas extends Component {
               </nav> 
                   <div className="quadrado">Quadrado</div>
                     <h1> Motoristas </h1>
+                    <form method="get" action="" className="centro row">
+                 <h2 className="filtrar">Filtrar</h2>
+               
+                <div className="formulario selecionar centro col-md-2">
+                    <label for="disponibilidade"> Situação</label>
+                    <select name="status" id="status"  tabindex="7" onChange={this.filterList}>
+                        <option value=""> Todos </option>
+                        <option value="Disponível"> Disponível </option>
+                        <option value="Em viagem"> Em viagem </option>
+                        <option value="Desativado"> Desativado </option>
+                    </select>
+                </div>
+
+                <div className="formulario selecionar centro col-md-2">
+                    <label for="categoria"> Categoria CNH</label>
+                    <select name="categoria" id="categoria"  tabindex="7" onChange={this.filterList}>
+                    <option value="">Selecionar...</option>
+                    <option value="A"> A </option>
+       <option value="B">  B </option>
+       <option value="AB"> A/B </option>
+       <option value="C"> C </option>
+       <option value="D"> D </option>
+       <option value="E"> E </option>
+                    </select>
+                </div>
+
+                <div className="formulario busca col-md-2">
+                    <label for="pesquisa"> Pesquisar	</label>
+                    <input type="text" name="pesquisa" id="pesquisar-veic" size="9" minlength="6" maxlength="7" placeholder="Placa/Empresa" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Você pode pesquisar o veículo pela placa ou empresa associada." onChange={this.filterList}/>
+                    <span id="box_icone_busca">
+                        <i id="icone_busca" className="fa fa-search"></i>
+                    </span> 
+                </div>
+            </form>
                     <div className="adc-rem">
                 Adicionar motorista: 
                <Link to={'./incluir-moto'}> <button className="adc"></button></Link>

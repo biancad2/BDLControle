@@ -138,7 +138,7 @@ class Manutencoes extends Component {
             </div>
       </nav> 
           <div className="quadrado">Quadrado</div>
-          <h1>Multas</h1>
+          <h1>Manutenções</h1>
 
                       
           <form method="get" action="" className="centro row">

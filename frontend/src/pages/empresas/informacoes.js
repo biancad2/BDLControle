@@ -3,6 +3,7 @@ import api from '../../services/api'
 import './empresas.css';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import TableRow from './motoristas';
+import TableRow2 from './veiculos';
 import jwt_decode from 'jwt-decode'
 
 
@@ -41,6 +42,7 @@ export default class InfoEmpresa extends Component {
                 status: ""
             },
             motoristas: [],
+            veiculos: [],
             nm_usuario: '',
             nm_sobrenome: '',
             email: '',
@@ -94,6 +96,14 @@ export default class InfoEmpresa extends Component {
           .catch(function(error){
             console.log(error);
           })
+          api.get('/veiculos-empresa/'+this.props.match.params.id)
+          .then(response => {
+            this.setState({ veiculos: response.data });
+            console.log(response)
+          })
+          .catch(function(error){
+            console.log(error);
+          })
     }
      expandir(){
          var mais = document.querySelector("#mais-info").innerHTML;
@@ -126,10 +136,27 @@ export default class InfoEmpresa extends Component {
             else
                 document.getElementById("informacoes-moto").classList.add("informacoes-moto")
     }
+    expandirVeiculos(){
+        var maisVeiculo = document.querySelector("#mais-veiculo").innerHTML;
+                //Informações motoristas
+        if(maisVeiculo=="+")
+                document.querySelector("#mais-veiculo").innerHTML='-'
+            else
+                document.querySelector("#mais-veiculo").innerHTML='+'
+                if(document.getElementById("informacoes-veiculo").classList.contains("informacoes-veiculo"))
+                document.getElementById("informacoes-veiculo").classList.remove("informacoes-veiculo")
+            else
+                document.getElementById("informacoes-veiculo").classList.add("informacoes-veiculo")
+    }
     
     tabRow(){
         return this.state.motoristas.map(function(object, i){
             return <TableRow obj={object} key={i} />;
+        });
+      }
+      tabRow2(){
+        return this.state.veiculos.map(function(object, i){
+            return <TableRow2 obj={object} key={i} />;
         });
       }
       logOut(e) {
@@ -217,36 +244,7 @@ export default class InfoEmpresa extends Component {
 
                  <h2 className="titulo-empresa">  {this.state.nm_emp} - {this.state.id_emp}</h2>
                  <h3>Visão geral</h3>
-                 <div class="container">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="card card-body align-items-center">
-                                <p class="card-text"><a href="#"><img src={Card1}title="em viagem"/>  Veículos </a></p>
-                                <p id="veiculos-viagem" class="numero">5500</p>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <div class="card card-body align-items-center">
-                                <p class="card-text"><a href="#"><img src={Card2}/>  Multas </a></p>
-                                <p id="multas" class="numero">R$ 10.500,00</p>
-                            </div>
-                        </div>
-                        <div class="col-md-3 ">
-                            <div class="card card-body align-items-center">
-                                <p class="card-text"><a href="#" class="manutencoes"><img src={Card3}/>Manutenções</a></p>
-                                <p id="manutencoes" class="numero">R$ 5.500,00</p>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card card-body align-items-center">
-                                <p class="card-text"><a href="#"><img src={Card4}/>  Despesas </a></p>
-                                <p id="despesas" class="numero">R$ 16.000,00</p>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                 
                 <h3  onClick={this.expandir} className="links-expandir"> <span id="mais-info">+</span> Informações
             <span class="span-click">(Clique e veja as informações principais da empresa)</span>
             </h3>
@@ -325,9 +323,39 @@ export default class InfoEmpresa extends Component {
                     </thead>
                     <tbody>{this.tabRow() }
                     </tbody>
+                </table>
+          
+            </div>
+            <h3  onClick={this.expandirVeiculos} className="links-expandir"> <span id="mais-veiculo">+</span> Veículos
+            <span class="span-click">(Clique e veja os veículos da empresa)</span>
+            </h3>
+            <div class="table-responsive informacoes-veiculo" id="informacoes-veiculo" >
+                <Link to={'/incluir-veiculo'}><button type="button" class="btn btn-success editar-table" >
+                <i class="fas fa-user-plus"></i>
+                    Adicionar
+                </button></Link>
+               
+                <div className="table-responsive">
+          <table className="table  table-sm">
+                    <thead className="thead-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Placa</th>
+                            <th>Empresa</th>
+                            <th>Ano</th>
+                            <th>Cilindrada</th>
+                            <th>Cor</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>{this.tabRow2() }
+                    </tbody>
                 </table> 
+            </div>
 
-          <Link to={'/incluir-moto'} className="nav-link">incluir</Link>
+
+              
           
             </div>
         </main>

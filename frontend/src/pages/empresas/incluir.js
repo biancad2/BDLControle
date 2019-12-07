@@ -3,7 +3,12 @@ import api from '../../services/api';
 import './empresas.css';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import { cepMask } from '../../js/mascaras/cepmask';
+import { telMask } from '../../js/mascaras/telmask';
+import { celMask } from '../../js/mascaras/celmask';
+import { cnpjMask } from '../../js/mascaras/cnpjmask';
 import jwt_decode from 'jwt-decode'
+import cep from 'cep-promise'
+import { confirmAlert } from 'react-confirm-alert';
 
 
 import Logo from '../../assets/logobranco2.png';
@@ -28,7 +33,7 @@ export default class Create extends Component {
         this.onChangeResponsavel = this.onChangeResponsavel.bind(this);
         this.onChangeDtValidade = this.onChangeDtValidade.bind(this);
         this.onChangeStatus = this.onChangeStatus.bind(this);
-        
+        this.onBlurCEP = this.onBlurCEP.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
 
         this.state = {
@@ -64,6 +69,8 @@ export default class Create extends Component {
                 email: decoded.email
               })
         }
+       
+
     }
     onChangeEmpresa(e) {
         this.setState({
@@ -72,7 +79,7 @@ export default class Create extends Component {
     }
     onChangeCNPJ(e) {
         this.setState({
-            cd_cnpj: e.target.value
+            cd_cnpj: cnpjMask(e.target.value)
         })
     }
     onChangeEmail(e) {
@@ -107,19 +114,35 @@ export default class Create extends Component {
     }
     onChangeTelefone(e) {
         this.setState({
-            nr_telefone: e.target.value
+            nr_telefone: telMask(e.target.value)
         })
     }
   
     onChangeCelular(e) {
         this.setState({
-            nr_celular: e.target.value
+            nr_celular: celMask(e.target.value)
         })
     }
     onChangeCEP(e) {
         this.setState({
             cd_CEP: cepMask(e.target.value)
         })
+        
+        
+    }
+    onBlurCEP(){
+        cep(this.state.cd_CEP)
+        .then(response => {
+          console.log(response)
+          this.setState({
+              sg_estado: response.state,
+              nm_cidade: response.city,
+              ds_endereco: response.street
+        })
+        }
+          
+          );
+         
     }
     onChangeResponsavel(e) {
         this.setState({
@@ -136,7 +159,23 @@ export default class Create extends Component {
             ds_status: e.target.value
         })
     }
-    
+    cancelar(){
+        confirmAlert({
+            title: 'Confirmar',
+            message: 'Você tem certeza que quer cancelar o cadastro?.',
+            buttons: [
+              {
+                label: 'Sim',
+                onClick: () =>  window.location.href = "/empresas"
+              },
+              {
+                label: 'Não'
+                
+              }
+            ]
+          });
+       
+    }
     onSubmit(e) {
         e.preventDefault();
         const obj = {
@@ -317,7 +356,7 @@ export default class Create extends Component {
              <div className="form-group col-md-2">
               <label for="inputCEP">CEP*</label>
               <input type="text" className="form-control" id="inputCEP" placeholder="Ex: 00000-000" required value={this.state.cd_CEP}
-                        onChange={this.onChangeCEP}/>
+                        onChange={this.onChangeCEP} onBlur={this.onBlurCEP}/>
             </div>
              
              <div className="form-group col-md-4">
@@ -350,7 +389,7 @@ export default class Create extends Component {
              </div>
              </fieldset>
         <input type="submit" className="btn btn-primary" id="salvar" value="Cadastrar"/>
-        <input type="reset" className="btn btn-primary" id="cancelar" value="Limpar"/>
+        <input type="reset" className="btn btn-primary" id="cancelar" value="Cancelar" onClick={this.cancelar}/>
     </form>
     </main>
     </div>

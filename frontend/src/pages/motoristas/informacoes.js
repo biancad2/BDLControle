@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import api from '../../services/api'
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
-import TableRow from '../despesas/manutencoes/tableRow';
-import TableRow2 from './multas';
+import TableRow from '../viagens/tableRow';
+import TableRow2 from '../veiculos/multas';
 import jwt_decode from 'jwt-decode'
 
 
@@ -17,35 +17,31 @@ import Card2 from '../../assets/multa.png';
 import Card3 from '../../assets/manutencoes.png';
 import Card4 from '../../assets/despesas.png';
 
-export default class InfoVeiculos extends Component {
+export default class InfoMotorista extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            empresa: {
-                id_veiculo: "",
-                id_frota: "",
-                id_marca: "",
-                id_modelo: "",
-                ds_placa: "",
-                ds_proprietario: "",
-                id_empresa: "",
-                qt_cilindrada: "",
-                qt_ano: "",
-                ds_cor: "",
-                qt_quilometragem: "",
-                qt_passageiros: "",
-                qt_peso: "",
-                nr_renavam: "",
-                ds_status: "",
-                id_empresa: "",
+            motorista: {
+                id_empresa: '',
+                nm_motorista: '',
+                sobrenome_motorista: '',
+                cd_cpf: '',
+                cd_rg: '',
+                cd_cnh: '',
+                nr_telefone: '',
+                nr_celular: '',
+                cat_cnh: '',
+                ds_endereco: '',
+                num_endereco: '',
+                sg_estado: '',
+                nm_cidade: '',
+                ds_email: '',
+                foto_motorista:'',
+                password:''
             },
             multas: [],
-            manutencoes: [],
-            empresas: [], 
-            marcas: [],
-            modelos: [],
-            frota: [],
+            viagens: [], 
             nm_usuario: '',
             nm_sobrenome: '',
             email: '',
@@ -66,54 +62,32 @@ export default class InfoVeiculos extends Component {
                 email: decoded.email
               })
         }
-        api.get('/veiculos/'+this.props.match.params.id)
-          .then(response => {
-              this.setState({ 
-                id_veiculo: response.data[0].id_veiculo,
-                id_frota: response.data[0].id_frota,
-                id_marca: response.data[0].id_marca,   
-                id_modelo: response.data[0].id_modelo,
-                ds_placa: response.data[0].ds_placa,
-                ds_proprietario: response.data[0].ds_proprietario,
-                qt_cilindrada: response.data[0].qt_cilindrada,
-                qt_ano: response.data[0].qt_ano,
-                ds_cor: response.data[0].ds_cor,
-                qt_quilometragem: response.data[0].qt_quilometragem,
-                qt_passageiros: response.data[0].qt_passageiros,
-                qt_peso: response.data[0].qt_peso,
-                nr_renavam: response.data[0].nr_renavam,
-                ds_status: response.data[0].ds_status,
-                id_empresa: response.data[0].id_empresa
-            });
-                console.log(response);
-                console.log(response.data.id_veiculo);
-          })
-          .catch(function (error) {
-              console.log(error);
-          })
-         
-          api.get('/manutencao-veic/'+this.props.match.params.id)
-          .then(response => {
-            this.setState({
-             vl_manutencao: response.data[0].valor
-               });
-          })
-          .catch(function (error) {
+        api.get('/motoristas/'+this.props.match.params.id)
+        .then(response => {
+            this.setState({ 
+              id_motorista: response.data[0].id_motorista,
+              id_empresa: response.data[0].id_empresa,
+              nm_motorista: response.data[0].nm_motorista,   
+              sobrenome_motorista: response.data[0].sobrenome_motorista,
+              cd_cpf: response.data[0].cd_cpf,
+              cd_rg: response.data[0].cd_rg,
+              cd_cnh: response.data[0].cd_cnh,
+              nr_telefone: response.data[0].nr_telefone,
+              nr_celular: response.data[0].nr_celular,
+              cat_cnh: response.data[0].cat_cnh,
+              ds_endereco: response.data[0].ds_endereco,
+              num_endereco: response.data[0].num_endereco,
+              sg_estado: response.data[0].sg_estado,
+              nm_cidade: response.data[0].nm_cidade,
+              ds_email: response.data[0].ds_email
+          });
+              console.log(response);
+              console.log(response.data.id);
+        })
+        .catch(function (error) {
             console.log(error);
-          })
-
-          api.get('/frota-veic/'+this.props.match.params.id)
-          .then(response => {
-            this.setState({
-             ds_frota: response.data[0].ds_frota
-               }
-               );
-               
-          })
-          .catch(function (error) {
-            console.log(error);
-          })
-          api.get('/empresa-veic/'+this.props.match.params.id)
+        })
+          api.get('/empresa-moto/'+this.props.match.params.id)
           .then(response => {
             this.setState({
              nm_empresa: response.data[0].nm_empresa
@@ -124,7 +98,7 @@ export default class InfoVeiculos extends Component {
           .catch(function (error) {
             console.log(error);
           })
-          api.get('/multa-veic/'+this.props.match.params.id)
+          api.get('/multaGeral-moto/'+this.props.match.params.id)
           .then(response => {
             this.setState({
              vl_multa: response.data[0].valor
@@ -134,29 +108,19 @@ export default class InfoVeiculos extends Component {
             console.log(error);
           })
 
-          api.get('/marca-modelo/'+this.props.match.params.id)
-          .then(response => {
-            this.setState({
-             marca: response.data[0].marca,
-             modelo: response.data[0].desc_modelo
-               });
-          })
-          .catch(function (error) {
-            console.log(error);
-          })
-          api.get('/manutencoes-veiculo/'+this.props.match.params.id)
-          .then(response => {
-            this.setState({
-             manutencoes: response.data
-               });
-          })
-          .catch(function (error) {
-            console.log(error);
-          })
-          api.get('/multas-veiculo/'+this.props.match.params.id)
+          api.get('/multas-moto/'+this.props.match.params.id)
           .then(response => {
             this.setState({
              multas: response.data
+               });
+          })
+          .catch(function (error) {
+            console.log(error);
+          })
+          api.get('/viagens-moto/'+this.props.match.params.id)
+          .then(response => {
+            this.setState({
+             viagens: response.data
                });
           })
           .catch(function (error) {
@@ -214,7 +178,7 @@ export default class InfoVeiculos extends Component {
     }
     
     tabRow(){
-        return this.state.manutencoes.map(function(object, i){
+        return this.state.viagens.map(function(object, i){
             return <TableRow obj={object} key={i} />;
         });
       }
@@ -310,10 +274,10 @@ export default class InfoVeiculos extends Component {
   </nav> 
             <main role="main" className="bg-light">
             <div className="quadrado">Quadrado</div>
-            <h1> Informações veículo </h1>
+            <h1> Informações motorista </h1>
             
 
-          <h2 className="titulo-empresa">  {this.state.ds_frota} - Placa:  {this.state.ds_placa}</h2>
+          <h2 className="titulo-empresa">  {this.state.nm_motorista} -  {this.state.cd_cpf}</h2>
                  <h3>Visão geral</h3>
                  <div className="container">
                     <div className="row alinhar">
@@ -327,23 +291,23 @@ export default class InfoVeiculos extends Component {
                         <div className="col-md-3 ">
                             <div className="card card-body align-items-center">
                                 <p className="card-text"><Link to="/manutencoes" className="manutencoes"><img src={Card3}/>Manutenções</Link></p>
-                                <p id="manutencoes" className="numero">R$ {this.state.vl_manutencao}</p>
+                                <p id="manutencoes" className="numero">R$ </p>
                             </div>
                         </div>
                         <div className="col-md-3">
                             <div className="card card-body align-items-center">
                                 <p className="card-text"><Link to="#"><img src={Card4}/>  Total </Link></p>
-                                <p id="despesas" className="numero">{this.state.resultado_soma}</p>
+                                <p id="despesas" className="numero"></p>
 
                             </div>
                         </div>
                     </div>
                 </div>
                 <h3  onClick={this.expandir} className="links-expandir"> <span id="mais-info">+</span> Informações
-            <span className="span-click">(Clique e veja as informações principais do veículo)</span>
+            <span className="span-click">(Clique e veja as informações principais do motorista)</span>
             </h3>
             <div className="table-responsive informacoes" id="informacoes" >
-                <Link to={/atualizar-veic/ + this.state.id_veiculo}><button type="button" className="btn btn-sm btn-outline-secondary editar-table" >
+                <Link to={/atualizar-moto/ + this.state.id_motorista}><button type="button" className="btn btn-sm btn-outline-secondary editar-table" >
                 <i className="fas fa-edit"></i>
                     Editar
                 </button></Link>
@@ -356,29 +320,33 @@ export default class InfoVeiculos extends Component {
                     </tr>
                     <tr>
                         <td className="font-weight-bold">ID: </td>
-                        <td className="id-empresa">{this.state.id_veiculo}</td>
+                        <td className="id-empresa">{this.state.id_motorista}</td>
                     </tr>
                     <tr>
-                        <td className="font-weight-bold"> Categoria: </td>
-                        <td className="empresa"> {this.state.ds_frota}</td>
+                        <td className="font-weight-bold"> Nome: </td>
+                        <td className="empresa"> {this.state.nm_motorista}</td>
                     </tr>
                     <tr>
-                        <td className="font-weight-bold">Placa: </td>
-                        <td className="cnpj">{this.state.ds_placa}</td>
+                        <td className="font-weight-bold">CPF: </td>
+                        <td className="cnpj">{this.state.cd_cpf}</td>
                     </tr>
                     <tr>
-                        <td className="font-weight-bold">Marca e modelo: </td>
-                        <td className="endereco">{this.state.marca} -  {this.state.modelo} </td>
+                        <td className="font-weight-bold">E-mail: </td>
+                        <td className="endereco">{this.state.ds_email}  </td>
                     </tr>
                     <tr>
-                        <td className="font-weight-bold">Status: </td>
-                        <td className="status">{this.state.ds_status}</td>
+                        <td className="font-weight-bold">Celular: </td>
+                        <td className="status">{this.state.nr_celular}</td>
+                    </tr>
+                    <tr>
+                        <td className="font-weight-bold">Endereço: </td>
+          <td className="status">{this.state.sg_estado} - {this.state.nm_cidade} - {this.state.ds_endereco}, {this.state.num_endereco}</td>
                     </tr>
                 </table>
             </div>
 
-            <h3  onClick={this.expandirManutencoes} className="links-expandir"> <span id="mais-manutencao">+</span> Manutenções
-            <span className="span-click">(Clique e veja as manutenções do veículo)</span>
+            <h3  onClick={this.expandirManutencoes} className="links-expandir"> <span id="mais-manutencao">+</span> Multas
+            <span className="span-click">(Clique e veja as multas do motorista)</span>
             </h3>
             <div className="table-responsive informacoes-manutencao" id="informacoes-manutencao" >
                 <Link to={'/incluir-manutencao'}><button type="button" className="btn btn-success editar-table" >
@@ -390,18 +358,19 @@ export default class InfoVeiculos extends Component {
           <table className="table table-md" >
                     <thead className="thead-dark">
                         <tr>
-                            <th>ID</th>
-                            <th>Veiculo</th>
-                            <th>Quilometragem</th>
-                            <th className="text-truncated">Tipo de manutenção</th>
+                        <th>ID</th>
+                            <th>Motorista</th>
+                            <th>Placa</th>
+                            <th>Infração</th>
                             <th>Descrição</th>
-                            <th>Causa</th>
-                            <th>Valor</th>
-                            <th>Data</th>
+                            <th>Gravidade</th>
+                            <th>Preço</th>
+                            <th>Status</th>
+                            <th>Pagar</th>
                             <th></th>
                         </tr>
                     </thead>
-                    <tbody>  {this.tabRow()}
+                    <tbody> {this.tabRow()}
                     </tbody>
                 </table> 
                 </div>
@@ -418,24 +387,29 @@ export default class InfoVeiculos extends Component {
                 </button></Link>
                
                 
-                <table className="table table-striped" style={{ marginTop: 20 }}>
+                <div className="table-responsive">
+          <table className="table table-md" >
                     <thead>
                         <tr>
                         <th>ID</th>
-                            <th>Motorista</th>
-                            <th>Placa</th>
-                            <th>Infração</th>
-                            <th>Descrição</th>
-                            <th>Gravidade</th>
-                            <th>Preço</th>
-                            <th>Status</th>
-                            <th>Pagar</th>
-                            <th></th>
+                                  <th>Empresa</th>
+                                  <th>Veículo</th>
+                                  <th>Motorista</th>
+                                  <th className="text-truncate">End. Origem</th>
+                                  <th>Dt. Saída</th>
+                                  <th className="text-truncate">End. Destino</th>
+                                  <th>Dt. Chegada</th>
+                                  <th>Dt. Iniciada</th>
+                                  <th >Dt. Finalizada</th>
+                                  <th>Iniciar</th>
+                                  <th>Encerrar</th>
+                                  <th></th>
                         </tr>
                     </thead>
-                    <tbody>{this.tabRow2() }
+                    <tbody>{this.tabRow2()}
                     </tbody>
                 </table> 
+                </div>
             </div>
         </main>
         </div>

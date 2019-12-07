@@ -14,6 +14,7 @@ import InfoVeiculos from './pages/veiculos/informacoes';
 import Motoristas from './pages/motoristas';
 import EditMotorista from './pages/motoristas/alterar';
 import CreateMotorista from './pages/motoristas/incluir';
+import InfoMotorista from './pages/motoristas/informacoes';
 import Viagens from './pages/viagens';
 import EditViagem from './pages/viagens/alterar';
 import CreateViagem from './pages/viagens/incluir';
@@ -40,7 +41,7 @@ export default function Routes() {
     return (
         <BrowserRouter>
 
-           <Route path="/" component={Header} />
+          
            <Route exact path="/" component={Login} />
            <Route exact path="/register" component={Register} />
             <Route exact path="/login" component={Login} />
@@ -57,6 +58,7 @@ export default function Routes() {
            <Route path="/motoristas"  component={Motoristas}/>
            <Route path="/atualizar-moto/:id" component={EditMotorista}/>
            <Route path="/incluir-moto/" component={CreateMotorista}/>
+           <Route path="/info-moto/" component={InfoMotorista}/>
            <Route path="/viagens"  component={Viagens}/>
            <Route path="/atualizar-viagem/:id" component={EditViagem}/>
            <Route path="/incluir-viagem/" component={CreateViagem}/>

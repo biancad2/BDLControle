@@ -5,8 +5,7 @@ import './carousel.css';
 import Carousel from 'react-bootstrap/Carousel';
 import { Link, withRouter } from 'react-router-dom';
 import jwt_decode from 'jwt-decode'
-
-
+import {LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Pie, PieChart} from 'recharts';
 import Logo from '../../assets/logobranco2.png';
 import Usuario from '../../assets/usuario-branco.png';
 import Notificacao from '../../assets/icone.png';
@@ -19,6 +18,8 @@ import Card2 from '../../assets/multa.png';
 import Card3 from '../../assets/manutencoes.png';
 import Card4 from '../../assets/despesas.png';
 
+
+
 export default class Main extends Component{
 
     constructor() {
@@ -29,8 +30,11 @@ export default class Main extends Component{
           email: '',
           errors: {},
           nrVeiculos: [],
-          motoristas: []
+          motoristas: [],
+          empresas: [],
+          qtveiculos: []
         }
+        this.carregar = this.carregar.bind(this)
       }
     componentDidMount() {
         if (localStorage.usertoken == null ){
@@ -40,13 +44,41 @@ export default class Main extends Component{
             const decoded = jwt_decode(token)
             this.setState({
                 nm_usuario: decoded.nm_usuario,
-                nm_sobrenome: decoded.last_name,
+                nm_sobrenome: decoded.nm_sobrenome,
                 email: decoded.email
               })
         }
+        
         api.get('/nr-veic')
         .then(response => {
           this.setState({ nrVeiculos: response.data[0].qt_veiculos });
+          console.log(response)
+          
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+        api.get('/empresas')
+        .then(response => {
+          this.setState({ empresas: response.data});
+          console.log(response)
+          
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+        api.get('/multa-geral')
+        .then(response => {
+          this.setState({ multasGeral: response.data[0].qt_multas });
+          console.log(response)
+          
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+        api.get('/manutencao-geral')
+        .then(response => {
+          this.setState({ manutencaoGeral: response.data[0].qt_manutencao });
           console.log(response)
           
         })
@@ -62,6 +94,17 @@ export default class Main extends Component{
         .catch(function (error) {
           console.log(error);
         })
+
+        api.get('/qtveiculos')
+        .then(response => {
+          this.setState({ qtveiculos: response.data});
+          console.log("VEICULOS AQUI Ó")
+          console.log(response)
+          
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
         
       }
 
@@ -70,56 +113,15 @@ export default class Main extends Component{
         localStorage.removeItem('usertoken')
         this.props.history.push(`./login`)
       }
-  /*  dashboard = () => {
-        this.grafico();
-        feather.replace()
-
-  // Graphs
-  var ctx = document.getElementById('myChart')
-  // eslint-disable-next-line no-unused-vars
-  var myChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: [
-        'Janeiro',
-        'Fevereiro',
-        'Março',
-        'Abril',
-        'Maio',
-        'Junho',
-        'Julho'
-      ],
-      datasets: [{
-        data: [
-          15339,
-          21345,
-          18483,
-          24003,
-          23489,
-          24092,
-          12034
-        ],
-        lineTension: 0,
-        backgroundColor: 'transparent',
-        borderColor: '#007bff',
-        borderWidth: 4,
-        pointBackgroundColor: '#007bff'
-      }]
-    },
-    options: {
-      scales: {
-        yAxes: [{
-          ticks: {
-            beginAtZero: false
-          }
-        }]
-      },
-      legend: {
-        display: false
+      componentDidUpdate(){
+        var valor = parseFloat(this.state.multasGeral) + parseFloat(this.state.manutencaoGeral);
+       
+        this.state.valor_soma= valor
+        
       }
-    }
-  })
-    };*/
+carregar(){
+
+}
     render(){
         const loginRegLink = (
             <ul className="navbar-nav">
@@ -252,39 +254,54 @@ export default class Main extends Component{
                     <div className="col-md-3">
                         <div className="card card-body align-items-center">
                             <p className="card-text"><Link to="#"><img src={Card2}></img>  Multas </Link></p>
-                            <p id="multas" className="numero">R$ 10.500,00</p>
+                            <p id="multas" className="numero">R$ {this.state.multasGeral}</p>
                         </div>
                     </div>
                     <div className="col-md-3 ">
                         <div className="card card-body align-items-center">
                             <p className="card-text"><Link to="#" className="manutencoes"><img src={Card3}></img>Manutenções</Link></p>
-                            <p id="manutencoes" className="numero">R$ 5.500,00</p>
+                            <p id="manutencoes" className="numero">R$ {this.state.manutencaoGeral}</p>
                         </div>
                     </div>
                     <div className="col-md-3">
                         <div className="card card-body align-items-center">
                             <p className="card-text"><Link to="#"><img src={Card4}></img>  Despesas </Link></p>
-                            <p id="despesas" className="numero">R$ 16.000,00</p>
+                            <p id="despesas" className="numero">R$ {this.state.valor_soma}</p>
 
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-    
+
         <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h2 className="h2">Gastos mensais </h2>
-            <div className="btn-toolbar mb-2 mb-md-0">
-        <div className="btn-group mr-2">
-        <button type="button" className="btn btn-sm btn-outline-secondary"> <span className="oi oi-document"></span>Exportar</button>
-      </div>
-      <button type="button" className="btn btn-sm btn-outline-secondary dropdown-toggle">
-        <span data-feather="calendar"></span>
-        Esse ano
-      </button>
-    </div>
+        <h2 className="h2">Veículos por empresa </h2>
   </div>
-        <canvas className="my-4 w-100" id="myChart" width="900" height="380"></canvas>
+  
+  <ResponsiveContainer
+        width={'99%'} height={400}
+      >
+  <LineChart
+        
+        data= { this.state.qtveiculos.map(veic =>(
+           {name: veic.nm_empresa, quantidade: veic.qt_veiculos}
+          
+     ))}
+        margin={{top: 5, right: 30, left: 20, bottom: 5}}
+       >
+        <Line
+          type='monotone'
+          dataKey='quantidade'
+          stroke='#8884d8'
+          activeDot={{r: 8}}
+          />
+        <CartesianGrid strokeDasharray='3 3'/>
+        <Tooltip/>
+        <YAxis/>
+        <XAxis dataKey='name'/>
+        <Legend />
+      </LineChart>
+      </ResponsiveContainer>
     </main>
     <footer className="container" id="rodape">
         <p className="float-right"><Link to="#">Voltar ao topo</Link></p>

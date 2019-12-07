@@ -112,7 +112,7 @@ class TableRow extends Component {
 </button>
           </td>
           <td>
-            <Link to={"./atualizar-locacao/"+this.props.obj.id_locacao} className="btn btn-primary edit"> <span class="sr-only">editar </span></Link>
+            <Link to={"/atualizar-locacao/"+this.props.obj.id_locacao} className="btn btn-primary edit"> <span class="sr-only">editar </span></Link>
             <button onClick={this.delete} className="btn btn-danger rem"><span class="sr-only">remover </span></button>
           </td>
         </tr>

@@ -30,6 +30,22 @@ routes.get("/nr-veic", function(req, res){
             res.json(err);
     })
 });
+routes.get("/multa-geral", function(req, res){
+    connection.query('select SUM(qt_preco) as qt_multas from tb_multa', function(err, rows, fields){
+        if (!err)
+            res.json(rows);
+        else
+            res.json(err);
+    })
+});
+routes.get("/manutencao-geral", function(req, res){
+    connection.query('select SUM(valor_manut) as qt_manutencao from tb_manutencao', function(err, rows, fields){
+        if (!err)
+            res.json(rows);
+        else
+            res.json(err);
+    })
+});
 
 routes.get("/manutencao-veic/:id", function(req, res){
     connection.query('select SUM(valor_manut) as valor from tb_manutencao where id_veiculo = ? ', [req.params.id], function(err, rows, fields){
@@ -39,6 +55,64 @@ routes.get("/manutencao-veic/:id", function(req, res){
             res.json(err);
     })
 });
+
+routes.get("/multa-veic/:id", function(req, res){
+    connection.query('select SUM(qt_preco) as valor from tb_multa where id_veiculo = ? ', [req.params.id], function(err, rows, fields){
+        if (!err)
+            res.json(rows);
+        else
+            res.json(err);
+    })
+});
+
+routes.get("/multaGeral-moto/:id", function(req, res){
+    connection.query('select SUM(qt_preco) as valor from tb_multa where id_motorista = ? ', [req.params.id], function(err, rows, fields){
+        if (!err)
+            res.json(rows);
+        else
+            res.json(err);
+    })
+});
+
+routes.get("/qtveiculos/", function(req, res){
+
+    connection.query('select COUNT(*) as qt_veiculos, E.nm_empresa, V.id_empresa from tb_veiculo V, tb_empresa E where E.id_empresa = V.id_empresa group by V.id_empresa ', [req.params.id], function(err, rows, fields){
+        if (!err)
+            res.json(rows);
+        else
+            res.json(err);
+    })
+});
+
+routes.get("/frota-veic/:id", function(req, res){
+
+    connection.query('select F.ds_frota, V.ds_placa from tb_frota F, tb_veiculo V where F.id_frota = V.id_frota and id_veiculo = ?', [req.params.id], function(err, rows, fields){
+        if (!err)
+            res.json(rows);
+        else
+            res.json(err);
+    })
+});
+
+routes.get("/empresa-veic/:id", function(req, res){
+
+    connection.query('select E.nm_empresa, V.ds_placa from tb_empresa E, tb_veiculo V where E.id_empresa = V.id_empresa and id_veiculo = ?', [req.params.id], function(err, rows, fields){
+        if (!err)
+            res.json(rows);
+        else
+            res.json(err);
+    })
+});
+routes.get("/empresa-moto/:id", function(req, res){
+
+    connection.query('select E.nm_empresa, M.nm_motorista from tb_empresa E, tb_motorista M where E.id_empresa = M.id_empresa and id_motorista = ?', [req.params.id], function(err, rows, fields){
+        if (!err)
+            res.json(rows);
+        else
+            res.json(err);
+    })
+});
+
 routes.get("/empresas", function(req, res){
     connection.query('select * from tb_empresa', function(err, rows, fields){
         if (!err)
@@ -136,6 +210,15 @@ routes.get("/veiculos-empresa/:id", function(req, res){
             res.json(err);
     })
 });
+
+routes.get("/marca-modelo/:id", function(req, res){
+    connection.query('select M.marca, Mo.desc_modelo from tb_marca M, tb_modelo Mo, tb_veiculo V where M.id_marca = V.id_marca and Mo.id_modelo = V.id_modelo and id_veiculo = ?', [req.params.id], function(err, rows, fields){
+        if (!err)
+            res.json(rows);
+        else
+            res.json(err);
+    })
+});
 routes.get("/veiculos", function(req, res){
     connection.query('select * from tb_veiculo', function(err, rows, fields){
         if (!err)
@@ -145,7 +228,7 @@ routes.get("/veiculos", function(req, res){
     })
 });
 routes.get("/marcas", function(req, res){
-    connection.query('select * from tb_marca', function(err, rows, fields){
+    connection.query('select * from tb_marca ORDER BY marca', function(err, rows, fields){
         if (!err)
             res.json(rows);
         else
@@ -153,7 +236,7 @@ routes.get("/marcas", function(req, res){
     })
 });
 routes.get("/marcas/:id", function(req, res){
-    connection.query('select * from tb_marca where id_marca = ?', [req.params.id], function(err, rows, fields){
+    connection.query('select * from tb_marca where id_marca = ? ', [req.params.id], function(err, rows, fields){
         if (!err)
             res.json(rows);
         else
@@ -162,7 +245,7 @@ routes.get("/marcas/:id", function(req, res){
 });
 
 routes.get("/modelos", function(req, res){
-    connection.query('select * from tb_modelo ',  function(err, rows, fields){
+    connection.query('select * from tb_modelo ORDER BY desc_modelo',  function(err, rows, fields){
         if (!err)
             res.json(rows);
         else
@@ -354,6 +437,25 @@ routes.get("/multas-veiculo/:id", function(req, res){
             res.json(err);        
     })
 });
+
+
+routes.get("/multas-moto/:id", function(req, res){
+    connection.query('select * from tb_multa where id_motorista = ?', [req.params.id], function(err, rows, fields){
+        if (!err)
+            res.json(rows);
+        else
+            res.json(err);        
+    })
+});
+routes.get("/viagens-moto/:id", function(req, res){
+    connection.query('select * from tb_viagem where id_motorista = ?', [req.params.id], function(err, rows, fields){
+        if (!err)
+            res.json(rows);
+        else
+            res.json(err);        
+    })
+});
+
 
 routes.post("/multas", function(req, res){
     connection.query('insert tb_multa set ?', req.body, function(err, rows, fields){
@@ -635,6 +737,16 @@ routes.post('/register', (req, res) => {
         res.send('error: ' + err)
       })
   })
+
+  
+routes.get("/funcionarios/:cpf", function(req, res){
+    connection.query('select * from tb_funcionarios where cd_cpf = ?', [req.params.cpf], function(err, rows, fields){
+        if (!err)
+            res.json(rows);
+        else
+            res.json(err);        
+    })
+  });
   
 
 module.exports = routes;

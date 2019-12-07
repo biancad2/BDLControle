@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { register } from './UserFunctions'
 import { Link } from 'react-router-dom';
+import api from '../services/api';
 
 class Register extends Component {
   constructor() {
@@ -18,8 +19,36 @@ class Register extends Component {
 
     this.onChange = this.onChange.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
+    this.pesquisar = this.pesquisar.bind(this)
+    this.onChangeCPF = this.onChangeCPF.bind(this)
+
+  }
+  pesquisar(){
+ 
+    api.get('/funcionarios/'+this.state.cd_cpf).then(response => {
+      this.setState({
+
+        nm_funcionario: response.data[0].nm_funcionario,
+        nm_sobrenome: response.data[0].nm_sobrenome,
+        email: response.data[0].email,
+        cd_cpf: response.data[0].cd_cpf,
+        cd_rg: response.data[0].cd_rg,
+        nr_telefone: response.data[0].nr_telefone
+    });
+    console.log(response);
+  })
+  .catch(function (error) {
+    console.log(error);
+    alert("Usuário não encontrado")
+  })
+    
   }
 
+  onChangeCPF(e){
+    this.setState({
+      cd_cpf: e.target.value
+    })
+  }
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value })
   }
@@ -27,7 +56,7 @@ class Register extends Component {
     e.preventDefault()
 
     const newUser = {
-      nm_usuario: this.state.nm_usuario,
+      nm_usuario: this.state.nm_funcionario,
       nm_sobrenome: this.state.nm_sobrenome,
       cd_cpf: this.state.cd_cpf,
       cd_rg: this.state.cd_rg,
@@ -36,6 +65,7 @@ class Register extends Component {
     }
 
     register(newUser).then(res => {
+      console.log(res)
       this.props.history.push(`/login`)
     })
   }
@@ -98,53 +128,7 @@ class Register extends Component {
             <form noValidate onSubmit={this.onSubmit} className="registro">
               <h1 className="h3 mb-3 font-weight-normal">Registrar</h1>
               <div className="form-group">
-                <label htmlFor="name"> Nome</label>
-                <input
-                  type="text"
-                  className="form-control entrada"
-                  name="nm_usuario"
-                  placeholder="Digite seu primeiro nome"
-                  value={this.state.nm_usuario}
-                  onChange={this.onChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="name">Sobrenome</label>
-                <input
-                  type="text"
-                  className="form-control entrada"
-                  name="nm_sobrenome"
-                  placeholder="Digite seu sobrenome"
-                  value={this.state.nm_sobrenome}
-                  onChange={this.onChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="email">Email</label>
-                <input
-                  type="email"
-                  className="form-control entrada"
-                  name="email"
-                  placeholder="Digite seu email"
-                  value={this.state.email}
-                  onChange={this.onChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-              <label htmlFor="telefone">Telefone</label>
-                <input
-                  type="telefone"
-                  className="form-control entrada"
-                  name="nr_telefone"
-                  placeholder="Digite seu telefone"
-                  value={this.state.nr_telefone}
-                  onChange={this.onChange}
-                  required
-                />
-              </div>
+               
               <div className="form-group">
               <label htmlFor="cpf">CPF</label>
                 <input
@@ -153,22 +137,19 @@ class Register extends Component {
                   name="cd_cpf"
                   placeholder="Digite seu cpf"
                   value={this.state.cd_cpf}
-                  onChange={this.onChange}
+                  onChange={this.onChangeCPF}
                   required
                 />
               </div>
-              <div className="form-group">
-              <label htmlFor="rg">RG</label>
-                <input
-                  type="rg"
-                  className="form-control entrada"
-                  name="cd_rg"
-                  placeholder="Digite seu rg"
-                  value={this.state.cd_rg}
-                  onChange={this.onChange}
-                  required
-                />
+          
               </div>
+              <button
+                type="button"
+                className="btn btn-lg btn-primary btn-block"
+                onClick={this.pesquisar}
+              >
+                Pesquisar
+              </button>
               <button
                 type="submit"
                 className="btn btn-lg btn-primary btn-block"

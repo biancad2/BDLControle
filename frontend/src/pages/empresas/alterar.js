@@ -3,6 +3,15 @@ import api from '../../services/api'
 import './empresas.css';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import jwt_decode from 'jwt-decode'
+import { cepMask } from '../../js/mascaras/cepmask';
+import { telMask } from '../../js/mascaras/telmask';
+import { celMask } from '../../js/mascaras/celmask';
+import { cnpjMask } from '../../js/mascaras/cnpjmask';
+import { confirmAlert } from 'react-confirm-alert';
+import './confirm.css';
+import cep from 'cep-promise';
+
+
 
 
 import Logo from '../../assets/logobranco2.png';
@@ -10,11 +19,13 @@ import Usuario from '../../assets/usuario-branco.png';
 import Notificacao from '../../assets/icone.png';
 import Download from '../../assets/download.png';
 
+  
+
+
 export default class Edit extends Component {
     constructor(props) {
-        super(props);
-        this.onChangeId = this.onChangeId.bind(this);
-        this.onChangeEmpresa = this.onChangeEmpresa.bind(this);
+        super(props); 
+         this.onChangeEmpresa = this.onChangeEmpresa.bind(this);
         this.onChangeCNPJ = this.onChangeCNPJ.bind(this);
         this.onChangeEmail= this.onChangeEmail.bind(this);
         this.onChangeEndereco = this.onChangeEndereco.bind(this);   
@@ -25,29 +36,29 @@ export default class Edit extends Component {
         this.onChangeTelefone = this.onChangeTelefone.bind(this);
         this.onChangeCelular = this.onChangeCelular.bind(this);
         this.onChangeCEP = this.onChangeCEP.bind(this);
-        this.onChangeQtVeic = this.onChangeQtVeic.bind(this);
         this.onChangeResponsavel = this.onChangeResponsavel.bind(this);
         this.onChangeDtValidade = this.onChangeDtValidade.bind(this);
+        this.cancelar = this.cancelar.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+        this.onBlurCEP = this.onBlurCEP.bind(this);
 
 
         this.state = {
             empresa: {
-                id_emp: "",
-                nm_emp: "",
-                cnpj: "",
-                email: "",
-                endereco: "",
-                estado: "",
-                nrendereco: "",
-                complemento: "",
-                cidade: "",
-                telefone: "",
-                celular: "",
-                CEP: "",
-                veiculos: "",
-                responsavel: "",
-                validadecontrato: ""
+                nm_empresa: '',
+                cd_cnpj: '',
+                ds_email: '',
+                ds_endereco: '',
+                sg_estado: '',
+                num_endereco: '',
+                ds_complemento: '',
+                nm_cidade: '',
+                nr_telefone: '',
+                nr_celular: '',
+                cd_cep: '',
+                nm_responsavel: '',
+                dt_validadecontrato: '',
+                ds_status: "Ativa",
             },
             nm_usuario: '',
             nm_sobrenome: '',
@@ -72,21 +83,22 @@ export default class Edit extends Component {
         api.get('/empresas/'+this.props.match.params.id)
           .then(response => {
               this.setState({ 
-                id_emp: response.data[0].id_empresa,
-                nm_emp: response.data[0].nm_empresa,
-                cnpj: response.data[0].cd_cnpj,   
-                email: response.data[0].ds_email,
-                endereco: response.data[0].ds_endereco,
-                veiculos: response.data[0].qt_veiculos,
-                estado: response.data[0].sg_estado,
-                nrendereco: response.data[0].num_endereco,
-                complemento: response.data[0].ds_complemento,
-                CEP: response.data[0].cd_CEP,
-                cidade: response.data[0].nm_cidade,
-                telefone: response.data[0].nr_telefone,
-                celular: response.data[0].nr_celular,
-                responsavel: response.data[0].nm_responsavel,
-                validadecontrato: response.data[0].dt_validadecontrato
+                id_empresa: response.data[0].id_empresa,
+                nm_empresa: response.data[0].nm_empresa,
+                cd_cnpj: response.data[0].cd_cnpj,   
+                ds_email: response.data[0].ds_email,
+                ds_endereco: response.data[0].ds_endereco,
+                qt_veiculos: response.data[0].qt_veiculos,
+                sg_estado: response.data[0].sg_estado,
+                num_endereco: response.data[0].num_endereco,
+                ds_complemento: response.data[0].ds_complemento,
+                cd_cep: response.data[0].cd_cep,
+                nm_cidade: response.data[0].nm_cidade,
+                nr_telefone: response.data[0].nr_telefone,
+                nr_celular: response.data[0].nr_celular,
+                nm_responsavel: response.data[0].nm_responsavel,
+                dt_validadecontrato: response.data[0].dt_validadecontrato,
+                ds_status: response.data[0].ds_status,
             });
                 console.log(response);
                 console.log(response.data.id_empresa);
@@ -96,100 +108,124 @@ export default class Edit extends Component {
           })
     }
 
-    onChangeId(e) {
-        this.setState({
-            id_emp: e.target.value
-        });
-    }
     onChangeEmpresa(e) {
         this.setState({
-            nm_emp: e.target.value
+            nm_empresa: e.target.value
         })
     }
     onChangeCNPJ(e) {
         this.setState({
-            cnpj: e.target.value
+            cd_cnpj: cnpjMask(e.target.value)
         })
     }
     onChangeEmail(e) {
         this.setState({
-            email: e.target.value
+            ds_email: e.target.value
         })
     }
     onChangeEndereco(e) {
         this.setState({
-            endereco: e.target.value
+            ds_endereco: e.target.value
         })
     }
     onChangeEstado(e) {
         this.setState({
-            estado: e.target.value
+            sg_estado: e.target.value
         })
     }
     onChangeNumEndereco(e) {
         this.setState({
-            nrendereco: e.target.value
+            num_endereco: e.target.value
         })
     }
     onChangeComplemento(e) {
         this.setState({
-            complemento: e.target.value
+            ds_complemento: e.target.value
         })
     }
     onChangeCidade(e) {
         this.setState({
-            cidade: e.target.value
+            nm_cidade: e.target.value
         })
     }
     onChangeTelefone(e) {
         this.setState({
-            telefone: e.target.value
+            nr_telefone: telMask(e.target.value)
         })
     }
-    onChangeQtVeic(e) {
-        this.setState({
-            veiculos: e.target.value
-        })
-    }
+  
     onChangeCelular(e) {
         this.setState({
-            celular: e.target.value
+            nr_celular: celMask(e.target.value)
         })
     }
     onChangeCEP(e) {
         this.setState({
-            CEP: e.target.value
+            cd_cep: cepMask(e.target.value)
         })
     }
     onChangeResponsavel(e) {
         this.setState({
-            responsavel: e.target.value
+            nm_responsavel: e.target.value
         })
     }
     onChangeDtValidade(e) {
         this.setState({
-            validadecontrato: e.target.value
+            dt_validadecontrato: e.target.value
         })
     }
-
+    onChangeStatus(e) {
+        this.setState({
+            ds_status: e.target.value
+        })
+    }
+    onBlurCEP(){
+        cep(this.state.cd_CEP)
+        .then(response => {
+          console.log(response)
+          this.setState({
+              sg_estado: response.state,
+              nm_cidade: response.city,
+              ds_endereco: response.street
+        })
+        }
+          
+          );
+         
+    }
+    cancelar(){
+        confirmAlert({
+            title: 'Confirmar',
+            message: 'Você tem certeza que quer cancelar a alteração?.',
+            buttons: [
+              {
+                label: 'Sim',
+                onClick: () =>    window.location.href = "/empresas"
+              },
+              {
+                label: 'Não'
+              }
+            ]
+          });
+       
+    }
     onSubmit(e) {
         e.preventDefault();
         const obj = {
-            nm_empresa: this.state.nm_emp,
-            cd_cnpj: this.state.cnpj,
-            ds_email: this.state.email,
-            qt_veiculos: this.state.veiculos,
-            ds_endereco: this.state.endereco,
-            sg_estado: this.state.estado,
-            num_endereco: this.state.nrendereco,
-            ds_complemento: this.state.complemento,
-            nm_cidade: this.state.cidade,
-            nr_telefone: this.state.telefone,
-            nr_celular: this.state.celular,
-            cd_CEP: this.state.CEP,
-            nm_responsavel: this.state.responsavel,
-            dt_validadecontrato: this.state.validadecontrato,
-            qt_veiculos: this.state.veiculos
+            nm_empresa: this.state.nm_empresa,
+            cd_cnpj: this.state.cd_cnpj,
+            ds_email: this.state.ds_email,
+            qt_veiculos: this.state.qt_veiculos,
+            ds_endereco: this.state.ds_endereco,
+            sg_estado: this.state.sg_estado,
+            num_endereco: this.state.num_endereco,
+            ds_complemento: this.state.ds_complemento,
+            nm_cidade: this.state.nm_cidade,
+            nr_telefone: this.state.nr_telefone,
+            nr_celular: this.state.nr_celular,
+            cd_cep: this.state.cd_cep,
+            nm_responsavel: this.state.nm_responsavel,
+            dt_validadecontrato: this.state.dt_validadecontrato
         };
 
         console.log('Nome da empresa: ' + obj.nome)
@@ -282,101 +318,108 @@ export default class Edit extends Component {
             <main role="main" class="bg-light">
             <div class="quadrado">Quadrado</div>
             <h1> Atualizar empresa </h1>
+            <form id="formulario" onSubmit={this.onSubmit}>
+         <fieldset>
+             <h2 class="info-empresas">Informações </h2>
+            <div className="form-row">
+                <div className="form-group col-md-5">
+                    <label for="inputNomeEmpresa">Nome*</label>
+                    <input type="text" className="form-control" id="inputNome" placeholder="Nome da Empresa" required  value={this.state.nm_empresa}
+                        onChange={this.onChangeEmpresa}/>
+                </div>
+            </div>
+            <div className="form-row">
+                <div className="form-group col-md-5">
+                    <label for="inputCNPJ">CNPJ*</label>
+                    <input type="text" className="form-control" id="inputCNPJ" required value={this.state.cd_cnpj}
+                        onChange={this.onChangeCNPJ} placeholder="Ex.: "/>
+                </div>
+                </div>
+                <div className="form-row">
+                <div className="form-group col-md-2">
+                    <label for="inputTel">Telefone</label>
+                    <input type="tel" className="form-control" id="inputTel" placeholder="Ex: (00)0000-0000" required value={this.state.nr_telefone}
+                        onChange={this.onChangeTelefone}/>
+                </div>
+                <div className="form-group col-md-3">
+                    <label for="inputCel">Celular*</label>
+                    <input type="tel" className="form-control" id="inputCel" placeholder="Ex: (00)00000-0000" required value={this.state.nr_celular}
+                        onChange={this.onChangeCelular}/>
+                </div>
+                </div>
+                <div className="form-row">
+                 <div className="form-group col-md-5">
+                    <label for="inputResponsavel">Nome responsável*</label>
+                    <input type="text" className="form-control" id="inputResponsavel" placeholder="Ex.: Rodrigo das Neves" required value={this.state.nm_responsavel}
+                        onChange={this.onChangeResponsavel}/>
+                </div>
+                </div>
+                <div className="form-row">
+                 <div className="form-group col-md-5">
+                    <label for="inputEmail">E-mail*</label>
+                    <input type="email" className="form-control" id="inputEmail" placeholder="E-mail do representante" required value={this.state.ds_email}
+                        onChange={this.onChangeEmail}/>
+                </div>
+                </div>
+                <div className="form-row">
+                
+                
+               
+                <div className="form-group col-md-3">
+                    <label for="inputData">Data vencimento contrato*</label>
+                    <input type="date" className="form-control" id="inputData" placeholder="Data" required value={this.state.dt_validadecontrato}
+                        onChange={this.onChangeDtValidade}/>
+                </div>
+            </div>
+         </fieldset>
+         <fieldset>
+             <legend>Endereço</legend>
+         <div className="form-row">
+             <div className="form-group col-md-2">
+              <label for="inputCEP">CEP*</label>
+              <input type="text" className="form-control" id="inputCEP" placeholder="Ex: 00000-000" required value={this.state.cd_cep}
+                        onChange={this.onChangeCEP} onBlur={this.onBlurCEP}/>
+            </div>
+             
+             <div className="form-group col-md-4">
+              <label for="inputEstado">Estado (Sigla)*</label>
+              <input type="text" maxLength='2' id="inputEstado" className="form-control" required value={this.state.sg_estado}
+                        onChange={this.onChangeEstado}/>
+             
+            </div>
             
-         <form id="formulario" onSubmit={this.onSubmit}>
-             <fieldset>
-                 <h2>Informações </h2>
-                <div class="form-row">
-                    <div class="form-group col-md-3">
-                        <label for="inputNomeEmpresa">Nome*</label>
-                        <input type="text" class="form-control" id="inputNome" placeholder="Nome da Empresa" required  value={this.state.nm_emp}
-                            onChange={this.onChangeEmpresa}/>
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label for="inputNomeR">Nome responsavel*</label>
-                        <input type="text" class="form-control" id="inputNomeR" placeholder="Nome do responsável" required  value={this.state.responsavel}
-                            onChange={this.onChangeResponsavel}/>
-                    </div>
-                
-                    <div class="form-group col-md-2">
-                        <label for="inputCNPJ">CNPJ*</label>
-                        <input type="text" class="form-control" id="inputCNPJ" required value={this.state.cnpj}
-                            onChange={this.onChangeCNPJ}/>
-                    </div>
-                    <div class="form-group col-md-2">
-                        <label for="inputQTVeic">Quantidade de veículos</label>
-                        <input type="number" class="form-control" id="inputQTVeic" placeholder="Ex: 100" required  value={this.state.veiculos}
-                            onChange={this.onChangeQtVeic}/>
-                    </div>
-                    
-                    <div class="form-group col-md-2">
-                        <label for="inputTel">Telefone</label>
-                        <input type="tel" class="form-control" id="inputTel" placeholder="Ex: (00)0000-0000" required value={this.state.telefone}
-                            onChange={this.onChangeTelefone}/>
-                    </div>
-                     <div class="form-group col-md-2">
-                        <label for="inputCel">Celular*</label>
-                        <input type="tel" class="form-control" id="inputCel" placeholder="Ex: (00)00000-0000" required value={this.state.celular}
-                            onChange={this.onChangeCelular}/>
-                    </div>
-                     <div class="form-group col-md-3">
-                        <label for="inputEmail">E-mail*</label>
-                        <input type="email" class="form-control" id="inputEmail" placeholder="E-mail do representante" required value={this.state.email}
-                            onChange={this.onChangeEmail}/>
-                    </div>
-                </div>
+             <div className="form-group col-md-3">
+              <label for="inputCidade">Cidade*</label>
+              <input type="text" className="form-control" id="inputCidade" required value={this.state.nm_cidade}
+                        onChange={this.onChangeCidade}/>
+            </div>
+           <div className="form-group col-md-4">
+            <label for="inputRua">Rua*</label>
+            <input type="text" className="form-control" id="inputRua" placeholder="Ex: Rua Aleatória" required value={this.state.ds_endereco}
+                        onChange={this.onChangeEndereco}/>
+        </div>
+        <div className="form-group col-md-1">
+            <label for="inputNumCasa">Número*</label>
+            <input type="text" className="form-control" id="inputNumCasa" placeholder="Ex: 0000" required value={this.state.num_endereco}
+                        onChange={this.onChangeNumEndereco}/>
+        </div>
+        <div className="form-group col-md-1">
+            <label for="inputComp">Comp.</label>
+            <input type="text" className="form-control" id="inputComp" placeholder="Ex: 3º andar Ap. 00" value={this.state.ds_complemento}
+                        onChange={this.onChangeComplemento}/>
+             </div> 
+             </div>
              </fieldset>
-             <fieldset>
-                 <legend>Endereço</legend>
-             <div class="form-row">
-                 <div class="form-group col-md-2">
-                  <label for="inputCEP">CEP*</label>
-                  <input type="text" class="form-control" id="inputCEP" placeholder="Ex: 00000-000" required value={this.state.CEP}
-                            onChange={this.onChangeCEP}/>
-                </div>
-                 
-                 <div class="form-group col-md-4">
-                  <label for="inputEstado">Estado*</label>
-                  <select id="inputEstado" class="form-control" required value={this.state.estado}
-                            onChange={this.onChangeEstado}>
-                    <option selected>Escolher...</option>
-                    <option value="SP">São paulo</option>
-                    <option value="RJ">Rio de janeiro</option>
-                  </select>
-                </div>
-                
-                 <div class="form-group col-md-3">
-                  <label for="inputCidade">Cidade*</label>
-                  <input type="text" class="form-control" id="inputCidade" required value={this.state.cidade}
-                            onChange={this.onChangeCidade}/>
-                </div>
-               <div class="form-group col-md-4">
-                <label for="inputRua">Rua*</label>
-                <input type="text" class="form-control" id="inputRua" placeholder="Ex: Rua Aleatória" required value={this.state.endereco}
-                            onChange={this.onChangeEndereco}/>
-            </div>
-            <div class="form-group col-md-1">
-                <label for="inputNumCasa">Número*</label>
-                <input type="text" class="form-control" id="inputNumCasa" placeholder="Ex: 0000" required value={this.state.nrendereco}
-                            onChange={this.onChangeNumEndereco}/>
-            </div>
-            <div class="form-group col-md-1">
-                <label for="inputComp">Comp.</label>
-                <input type="text" class="form-control" id="inputComp" placeholder="Ex: 3º andar Ap. 00" value={this.state.complemento}
-                            onChange={this.onChangeComplemento}/>
-                 </div> 
-                 </div>
-                 </fieldset>
-            <input type="submit" className="btn btn-primary" id="salvar" value="salvar"/>
-            <input type="reset" className="btn btn-primary" id="cancelar" value="limpar"/>
-        </form>
+        <input type="submit" className="btn btn-primary" id="salvar" value="Cadastrar"/>
+        <input type="button" className="btn btn-primary" id="cancelar" value="Cancelar" onClick={this.cancelar}/>
+    </form>
         </main>
         </div>
           )
         return (
             <div>
 
-            {localStorage.usertoken==null ? this.props.history.push(`./login`)  : userLink}
+            {localStorage.usertoken==null ? this.props.history.push(`/login`)  : userLink}
             </div>
         )
     }
