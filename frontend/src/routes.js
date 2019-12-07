@@ -58,7 +58,7 @@ export default function Routes() {
            <Route path="/motoristas"  component={Motoristas}/>
            <Route path="/atualizar-moto/:id" component={EditMotorista}/>
            <Route path="/incluir-moto/" component={CreateMotorista}/>
-           <Route path="/info-moto/" component={InfoMotorista}/>
+           <Route path="/info-moto/:id" component={InfoMotorista}/>
            <Route path="/viagens"  component={Viagens}/>
            <Route path="/atualizar-viagem/:id" component={EditViagem}/>
            <Route path="/incluir-viagem/" component={CreateViagem}/>

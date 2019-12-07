@@ -63,30 +63,30 @@ export default class InfoMotorista extends Component {
               })
         }
         api.get('/motoristas/'+this.props.match.params.id)
-        .then(response => {
-            this.setState({ 
-              id_motorista: response.data[0].id_motorista,
-              id_empresa: response.data[0].id_empresa,
-              nm_motorista: response.data[0].nm_motorista,   
-              sobrenome_motorista: response.data[0].sobrenome_motorista,
-              cd_cpf: response.data[0].cd_cpf,
-              cd_rg: response.data[0].cd_rg,
-              cd_cnh: response.data[0].cd_cnh,
-              nr_telefone: response.data[0].nr_telefone,
-              nr_celular: response.data[0].nr_celular,
-              cat_cnh: response.data[0].cat_cnh,
-              ds_endereco: response.data[0].ds_endereco,
-              num_endereco: response.data[0].num_endereco,
-              sg_estado: response.data[0].sg_estado,
-              nm_cidade: response.data[0].nm_cidade,
-              ds_email: response.data[0].ds_email
-          });
-              console.log(response);
-              console.log(response.data.id);
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
+          .then(response => {
+              this.setState({ 
+               id_motorista: response.data[0].id_motorista,
+                id_empresa: response.data[0].id_empresa,
+                nm_motorista: response.data[0].nm_motorista,   
+                sobrenome_motorista: response.data[0].sobrenome_motorista,
+                cd_cpf: response.data[0].cd_cpf,
+                cd_rg: response.data[0].cd_rg,
+                cd_cnh: response.data[0].cd_cnh,
+                nr_telefone: response.data[0].nr_telefone,
+                nr_celular: response.data[0].nr_celular,
+                cat_cnh: response.data[0].cat_cnh,
+                ds_endereco: response.data[0].ds_endereco,
+                num_endereco: response.data[0].num_endereco,
+                sg_estado: response.data[0].sg_estado,
+                nm_cidade: response.data[0].nm_cidade,
+                ds_email: response.data[0].ds_email
+            });
+                console.log(response);
+          })
+          .catch(function (error) {
+              console.log(error);
+          })
+         
           api.get('/empresa-moto/'+this.props.match.params.id)
           .then(response => {
             this.setState({
@@ -342,6 +342,14 @@ export default class InfoMotorista extends Component {
                         <td className="font-weight-bold">Endereço: </td>
           <td className="status">{this.state.sg_estado} - {this.state.nm_cidade} - {this.state.ds_endereco}, {this.state.num_endereco}</td>
                     </tr>
+                    <tr>
+                        <td className="font-weight-bold">Categoria CNH: </td>
+          <td className="status">{this.state.cat_cnh} </td>
+                    </tr>
+                    <tr>
+                        <td className="font-weight-bold">Número CNH: </td>
+          <td className="status">{this.state.cd_cnh} </td>
+                    </tr>
                 </table>
             </div>
 
@@ -370,15 +378,16 @@ export default class InfoMotorista extends Component {
                             <th></th>
                         </tr>
                     </thead>
-                    <tbody> {this.tabRow()}
+                    <tbody>  
+                    {this.tabRow2() }
                     </tbody>
                 </table> 
                 </div>
                 </div>
 
 
-            <h3  onClick={this.expandirMultas} className="links-expandir"> <span id="mais-multa">+</span> Multas
-            <span className="span-click">(Clique e veja as manutenções do veículo)</span>
+            <h3  onClick={this.expandirMultas} className="links-expandir"> <span id="mais-multa">+</span> Viagens
+            <span className="span-click">(Clique e veja as viagens do motorista)</span>
             </h3>
             <div className="table-responsive informacoes-multa" id="informacoes-multa" >
                 <Link to={'/incluir-multa'}><button type="button" className="btn btn-success editar-table" >
@@ -389,7 +398,7 @@ export default class InfoMotorista extends Component {
                 
                 <div className="table-responsive">
           <table className="table table-md" >
-                    <thead>
+                    <thead className="thead-dark">
                         <tr>
                         <th>ID</th>
                                   <th>Empresa</th>
@@ -406,7 +415,7 @@ export default class InfoMotorista extends Component {
                                   <th></th>
                         </tr>
                     </thead>
-                    <tbody>{this.tabRow2()}
+                    <tbody>{this.tabRow()}
                     </tbody>
                 </table> 
                 </div>
