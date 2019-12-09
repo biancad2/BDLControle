@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { register } from './UserFunctions'
 import { Link } from 'react-router-dom';
 import api from '../services/api';
+import { cpfMask } from '../js/mascaras/cpfmask';
 
 class Register extends Component {
   constructor() {
@@ -36,7 +37,11 @@ class Register extends Component {
         nr_telefone: response.data[0].nr_telefone
     });
     console.log(response);
-  })
+    
+  },
+  document.querySelector(".fa-search").classList.add("escondido"),
+    document.querySelector(".fa-check").classList.remove("escondido")
+  )
   .catch(function (error) {
     console.log(error);
     alert("Usuário não encontrado")
@@ -46,7 +51,7 @@ class Register extends Component {
 
   onChangeCPF(e){
     this.setState({
-      cd_cpf: e.target.value
+      cd_cpf: cpfMask(e.target.value)
     })
   }
   onChange(e) {
@@ -122,6 +127,28 @@ class Register extends Component {
     background-color:#1E155C;
     color: #fff 
   }
+  .fas{
+    color:  #55ACFE
+}
+.box_icone_busca2{
+  width: 25px;
+  height: 25px;
+  position: relative;
+  top: -1.9rem;
+  right: -44% ;
+  cursor: pointer;
+}
+.fas:hover{
+  color:  #0B467E
+}
+.escondido{
+  display:none;
+}
+
+.fa-check{
+  color:#1FC506;
+  cursor: not-allowed
+}
 `}}></style>
         <div className="row">
           <div className="col-md-6 mt-5 mx-auto">
@@ -140,16 +167,16 @@ class Register extends Component {
                   onChange={this.onChangeCPF}
                   required
                 />
+                <span className="box_icone_busca2">
+                <i class="fas fa-search" onClick={this.pesquisar}></i>
+                <i class="fas fa-check escondido"></i>
+                </span> 
+               
+
+
               </div>
           
               </div>
-              <button
-                type="button"
-                className="btn btn-lg btn-primary btn-block"
-                onClick={this.pesquisar}
-              >
-                Pesquisar
-              </button>
               <button
                 type="submit"
                 className="btn btn-lg btn-primary btn-block"

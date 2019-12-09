@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import api from '../../services/api'
 import './motoristas.css';
-
+import { cepMask } from '../../js/mascaras/cepmask';
+import { telMask } from '../../js/mascaras/telmask';
+import { celMask } from '../../js/mascaras/celmask';
+import { cpfMask } from '../../js/mascaras/cpfmask';
+import { rgMask } from '../../js/mascaras/rgmask';
+import cep from 'cep-promise'
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import jwt_decode from 'jwt-decode'
 
@@ -26,9 +31,8 @@ export default class CreateMotorista extends Component {
         this.onChangeNrEnd = this.onChangeNrEnd.bind(this);
         this.onChangeCidade = this.onChangeCidade.bind(this);
         this.onChangeEmail = this.onChangeEmail.bind(this);
-        this.onChangeFoto = this.onChangeFoto.bind(this);
-
-
+        this.onChangeCEP = this.onChangeCEP.bind(this);
+        this.onBlurCEP = this.onBlurCEP.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
 
         this.state = {
@@ -45,8 +49,8 @@ export default class CreateMotorista extends Component {
             num_endereco: '',
             sg_estado: '',
             nm_cidade: '',
+            cd_cep: '',
             ds_email: '',
-            foto_motorista:'', 
             password: '',
             empresas: [],
             nm_usuario: '',
@@ -86,7 +90,7 @@ export default class CreateMotorista extends Component {
     }
     onChangeCPF(e) {
         this.setState({
-            cd_cpf: e.target.value
+            cd_cpf: cpfMask(e.target.value)
         })
     }
     onChangeCNH(e) {
@@ -96,7 +100,7 @@ export default class CreateMotorista extends Component {
     }
     onChangeRg(e) {
         this.setState({
-            cd_rg: e.target.value
+            cd_rg: rgMask(e.target.value)
         })
     }
     onChangeNome(e) {
@@ -111,12 +115,12 @@ export default class CreateMotorista extends Component {
     }
     onChangeTelefone(e) {
         this.setState({
-            nr_telefone: e.target.value
+            nr_telefone: telMask(e.target.value)
         })
     }
     onChangeCelular(e) {
         this.setState({
-            nr_celular: e.target.value
+            nr_celular: celMask(e.target.value)
         })
     }
     onChangeCatCnh(e) {
@@ -150,10 +154,24 @@ export default class CreateMotorista extends Component {
         })
     }
 
-    onChangeFoto(e) {
+    onChangeCEP(e){
         this.setState({
-            foto_motorista: e.target.value
+            cd_cep: cepMask(e.target.value)
         })
+    }
+    onBlurCEP(){
+        cep(this.state.cd_cep)
+        .then(response => {
+          console.log(response)
+          this.setState({
+              sg_estado: response.state,
+              nm_cidade: response.city,
+              ds_endereco: response.street
+        })
+        }
+          
+          );
+         
     }
     logOut(e) {
         e.preventDefault()
@@ -177,7 +195,7 @@ export default class CreateMotorista extends Component {
             sg_estado: this.state.sg_estado,
             nm_cidade: this.state.nm_cidade,
             ds_email: this.state.ds_email,
-            foto_motorista: this.state.foto_motorista,
+            cd_cep: this.state.cd_cep,
             password: this.state.cd_cpf
         };
 
@@ -200,7 +218,7 @@ export default class CreateMotorista extends Component {
             sg_estado: '',
             nm_cidade: '',
             ds_email: '',
-            foto_motorista:'',
+            cd_cep: '',
             password:''
         })
     }
@@ -224,7 +242,7 @@ export default class CreateMotorista extends Component {
           const userLink = (
             <div>
                <nav className="navbar navbar-expand-md navbar-dark bg-menu" id="menuu">
-                        <Link class="navbar-brand" to="/main">
+                        <Link className="navbar-brand" to="/main">
                             <img src={Logo}></img>
                         </Link>
                         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -279,42 +297,47 @@ export default class CreateMotorista extends Component {
                             </ul>
                         </div>
                   </nav> 
-<main role="main" class="bg-light">
-<div class="quadrado">Quadrado</div>
+<main role="main" className="bg-light">
+<div className="quadrado">Quadrado</div>
 <h1> Adicionar motorista </h1>
 
 <form id="formulario" onSubmit={this.onSubmit}>
 <fieldset>
 <h2>Informações pessoais</h2>
-<div class="form-row">
-<div class="form-group col-md-3">
+<div className="form-row">
+<div className="form-group col-md-4">
    <label for="inputNome">Nome*</label>
-   <input type="text" class="form-control" id="inputNome" placeholder="Nome" required value={this.state.nm_motorista}
+   <input type="text" className="form-control" id="inputNome" placeholder="Nome" required value={this.state.nm_motorista}
        onChange={this.onChangeNome}/>
 </div>
-<div class="form-group col-md-3">
+
+<div className="form-group col-md-4">
    <label for="inputSobrenome">Sobrenome*</label>
-   <input type="text" class="form-control" id="inputSobrenome" placeholder="Sobrenome" required value={this.state.sobrenome_motorista}
+   <input type="text" className="form-control" id="inputSobrenome" placeholder="Sobrenome" required value={this.state.sobrenome_motorista}
        onChange={this.onChangeSobrenome}/>
 </div>
-<div class="form-group col-md-2">
+</div>
+<div className="form-row">
+<div className="form-group col-md-4">
    <label for="inputRG">RG*</label>
-   <input type="text" class="form-control" id="inputRG" placeholder="Ex: 00.000.000-0" required value={this.state.cd_rg}
+   <input type="text" className="form-control" id="inputRG" placeholder="Ex: 00.000.000-0" required value={this.state.cd_rg}
        onChange={this.onChangeRg}/>
 </div>
-<div class="form-group col-md-2">
+<div className="form-group col-md-4">
    <label for="inputCPF">CPF*</label>
-   <input type="text" class="form-control" id="inputCPF" placeholder="Ex: 000.000.000-00" required value={this.state.cd_cpf}
+   <input type="text" className="form-control" id="inputCPF" placeholder="Ex: 000.000.000-00" required value={this.state.cd_cpf}
        onChange={this.onChangeCPF}/>
 </div>
-<div class="form-group col-md-3">
+</div>
+<div className="form-row">
+<div className="form-group col-md-4">
    <label for="inputCNH">CNH*</label>
-   <input type="text" class="form-control" id="inputCNH" placeholder="Ex: 000123456789" required value={this.state.cd_cnh}
+   <input type="text" className="form-control" id="inputCNH" placeholder="Ex: 000123456789" required value={this.state.cd_cnh}
        onChange={this.onChangeCNH}/>
 </div>
-<div class="form-group  col-md-2">
+<div className="form-group  col-md-2">
    <label for="catCNH"> Categoria CNH*</label>
-   <select name="catCNH" class="form-control" id="catCNH"  tabindex="" required value={this.state.cat_cnh}
+   <select name="catCNH" className="form-control" id="catCNH"  tabindex="" required value={this.state.cat_cnh}
        onChange={this.onChangeCatCnh}>
        <option value=""> Selecione... </option>
        <option value="A"> A </option>
@@ -325,67 +348,63 @@ export default class CreateMotorista extends Component {
        <option value="E"> E </option>
    </select>
 </div>
-<div class="form-group col-md-2">
+</div>
+<div className="form-row">
+<div className="form-group col-md-4">
    <label for="inputTel">Telefone</label>
-   <input type="tel" class="form-control" id="inputTel" placeholder="Ex: (00)0000-0000" value={this.state.nr_telefone}
+   <input type="tel" className="form-control" id="inputTel" placeholder="Ex: (00)0000-0000" value={this.state.nr_telefone}
        onChange={this.onChangeTelefone}/>
 </div>
-<div class="form-group col-md-2">
+<div className="form-group col-md-4">
    <label for="inputCel">Celular*</label>
-   <input type="tel" class="form-control" id="inputCel" placeholder="Ex: (00)00000-0000" required value={this.state.nr_celular}
+   <input type="tel" className="form-control" id="inputCel" placeholder="Ex: (00)00000-0000" required value={this.state.nr_celular}
        onChange={this.onChangeCelular}/>
 </div>
-<div class="custom-file col-md-4">
-<label class="custom-file-label" for="customFile">Selecionar foto do motorista</label>
-<input type="file" class="custom-file-input" id="fotoMotorista " ref="fotoMotorista" value={this.state.foto_motorista} onChange={this.onChangeFoto}/>
-<div className="algo" ref="divizinha"></div>
-</div>
+
 
 </div>
 </fieldset>
 <fieldset>
 <legend>Endereço</legend>
-<div class="form-row">
-<div class="form-group col-md-2">
+<div className="form-row">
+<div className="form-group col-md-4">
 <label for="inputCEP">CEP*</label>
-<input type="text" class="form-control" id="inputCEP" placeholder="Ex: 00000-000" required/>
+<input type="text" className="form-control" id="inputCEP" placeholder="Ex: 00000-000" required onChange={this.onChangeCEP} value={this.state.cd_cep} onBlur={this.onBlurCEP}/>
 </div>
 
-<div class="form-group col-md-4">
+<div className="form-group col-md-4">
 <label for="inputEstado">Estado*</label>
-<select id="inputEstado" class="form-control" required value={this.state.sg_estado}
-       onChange={this.onChangeEstado}>
-<option selected>Escolher...</option>
-<option value="SP">São Paulo</option>
-<option value="RJ">Rio de Janeiro</option>
-</select>
-</div>
+<input id="inputEstado" className="form-control" required value={this.state.sg_estado}
+       onChange={this.onChangeEstado}/>
 
-<div class="form-group col-md-3">
+</div>
+</div>
+<div className="form-row">
+<div className="form-group col-md-2">
 <label for="inputCidade">Cidade*</label>
-<input type="text" class="form-control" id="inputCidade" required value={this.state.nm_cidade}
+<input type="text" className="form-control" id="inputCidade" required value={this.state.nm_cidade}
        onChange={this.onChangeCidade}/>
 </div>
-<div class="form-group col-md-4">
+<div className="form-group col-md-4">
 <label for="inputRua">Rua*</label>
-<input type="text" class="form-control" id="inputRua" placeholder="Ex: Rua Aleatória" required value={this.state.ds_endereco}
+<input type="text" className="form-control" id="inputRua" placeholder="Ex: Rua Aleatória" required value={this.state.ds_endereco}
        onChange={this.onChangeEndereco}/>
 </div>
-<div class="form-group col-md-1">
+<div className="form-group col-md-2">
 <label for="inputNumCasa">Número*</label>
-<input type="text" class="form-control" id="inputNumCasa" placeholder="Ex: 0000" required value={this.state.num_endereco}
+<input type="text" className="form-control" id="inputNumCasa" placeholder="Ex: 0000" required value={this.state.num_endereco}
        onChange={this.onChangeNrEnd}/>
 </div>
-<div class="form-group col-md-1">
+<div className="form-group col-md-1">
 <label for="inputComp">Comp.</label>
-<input type="text" class="form-control" id="inputComp" placeholder="Ex: Ap. 00"/>
+<input type="text" className="form-control" id="inputComp" placeholder="Ex: Ap. 00"/>
 </div> 
 </div>
 </fieldset>
-<div class="form-row">
-<div class="form-group col-md-3">
+<div className="form-row">
+<div className="form-group col-md-3">
 <label for="inputEmpresa">Selecionar empresa*</label>
-  <select  class="form-control" id="idEmpresa"  tabindex="" required value={this.state.id_empresa}
+  <select  className="form-control" id="idEmpresa"  tabindex="" required value={this.state.id_empresa}
 onChange={this.onChangeEmpresa}>
 <option value="">Selecionar...</option>
 { this.state.empresas.map(empresa =>(
@@ -394,16 +413,16 @@ onChange={this.onChangeEmpresa}>
 ))}
 </select>
 </div>
-<div class="form-group col-md-3">
+<div className="form-group col-md-3">
 <label for="inputCNPJ">ID*</label>
-<input type="text" class="form-control" id="inputCNPJ"  value={this.state.id_empresa} ref="cnpj"/>
+<input type="text" className="form-control" id="inputCNPJ"  value={this.state.id_empresa} ref="cnpj"/>
 </div> 
 
 
 </div>
 
-<button type="submit" class="btn btn-primary" id="salvar">Salvar</button>
-<button type="submit" class="btn btn-primary" id="cancelar">Cancelar</button>
+<button type="submit" className="btn btn-primary" id="salvar">Salvar</button>
+<button type="submit" className="btn btn-primary" id="cancelar">Cancelar</button>
 </form>
 </main>
 </div>

@@ -45,7 +45,7 @@ class Viagens extends Component {
         let items = this.state.viagens;
         items = items.filter((item)=>{
            
-            return item.end_destino.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1 || item.end_origem.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1 || item.data_saida.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1 || item.data_chegada.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1
+            return item.end_destino.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1 || item.end_origem.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1 || item.data_saida.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1 || item.data_chegada.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1 || item.id_viagem.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1 || item.id_motorista.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1 || item.id_veiculo.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1
         });
         this.setState({items: items});
         console.log(items);
@@ -144,22 +144,16 @@ class Viagens extends Component {
       
                       <div className="formulario busca col-md-5">
                           <label for="pesquisa" className="label-pesquisa"> Pesquisar	</label> 
-                          <input type="text" name="pesquisa" id="pesquisar" size="9" minlength="6" maxlength="7" placeholder="Endereço" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Você pode pesquisar pelos endereços cadastrados" onChange={this.filterList}/>
+                          <input type="text" name="pesquisa" id="pesquisar" size="9"  placeholder="Pesquisar por endereços/datas/id" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Você pode pesquisar pelos endereços, datas e id cadastrados" onChange={this.filterList}/>
                           <span id="box_icone_busca">
                               <i id="icone_busca" className="fa fa-search"></i>
                           </span> 
                       </div>
-                      <div className="col-md-5">
-                          <label for="pesquisa" className="label-pesquisa"> Pesquisar	</label> 
-                          <input type="datetime" name="pesquisa" id="pesquisarr" size="9" minlength="6" maxlength="7" placeholder="Endereço" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Você pode pesquisar pelos endereços cadastrados" onChange={this.filterList}/>
-                          <span id="box_icone_busca">
-                              <i id="icone_busca" className="fa fa-search"></i>
-                          </span> 
-                      </div>
+                    
                   </form>
                   <div className="adc-rem">
-                      Adicionar empresa: 
-                     <Link to={'./incluir-viagem'}> <button className="adc"></button></Link>
+                      Adicionar viagem: 
+                     <Link to={'/incluir-viagem'}> <button className="adc"></button></Link>
                   </div>
                 <div className="table-responsive">
                 <table className="table table-md" >

@@ -16,6 +16,7 @@ import Card1 from '../../assets/Veiculos/carro.png';
 import Card2 from '../../assets/multa.png';
 import Card3 from '../../assets/manutencoes.png';
 import Card4 from '../../assets/despesas.png';
+import Card5 from '../../assets/viagens.png';
 
 export default class InfoMotorista extends Component {
     constructor(props) {
@@ -107,7 +108,17 @@ export default class InfoMotorista extends Component {
           .catch(function (error) {
             console.log(error);
           })
-
+          api.get('/qtviagens/'+this.props.match.params.id)
+          .then(response => {
+            this.setState({
+             qtviagens: response.data[0].qt_viagens
+               }
+               );
+              
+          })
+          .catch(function (error) {
+            console.log(error);
+          })
           api.get('/multas-moto/'+this.props.match.params.id)
           .then(response => {
             this.setState({
@@ -290,17 +301,11 @@ export default class InfoMotorista extends Component {
                         </div>
                         <div className="col-md-3 ">
                             <div className="card card-body align-items-center">
-                                <p className="card-text"><Link to="/manutencoes" className="manutencoes"><img src={Card3}/>Manutenções</Link></p>
-                                <p id="manutencoes" className="numero">R$ </p>
+                                <p className="card-text"><Link to="/viagens" className="manutencoes"><img src={Card5}/>Viagens</Link></p>
+                                <p id="manutencoes" className="numero">{this.state.qtviagens} </p>
                             </div>
                         </div>
-                        <div className="col-md-3">
-                            <div className="card card-body align-items-center">
-                                <p className="card-text"><Link to="#"><img src={Card4}/>  Total </Link></p>
-                                <p id="despesas" className="numero"></p>
 
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <h3  onClick={this.expandir} className="links-expandir"> <span id="mais-info">+</span> Informações

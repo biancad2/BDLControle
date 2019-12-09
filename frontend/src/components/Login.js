@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { login } from './UserFunctions'
 import { Link } from 'react-router-dom';
 import Logo from '../assets/logobranco2.png';
+import { cpfMask } from '../js/mascaras/cpfmask';
 
 class Login extends Component {
   constructor() {
@@ -13,12 +14,18 @@ class Login extends Component {
     }
 
     this.onChange = this.onChange.bind(this)
+    this.onChangePassword = this.onChangePassword.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
   }
 
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value })
   }
+  onChangePassword(e){
+    this.setState({
+      password: cpfMask(e.target.value)
+    })
+}
   onSubmit(e) {
     e.preventDefault()
 
@@ -125,7 +132,7 @@ class Login extends Component {
                   name="password"
                   placeholder="Password"
                   value={this.state.password}
-                  onChange={this.onChange}
+                  onChange={this.onChangePassword}
                 />
                  <span className="box_icone_busca2">
                  <i class="fas fa-lock"></i>

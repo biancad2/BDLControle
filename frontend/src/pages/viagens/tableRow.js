@@ -80,7 +80,7 @@ class TableRow extends Component {
     }
     onChangeInicializar(e) {
       e.target.disabled = true;
-      document.getElementById("finalizar").disabled=false;
+      document.getElementById("encerrar-viagem").disabled=false;
         this.state.dt_iniciada= this.state.data
         
         const obj = {
@@ -99,7 +99,7 @@ class TableRow extends Component {
            
         api.put('/veiculos/' + this.props.obj.id_veiculo, obj2)
             .then(res => console.log(res.data)); 
-      
+      window.location.reload()
     }
    
     onChangeFinalizar(e) {
@@ -140,7 +140,7 @@ class TableRow extends Component {
     delete() {
         api.delete('/viagens/'+this.props.obj.id_viagem)
             .then(console.log('Deleted'),
-           window.reload()
+           window.location.reload()
            )
             .catch(err => console.log(err))
     }
@@ -183,10 +183,10 @@ class TableRow extends Component {
             <button className="btn btn-success" id="iniciar" onClick={this.onChangeInicializar}> <i class="fas fa-play"></i> </button>
           </td>
           <td className="encerrar">
-            <button className="btn btn-danger " id="finalizar"  onClick={this.onChangeFinalizar} ><i class="fas fa-stop"></i></button>
+            <button className="btn btn-danger " id="encerrar-viagem"  onClick={this.onChangeFinalizar} ><i class="fas fa-stop"></i></button>
           </td>
           <td>
-            <Link to={"./atualizar-viagem/"+this.props.obj.id_viagem} className="btn btn-primary edit"> <span class="sr-only">editar </span></Link>
+            <Link to={"/atualizar-viagem/"+this.props.obj.id_viagem} className="btn btn-primary edit"> <span class="sr-only">editar </span></Link>
             <button onClick={this.delete} className="btn btn-danger rem"><span class="sr-only">remover </span></button>
           </td>
         </tr>

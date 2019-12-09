@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import api from '../../services/api'
 import jwt_decode from 'jwt-decode'
 import { Link } from 'react-router-dom';
-
+import cep from 'cep-promise';
+import { cepMask } from '../../js/mascaras/cepmask';
 import Logo from '../../assets/logobranco2.png';
 import Usuario from '../../assets/usuario-branco.png';
 import Notificacao from '../../assets/icone.png';
@@ -22,6 +23,12 @@ export default class EditViagem extends Component {
         this.onChangeEmpresa = this.onChangeEmpresa.bind(this);
         this.onChangeVeiculo = this.onChangeVeiculo.bind(this);
         this.onChangeMotorista = this.onChangeMotorista.bind(this);
+        this.onChangeCepOrigem= this.onChangeCepOrigem.bind(this);
+        this.onChangeCepDestino= this.onChangeCepDestino.bind(this);
+        this.onChangeEstadoOrigem= this.onChangeEstadoOrigem.bind(this);
+        this.onChangeEstadoDestino= this.onChangeEstadoDestino.bind(this);
+        this.onBlurCepDestino=this.onBlurCepDestino.bind(this);
+        this.onBlurCepOrigem=this.onBlurCepOrigem.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
 
 
@@ -37,6 +44,13 @@ export default class EditViagem extends Component {
             cidade_destino: '',
             data_chegada: '',
             km: '',
+            cd_CEPOrigem: '',
+            cd_CEPDestino: '',
+            sg_estadoOrigem: '',
+            sg_estadoDestino: '',
+            empresas: [],
+            motoristas:[],
+            veiculos: [],
             nm_usuario: '',
             nm_sobrenome: '',
             email: '',
@@ -69,7 +83,11 @@ export default class EditViagem extends Component {
                 end_destino: response.data[0].end_destino,
                 cidade_destino: response.data[0].cidade_destino,
                 data_chegada: response.data[0].data_chegada,
-                km: response.data[0].km
+                km: response.data[0].km,
+                cd_CEPOrigem: response.data[0].cd_CEPOrigem,
+                cd_CEPDestino: response.data[0].cd_CEPDestino,
+                sg_estadoOrigem: response.data[0].sg_estadoOrigem,
+                cd_estadoDestino: response.data[0].cd_estadoDestino,
             });
                 console.log(response);
                 console.log(response.data.id_viagem);
@@ -77,6 +95,30 @@ export default class EditViagem extends Component {
           .catch(function (error) {
               console.log(error);
           })
+          api.get('/empresas/')
+        .then(response => {
+          this.setState({ empresas: response.data });
+
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+        api.get('/motoristas/')
+        .then(response => {
+          this.setState({ motoristas: response.data });
+          console.log(response)
+        })
+        .catch(function(error){
+          console.log(error);
+        })
+        api.get('/veiculos/')
+        .then(response => {
+          this.setState({ veiculos: response.data });
+          console.log(response)
+        })
+        .catch(function(error){
+          console.log(error);
+        })
     }
     
 
@@ -84,6 +126,26 @@ export default class EditViagem extends Component {
         this.setState({
             id_empresa: e.target.value
         })
+        this.setState({
+            id_empresa: e.target.value
+        })
+        api.get('/motoristas-empresa/'+e.target.value)
+          .then(response => {
+            this.setState({ motoristas: response.data });
+            console.log(response)
+          })
+          .catch(function(error){
+            console.log(error);
+          })
+          api.get('/veiculos-empresa/'+e.target.value)
+          .then(response => {
+            this.setState({ veiculos: response.data });
+            console.log(response)
+          })
+          .catch(function(error){
+            console.log(error);
+          })
+      
     }
     onChangeOrigem(e) {
         this.setState({
@@ -130,7 +192,57 @@ export default class EditViagem extends Component {
             id_motorista: e.target.value
         })
     }
-    
+    onChangeCepOrigem(e){
+        this.setState({
+            cd_CEPOrigem: cepMask(e.target.value)
+        })
+    }
+    onChangeEstadoOrigem(e){
+        this.setState({
+            sg_estadoOrigem: e.target.value
+        })
+    }
+
+    onChangeEstadoDestino(e){
+        this.setState({
+            sg_estadoDestino: e.target.value
+        })
+    }
+
+    onBlurCepOrigem(){
+        cep(this.state.cd_CEPOrigem)
+        .then(response => {
+          console.log(response)
+          this.setState({
+              sg_estadoOrigem: response.state,
+              cidade_origem: response.city,
+              end_origem: response.street
+        })
+        }
+          
+          );
+         
+    }
+
+    onBlurCepDestino(){
+        cep(this.state.cd_CEPDestino)
+        .then(response => {
+          console.log(response)
+          this.setState({
+              sg_estadoDestino: response.state,
+              cidade_destino: response.city,
+              end_destino: response.street
+        })
+        }
+          
+          );
+         
+    }
+    onChangeCepDestino(e){
+        this.setState({
+            cd_CEPDestino: cepMask(e.target.value)
+        })
+    }
     onSubmit(e) {
         e.preventDefault();
         const obj = {
@@ -143,10 +255,14 @@ export default class EditViagem extends Component {
             end_destino: this.state.end_destino,
             cidade_destino: this.state.cidade_destino,
             data_chegada: this.state.data_chegada,
-            km: this.state.km
+            km: this.state.km,
+            cd_CEPOrigem: this.state.cd_CEPOrigem,
+            cd_CEPDestino: this.state.cd_CEPOrigem,
+            sg_estadoOrigem: this.state.sg_estadoOrigem,
+            sg_estadoDestino: this.state.sg_estadoDestino,
         };
 
-        console.log('ID do motorista: ' + obj.id_motorista)
+       
 
         api.put('/viagens/' + this.props.match.params.id, obj)
             .then(res => console.log(res.data));
@@ -235,66 +351,131 @@ export default class EditViagem extends Component {
             <div class="quadrado">Quadrado</div>
             <h1> Editar viagem </h1>
             
-         <form id="formulario" onSubmit={this.onSubmit}>
-             <fieldset>
-                 <h2>Informações </h2>
-                <div class="form-row">
-                    <div class="form-group col-md-3">
-                        <label for="inputEmpresa">Selecionar empresa*</label>
-                        <input type="text" class="form-control" id="idEmpresa"  tabindex="" required value={this.state.id_empresa}
-                    onChange={this.onChangeEmpresa} />
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label for="inputMotorista">ID Motorista*</label>
-                        <input type="text" class="form-control" id="inputMotorista" placeholder="Id do motorista" required value={this.state.id_motorista}
-                            onChange={this.onChangeMotorista}/>
-                    </div>
-                    <div class="form-group vcol-md-2">
-                        <label for="inputIdVeiculo">Id Veiculo*</label>
-                        <input type="text" class="form-control" id="inputIdVeiculo" placeholder="Ex: 00.000.000-0" required value={this.state.id_veiculo}
-                            onChange={this.onChangeVeiculo}/>
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label for="inputEndOrigem">Endereço de Origem*</label>
-                        <input type="text" class="form-control" id="inputEndOrigem" placeholder="Ex: Rua Aleatoria, nº 0" required value={this.state.end_origem}
-                            onChange={this.onChangeOrigem}/>
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label for="inputCidadeOrigem">Cidade Origem*</label>
-                        <input type="text" class="form-control" id="inputCidadeOrigem" placeholder="Ex: Santos" required value={this.state.cidade_origem}
-                            onChange={this.onChangeCidadeOrigem}/>
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label for="inputDtSaida">Data de saída*</label>
-                        <input type="text" class="form-control" id="inputDtSaida" placeholder="Ex: 04102019" required value={this.state.data_saida}
-                            onChange={this.onChangeDataSaida}/>
-                    </div>
-                    <div class="form-group col-md-2">
-                        <label for="inputEndDestino">Endereço de Destino*</label>
-                        <input type="tel" class="form-control" id="inputEndDestino" placeholder="Ex: Rua Aleatória2, Nº 0" value={this.state.end_destino}
-                            onChange={this.onChangeDestino}/>
-                    </div>
-                     <div class="form-group col-md-2">
-                        <label for="inputCidadeDestino">Cidade de Destino*</label>
-                        <input type="tel" class="form-control" id="inputCidadeDestino" placeholder="Ex: São Vicente" required value={this.state.cidade_destino}
-                            onChange={this.onChangeCidadeDestino}/>
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label for="inputDtChegada">Data de chegada*</label>
-                        <input type="text" class="form-control" id="inputDtChegada" placeholder="Ex: 04102019" required value={this.state.data_chegada}
-                            onChange={this.onChangeDtChegada}/>
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label for="inputKM">Quilometragem *</label>
-                        <input type="text" class="form-control" id="inputKM" placeholder="Ex: 04102019" required value={this.state.km}
-                            onChange={this.onChangeKM}/>
-                    </div>
-                </div>
-             </fieldset>
-           
-            <button type="submit" class="btn btn-primary" id="salvar">Salvar</button>
-            <button type="submit" class="btn btn-primary" id="cancelar">Cancelar</button>
-        </form>
+            <form id="formulario" onSubmit={this.onSubmit}>
+                     <fieldset>
+                         <h2>Informações </h2>
+                        <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="inputEmpresa">Selecionar empresa*</label>
+                               <select  class="form-control" id="idEmpresa"  tabindex="" required value={this.state.id_empresa}
+                       onChange={this.onChangeEmpresa}>
+                           <option value="">Selecionar...</option>
+                           { this.state.empresas.map(empresa =>(
+                                <option value={empresa.id_empresa}>{empresa.nm_empresa}</option>
+                                
+                           ))}
+                       </select>
+                       </div>
+                       <div class="form-group col-md-2">
+                        <label for="inputCNPJ">ID*</label>
+                        <input type="text" class="form-control" id="inputCNPJ"  value={this.state.id_empresa} ref="cnpj"/>
+                        </div> 
+                            
+                            </div>
+                            <div class="form-row">
+                            <div class="form-group col-md-6">
+                            <label for="inputMotorista">Selecionar motorista*</label>
+                               <select  class="form-control" id="motorista"  tabindex="" required value={this.state.id_motorista}
+                       onChange={this.onChangeMotorista}>
+                           <option value="">Selecionar...</option>
+                           { this.state.motoristas.map(motorista =>(
+                                <option value={motorista.id_motorista}>{motorista.nm_motorista}</option>
+                                
+                           ))}
+                       </select>
+                            </div>
+                            </div>
+                            <div class="form-row">
+                            <div class="form-group col-md-6">
+                            <label for="inputVeiculo">Selecionar veiculo*</label>
+                               <select  class="form-control" id="veiculo"  tabindex="" required value={this.state.id_veiculo}
+                       onChange={this.onChangeVeiculo}>
+                           <option value="">Selecionar...</option>
+                           { this.state.veiculos.map(veiculo =>(
+                                <option value={veiculo.id_veiculo}>{veiculo.ds_placa}</option>
+                                
+                           ))}
+                       </select>
+                            </div>
+                            </div>
+                            <div class="form-row">
+                            <div class="form-group col-md-4">
+                            <label for="inputCEP">CEP*</label>
+                                <input type="text" className="form-control" id="inputCEP" placeholder="Ex: 00000-000" required value={this.state.cd_CEP}
+                        onChange={this.onChangeCepOrigem} onBlur={this.onBlurCepOrigem}/>
+                             </div>
+                             <div className="form-group col-md-4">
+              <label for="inputEstado">Estado (Sigla)*</label>
+              <input type="text" maxLength='2' id="inputEstado" className="form-control" required value={this.state.sg_estadoOrigem}
+                        onChange={this.onChangeEstadoOrigem}/>
+             
+            </div>
+                             </div>
+                             <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="inputCidadeOrigem">Cidade Origem*</label>
+                                <input type="text" class="form-control" id="inputCidadeOrigem" placeholder="Ex: Santos" required value={this.state.cidade_origem}
+                                    onChange={this.onChangeCidadeOrigem}/>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="inputEndOrigem">Endereço de Origem*</label>
+                                <input type="text" class="form-control" id="inputEndOrigem" placeholder="Ex: Rua Aleatoria, nº 0" required value={this.state.end_origem}
+                                    onChange={this.onChangeOrigem}/>
+                            </div>
+                            </div>
+                            <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="inputDtSaida">Data de saída(previsão)*</label>
+                                <input type="datetime-local" class="form-control" id="inputDtSaida" placeholder="Ex: 04102019" required value={this.state.data_saida}
+                                    onChange={this.onChangeDataSaida}/>
+                            </div>
+                            </div>
+                            <div class="form-row">
+
+                            <div className="form-group col-md-4">
+              <label for="inputCEP">CEP*</label>
+              <input type="text" className="form-control" id="inputCEP" placeholder="Ex: 00000-000" required value={this.state.cd_CEP}
+                        onChange={this.onChangeCepDestino} onBlur={this.onBlurCepDestino}/>
+            </div>
+            <div className="form-group col-md-4">
+              <label for="inputEstado">Estado (Sigla)*</label>
+              <input type="text" maxLength='2' id="inputEstado" className="form-control" required value={this.state.sg_estadoDestino}
+                        onChange={this.onChangeEstadoDestino}/>
+             
+            </div> 
+            </div>
+            <div class="form-row">
+            <div class="form-group col-md-4">
+                                <label for="inputCidadeDestino">Cidade de Destino*</label>
+                                <input type="tel" class="form-control" id="inputCidadeDestino" placeholder="Ex: São Vicente" required value={this.state.cidade_destino}
+                                    onChange={this.onChangeCidadeDestino}/>
+                            </div>
+            <div class="form-group col-md-4">
+                                <label for="inputEndDestino">Endereço de Destino*</label>
+                                <input type="tel" class="form-control" id="inputEndDestino" placeholder="Ex: Rua Aleatória2, Nº 0" value={this.state.end_destino}
+                                    onChange={this.onChangeDestino}/>
+                            </div>
+                             
+                            </div>
+                            <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="inputDtChegada">Data de chegada*</label>
+                                <input type="datetime-local" class="form-control" id="inputDtChegada" placeholder="Ex: 04102019" required value={this.state.data_chegada}
+                                    onChange={this.onChangeDtChegada}/>
+                            </div>
+                            </div>
+                            <div class="form-row">
+                            <div class="form-group col-md-3">
+                                <label for="inputKM">Quilometragem *</label>
+                                <input type="text" class="form-control" id="inputKM" placeholder="Ex: 04102019" required value={this.state.km}
+                                    onChange={this.onChangeKM}/>
+                            </div>
+                        </div>
+                     </fieldset>
+                   
+                    <button type="submit" class="btn btn-primary" id="salvar">Salvar</button>
+                    <button type="submit" class="btn btn-primary" id="cancelar">Cancelar</button>
+                </form>
         </main>
             </div>
           )

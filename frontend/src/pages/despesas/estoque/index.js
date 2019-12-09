@@ -153,8 +153,8 @@ class Estoques extends Component {
                 </div>
             </form>
             <div className="adc-rem">
-                Adicionar manutenção: 
-               <Link to={'./incluir-estoque'}> <button className="adc"></button></Link>
+                Adicionar produto: 
+               <Link to={'/incluir-estoque'}> <button className="adc"></button></Link>
             </div>
           <div className="table-responsive">
           <table className="table table-md" >

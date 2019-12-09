@@ -1,4 +1,7 @@
+
 drop database db_controle_frota;
+
+create database db_controle_frota;
 use db_controle_frota;
 
 
@@ -9,7 +12,7 @@ create table users
     nm_sobrenome varchar(255) not null,
     cd_cpf varchar(15) not null,
     cd_rg varchar(15) not null,
-    nr_telefone int not null,
+    nr_telefone varchar(20) null,
     email varchar(255) not null,
     password varchar(255) not null,
     created varchar(255) not null
@@ -37,15 +40,15 @@ create table tb_empresa
     ds_complemento varchar(255),
     cd_CEP varchar(10), 
     nm_cidade varchar(255) not null,
-    nr_telefone varchar(11) not null,
-    nr_celular varchar(11) not null,
+    nr_telefone varchar(20) not null,
+    nr_celular varchar(20) not null,
     nm_responsavel varchar(255) not null,
     dt_validadecontrato date,
     ds_status varchar(20) not null
 );
 
 
-insert tb_empresa(nm_empresa, cd_cnpj, ds_email, ds_endereco, sg_estado, num_endereco, nm_cidade, nr_telefone, nm_responsavel, cd_CEP, nr_celular) values ("Locação", "20.197.987/5670-13", "locacao@veiculos.com", "Av. Conselheiro Nébias", "SP", 555, "Santos", "(13)3290-4490", "Adenilson", 11088310, "(11)99782-9090");
+insert tb_empresa(nm_empresa, cd_cnpj, ds_email, ds_endereco, sg_estado, num_endereco, nm_cidade, nr_telefone, nm_responsavel, cd_CEP, nr_celular, ds_status) values ("Locação", "20.197.987/5670-13", "locacao@veiculos.com", "Av. Conselheiro Nébias", "SP", 555, "Santos", "(13)3290-4490", "Adenilson", 11088310, "(11)99782-9090", "Ativa");
 
 create table tb_veiculo
 (
@@ -60,7 +63,7 @@ create table tb_veiculo
     qt_quilometragem int not null,
     qt_passageiros int not null, 
 	qt_peso int not null, 
-    ds_placa varchar(8) not null, 
+    ds_placa varchar(10) not null, 
     nr_renavam varchar(25) not null,
     ds_status varchar(25) not null,
     id_frota int not null,
@@ -84,21 +87,20 @@ create table tb_motorista
     id_motorista int not null auto_increment primary key,
     nm_motorista varchar(255) not null,
     sobrenome_motorista varchar(255) not null,
-    cd_cnh char(11) not null,
-    cd_cpf char(11) not null,
+    cd_cnh varchar(20) not null,
+    cd_cpf varchar(20) not null,
     password varchar(255) not null,
-    cd_rg varchar(14) not null,
-    nr_telefone varchar(11),
-    nr_celular varchar(11) not null,
-    cat_cnh varchar(2) not null, 
-    foto_motorista varchar(255),
-    cd_cep int,
+    cd_rg varchar(20) not null,
+    nr_telefone varchar(20),
+    nr_celular varchar(20) not null,
+    cat_cnh varchar(3) not null, 
     ds_endereco varchar (255) not null,
     sg_estado char(2) not null,
     num_endereco varchar(255) not null,
     nm_cidade varchar(255) not null,
     ds_email varchar(255) not null,
-    id_empresa int
+    id_empresa int,
+    cd_CEP varchar(10)
 );
 
 
@@ -116,7 +118,11 @@ create table tb_viagem
     id_empresa int,
     id_motorista int,
     dt_iniciada datetime,
-    dt_finalizada datetime
+    dt_finalizada datetime,
+    cd_CEPOrigem varchar(10), 
+    cd_CEPDestino varchar(10),
+    sg_estadoOrigem char(2),
+     sg_estadoDestino char(2)
 );
 
 create table tb_manutencao
@@ -144,7 +150,7 @@ create table tb_produto
 (
     id_produto int not null auto_increment primary key,
     qt_produto int not null,
-    nm_produto varchar(25),
+    nm_produto varchar(255),
     ds_produto varchar(255)
 );
 

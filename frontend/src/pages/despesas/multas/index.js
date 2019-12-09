@@ -158,6 +158,7 @@ class Multas extends Component {
                </select>
                     
                     </div>
+                    
                 <div className="col-md-3">
                     <label for="pesquisa" className="label-pesquisa"> Pesquisar	</label> 
                     <input type="datetime" name="pesquisa" id="pesquisarr" size="9" minlength="6" maxlength="7" placeholder="Pesquisar..." data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Você pode pesquisar pelo ID do motorista, do veículo e da multa" onChange={this.filterList}/>
@@ -168,7 +169,7 @@ class Multas extends Component {
             </form>
             <div className="adc-rem">
                 Adicionar multa: 
-               <Link to={'./incluir-multa'}> <button className="adc"></button></Link>
+               <Link to={'/incluir-multa'}> <button className="adc"></button></Link>
             </div>
           <div className="table-responsive">
           <table className="table table-md" >
@@ -177,7 +178,7 @@ class Multas extends Component {
                             <th>ID</th>
                             <th>Motorista</th>
                             <th>Placa</th>
-                            <th>Infração</th>
+                            <th>Data</th>
                             <th>Descrição</th>
                             <th>Gravidade</th>
                             <th>Preço</th>

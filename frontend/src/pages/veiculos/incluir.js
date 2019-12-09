@@ -333,7 +333,7 @@ export default class CreateVeiculo extends Component {
                 </div>
                 <div class="form-group col-md-2">
             <label for="inputCNPJ">ID*</label>
-            <input type="text" class="form-control" id="idEmpresa2"  value={this.state.id_empresa} ref="cnpj"/>
+            <input type="text" class="form-control" id="idEmpresa2"  value={this.state.id_empresa} ref="cnpj" />
             </div> 
                 </div>
          </fieldset>
@@ -343,7 +343,7 @@ export default class CreateVeiculo extends Component {
                 <div className="form-group col-md-5">
                     <label for="categoria"> Categoria*</label>
                     <select name="categoria" id="categoria" className="form-control" value={this.state.id_frota}
-                        onChange={this.onChangeIdFrota}>
+                        onChange={this.onChangeIdFrota} required>
                             <option value="">Selecionar...</option>
                         { this.state.categorias.map(cat =>(
                     <option value={cat.id_frota}>{cat.ds_frota}</option>
@@ -356,7 +356,7 @@ export default class CreateVeiculo extends Component {
                 <div className="form-group col-md-5">
                     <label for="marca"> Marca*</label>
                     <select name="marca" id="marca" className="form-control" value={this.state.id_marca}
-                        onChange={this.onChangeMarca}>
+                        onChange={this.onChangeMarca} required>
                             <option value="">Selecionar...</option>
                         { this.state.marcas.map(marca =>(
                     <option value={marca.id_marca}>{marca.marca}</option>
@@ -367,7 +367,7 @@ export default class CreateVeiculo extends Component {
                 <div className="form-group col-md-5">
                     <label for="modelo"> Modelo*</label>
                     <select name="modelo" id="modelo" className="form-control" value={this.state.id_modelo}
-                        onChange={this.onChangeModelo}>
+                        onChange={this.onChangeModelo} required>
                             <option value="">Selecionar...</option>
                         { this.state.modelos.map(modelo =>(
                     <option value={modelo.id_modelo}>{modelo.desc_modelo}</option>
@@ -379,12 +379,12 @@ export default class CreateVeiculo extends Component {
                 <div className="form-row">
                   <div className="form-group col-md-3">
                     <label for="inputAno">Ano do modelo</label>
-                    <input type="number" className="form-control" id="inputAno" placeholder="Ex.: 2009" value={this.state.qt_ano}
+                    <input type="number" className="form-control" id="inputAno" placeholder="Ex.: 2009" required value={this.state.qt_ano} 
                         onChange={this.onChangeAno}/>
                  </div>
                  <div className="form-group col-md-2">
                  <label for="inputCilindrada">Cilindrada</label>
-                    <input type="number" className="form-control" id="inputCilindrada" placeholder="Ex.: 1.0" step="0.1" value={this.state.qt_cilindrada}
+                    <input type="number" className="form-control" id="inputCilindrada" required placeholder="Ex.: 109.1" step="0.1" value={this.state.qt_cilindrada}
                         onChange={this.onChangeCilindrada}/>
                     
                  </div> 
@@ -392,12 +392,12 @@ export default class CreateVeiculo extends Component {
                  <div className="form-row">
                 <div className="form-group col-md-3">
                 <label for="inputCor">Cor</label>
-                    <input type="text" className="form-control" id="inputCor" placeholder="Ex.: Prata" value={this.state.ds_cor}
+                    <input type="text" className="form-control" id="inputCor" required placeholder="Ex.: Prata" value={this.state.ds_cor}
                         onChange={this.onChangeCor}/>
                  </div> 
                  <div className="form-group col-md-2">
                     <label for="inputQuilometragem">Quilometragem</label>
-                    <input type="text" className="form-control" id="inputQuilometragem" name="inputQuilometragem" placeholder="Ex.: 15500" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Quantos KM o veículo percorreu"
+                    <input type="text" className="form-control" id="inputQuilometragem" required name="inputQuilometragem" placeholder="Ex.: 15500" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Quantos KM o veículo percorreu"
                     value={this.state.qt_quilometragem}
                     onChange={this.onChangeKM}
                     />
@@ -406,7 +406,7 @@ export default class CreateVeiculo extends Component {
                  <div className="form-row"> 
                   <div className="form-group col-md-3">
                   <label for="inputQtPassageiros">Peso máximo</label>
-                    <input type="number" className="form-control" id="inputQtPassageiros" name="inputQtPassageiros" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Peso que o veículo suporta" placeholder="Ex.: 45 toneladas"
+                    <input type="number" className="form-control" id="inputQtPassageiros" required name="inputQtPassageiros" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Peso que o veículo suporta" placeholder="Ex.: 45 toneladas"
                     value={this.state.qt_peso}
                     onChange={this.onChangePeso}
                     />
@@ -414,7 +414,7 @@ export default class CreateVeiculo extends Component {
                  </div> 
                 <div className="form-group col-md-2">
                 <label for="inputQtPassageiros">Qt passageiros</label>
-                    <input type="number" className="form-control" id="inputQtPassageiros" name="inputQtPassageiros" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Insira o limite de passageiros do veículo" placeholder="Ex.: 5"
+                    <input type="number" className="form-control" id="inputQtPassageiros" required name="inputQtPassageiros" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Insira o limite de passageiros do veículo" placeholder="Ex.: 5"
                     value={this.state.qt_passageiros}
                     onChange={this.onChangePassageiros}
                     />
@@ -423,7 +423,7 @@ export default class CreateVeiculo extends Component {
                  <div className="form-row"> 
                  <div className="form-group col-md-3">
                  <label for="inputRenavam">Renavam</label>
-                    <input type="text" className="form-control" id="inputRenavam" placeholder="Ex.: 0123456789" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Pode ser encontrado no canto esquerdo do CRLV"
+                    <input type="text" className="form-control" id="inputRenavam" required placeholder="Ex.: 0123456789" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Pode ser encontrado no canto esquerdo do CRLV"
                     value={this.state.nr_renavam}
                     onChange={this.onChangeRenavam}
                     /> 
@@ -431,14 +431,14 @@ export default class CreateVeiculo extends Component {
                  <div className="form-group col-md-2">
                     
                     <label for="inputPlaca">Placa</label>
-                    <input type="text" className="form-control" id="inputPlaca" placeholder="Ex.: AAA-000" value={this.state.ds_placa}
+                    <input type="text" className="form-control" id="inputPlaca" required placeholder="Ex.: AAA-000" value={this.state.ds_placa}
                         onChange={this.onChangePlaca}/>
                  </div>
                  </div>
                  <div className="form-row"> 
                  <div className="form-group col-md-5">
                     <label for="status"> Status*</label>
-                    <select name="status" id="status" className="form-control" value={this.state.ds_status}
+                    <select name="status" id="status" className="form-control" required value={this.state.ds_status}
                         onChange={this.onChangeStatus}>
                         <option value="Disponivel"> Disponível </option> 
                         <option value="Indisponível"> Indisponível </option> 

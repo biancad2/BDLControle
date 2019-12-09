@@ -3,7 +3,8 @@ import api from '../../services/api'
 import ListEmpresas from './listEmpresas'
 import jwt_decode from 'jwt-decode'
 import { Link } from 'react-router-dom';
-
+import cep from 'cep-promise';
+import { cepMask } from '../../js/mascaras/cepmask';
 import Logo from '../../assets/logobranco2.png';
 import Usuario from '../../assets/usuario-branco.png';
 import Notificacao from '../../assets/icone.png';
@@ -22,6 +23,12 @@ export default class CreateViagens extends Component {
         this.onChangeEmpresa = this.onChangeEmpresa.bind(this);
         this.onChangeVeiculo = this.onChangeVeiculo.bind(this);
         this.onChangeMotorista = this.onChangeMotorista.bind(this);
+        this.onChangeCepOrigem= this.onChangeCepOrigem.bind(this);
+        this.onChangeCepDestino= this.onChangeCepDestino.bind(this);
+        this.onChangeEstadoOrigem= this.onChangeEstadoOrigem.bind(this);
+        this.onChangeEstadoDestino= this.onChangeEstadoDestino.bind(this);
+        this.onBlurCepDestino=this.onBlurCepDestino.bind(this);
+        this.onBlurCepOrigem=this.onBlurCepOrigem.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
         
         this.state = {
@@ -35,6 +42,10 @@ export default class CreateViagens extends Component {
             cidade_destino: '',
             data_chegada: '',
             km: '',
+            cd_CEPOrigem: '',
+            cd_CEPDestino: '',
+            sg_estadoOrigem: '',
+            sg_estadoDestino: '',
             empresas: [],
             motoristas: [],
             veiculos: [],
@@ -45,6 +56,17 @@ export default class CreateViagens extends Component {
         }
     }
     componentDidMount() {
+        if (localStorage.usertoken == null ){
+            alert("Faça login para continuar")
+        }else{
+            const token = localStorage.usertoken
+            const decoded = jwt_decode(token)
+            this.setState({
+                nm_usuario: decoded.nm_usuario,
+                nm_sobrenome: decoded.last_name,
+                email: decoded.email
+              })
+        }
         api.get('/empresas/')
         .then(response => {
           this.setState({ empresas: response.data });
@@ -122,7 +144,57 @@ export default class CreateViagens extends Component {
             id_motorista: e.target.value
         })
     }
-    
+    onChangeCepOrigem(e){
+        this.setState({
+            cd_CEPOrigem: cepMask(e.target.value)
+        })
+    }
+    onChangeEstadoOrigem(e){
+        this.setState({
+            sg_estadoOrigem: e.target.value
+        })
+    }
+
+    onChangeEstadoDestino(e){
+        this.setState({
+            sg_estadoDestino: e.target.value
+        })
+    }
+
+    onBlurCepOrigem(){
+        cep(this.state.cd_CEPOrigem)
+        .then(response => {
+          console.log(response)
+          this.setState({
+              sg_estadoOrigem: response.state,
+              cidade_origem: response.city,
+              end_origem: response.street
+        })
+        }
+          
+          );
+         
+    }
+
+    onBlurCepDestino(){
+        cep(this.state.cd_CEPDestino)
+        .then(response => {
+          console.log(response)
+          this.setState({
+              sg_estadoDestino: response.state,
+              cidade_destino: response.city,
+              end_destino: response.street
+        })
+        }
+          
+          );
+         
+    }
+    onChangeCepDestino(e){
+        this.setState({
+            cd_CEPDestino: cepMask(e.target.value)
+        })
+    }
     onSubmit(e) {
         e.preventDefault();
         const obj = {
@@ -135,7 +207,11 @@ export default class CreateViagens extends Component {
             end_destino: this.state.end_destino,
             cidade_destino: this.state.cidade_destino,
             data_chegada: this.state.data_chegada,
-            km: this.state.km
+            km: this.state.km,
+            cd_CEPOrigem: this.state.cd_CEPOrigem,
+            cd_CEPDestino: this.state.cd_CEPOrigem,
+            sg_estadoOrigem: this.state.sg_estadoOrigem,
+            sg_estadoDestino: this.state.sg_estadoDestino,
         };
 
 
@@ -152,7 +228,11 @@ export default class CreateViagens extends Component {
             end_destino: '',
             cidade_destino: '',
             data_chegada: '',
-            km: ''
+            km: '',
+            cd_CEPOrigem: '',
+            cd_CEPDestino: '',
+            sg_estadoOrigem: '',
+            cd_estadoDestino: '',
         })
     }
    
@@ -287,14 +367,27 @@ export default class CreateViagens extends Component {
                             </div>
                             <div class="form-row">
                             <div class="form-group col-md-4">
-                                <label for="inputEndOrigem">Endereço de Origem*</label>
-                                <input type="text" class="form-control" id="inputEndOrigem" placeholder="Ex: Rua Aleatoria, nº 0" required value={this.state.end_origem}
-                                    onChange={this.onChangeOrigem}/>
-                            </div>
-                            <div class="form-group col-md-2">
+                            <label for="inputCEP">CEP*</label>
+                                <input type="text" className="form-control" id="inputCEP" placeholder="Ex: 00000-000" required value={this.state.cd_CEP}
+                        onChange={this.onChangeCepOrigem} onBlur={this.onBlurCepOrigem}/>
+                             </div>
+                             <div className="form-group col-md-4">
+              <label for="inputEstado">Estado (Sigla)*</label>
+              <input type="text" maxLength='2' id="inputEstado" className="form-control" required value={this.state.sg_estadoOrigem}
+                        onChange={this.onChangeEstadoOrigem}/>
+             
+            </div>
+                             </div>
+                             <div class="form-row">
+                            <div class="form-group col-md-4">
                                 <label for="inputCidadeOrigem">Cidade Origem*</label>
                                 <input type="text" class="form-control" id="inputCidadeOrigem" placeholder="Ex: Santos" required value={this.state.cidade_origem}
                                     onChange={this.onChangeCidadeOrigem}/>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="inputEndOrigem">Endereço de Origem*</label>
+                                <input type="text" class="form-control" id="inputEndOrigem" placeholder="Ex: Rua Aleatoria, nº 0" required value={this.state.end_origem}
+                                    onChange={this.onChangeOrigem}/>
                             </div>
                             </div>
                             <div class="form-row">
@@ -305,16 +398,31 @@ export default class CreateViagens extends Component {
                             </div>
                             </div>
                             <div class="form-row">
-                            <div class="form-group col-md-4">
-                                <label for="inputEndDestino">Endereço de Destino*</label>
-                                <input type="tel" class="form-control" id="inputEndDestino" placeholder="Ex: Rua Aleatória2, Nº 0" value={this.state.end_destino}
-                                    onChange={this.onChangeDestino}/>
-                            </div>
-                             <div class="form-group col-md-2">
+
+                            <div className="form-group col-md-4">
+              <label for="inputCEP">CEP*</label>
+              <input type="text" className="form-control" id="inputCEP" placeholder="Ex: 00000-000" required value={this.state.cd_CEP}
+                        onChange={this.onChangeCepDestino} onBlur={this.onBlurCepDestino}/>
+            </div>
+            <div className="form-group col-md-4">
+              <label for="inputEstado">Estado (Sigla)*</label>
+              <input type="text" maxLength='2' id="inputEstado" className="form-control" required value={this.state.sg_estadoDestino}
+                        onChange={this.onChangeEstadoDestino}/>
+             
+            </div> 
+            </div>
+            <div class="form-row">
+            <div class="form-group col-md-4">
                                 <label for="inputCidadeDestino">Cidade de Destino*</label>
                                 <input type="tel" class="form-control" id="inputCidadeDestino" placeholder="Ex: São Vicente" required value={this.state.cidade_destino}
                                     onChange={this.onChangeCidadeDestino}/>
                             </div>
+            <div class="form-group col-md-4">
+                                <label for="inputEndDestino">Endereço de Destino*</label>
+                                <input type="tel" class="form-control" id="inputEndDestino" placeholder="Ex: Rua Aleatória2, Nº 0" value={this.state.end_destino}
+                                    onChange={this.onChangeDestino}/>
+                            </div>
+                             
                             </div>
                             <div class="form-row">
                             <div class="form-group col-md-6">

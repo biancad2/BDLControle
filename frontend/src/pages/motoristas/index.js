@@ -44,9 +44,17 @@ class Motoristas extends Component {
         })
     }
     filterList=(event)=>{
-      let items = this.state.veiculos;
+        let items = this.state.motoristas;
+        items = items.filter((item)=>{
+            return  item.nm_motorista.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1  || item.cd_cpf.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1  
+        });
+        this.setState({items: items});
+        console.log(items);
+    }
+    filterList1=(event)=>{
+      let items = this.state.motoristas;
       items = items.filter((item)=>{
-          return item.cat_cnh.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1  || item.nm_motorista.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1  || item.cd_cpf.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1  
+          return item.cat_cnh.toString().toLowerCase().search(event.target.value.toLowerCase()) !== -1  
       });
       this.setState({items: items});
       console.log(items);
@@ -139,20 +147,10 @@ class Motoristas extends Component {
                     <h1> Motoristas </h1>
                     <form method="get" action="" className="centro row">
                  <h2 className="filtrar">Filtrar</h2>
-               
-                <div className="formulario selecionar centro col-md-2">
-                    <label for="disponibilidade"> Situação</label>
-                    <select name="status" id="status"  tabindex="7" onChange={this.filterList}>
-                        <option value=""> Todos </option>
-                        <option value="Disponível"> Disponível </option>
-                        <option value="Em viagem"> Em viagem </option>
-                        <option value="Desativado"> Desativado </option>
-                    </select>
-                </div>
 
                 <div className="formulario selecionar centro col-md-2">
                     <label for="categoria"> Categoria CNH</label>
-                    <select name="categoria" id="categoria"  tabindex="7" onChange={this.filterList}>
+                    <select name="categoria" id="categoria"  tabindex="7" onChange={this.filterList1}>
                     <option value="">Selecionar...</option>
                     <option value="A"> A </option>
        <option value="B">  B </option>
@@ -165,7 +163,7 @@ class Motoristas extends Component {
 
                 <div className="formulario busca col-md-2">
                     <label for="pesquisa"> Pesquisar	</label>
-                    <input type="text" name="pesquisa" id="pesquisar-veic" size="9" minlength="6" maxlength="7" placeholder="Placa/Empresa" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Você pode pesquisar o veículo pela placa ou empresa associada." onChange={this.filterList}/>
+                    <input type="text" name="pesquisa" id="pesquisar-veic" size="9" minlength="6" maxlength="7" placeholder="Pesquisar Nome/CPF" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" title="Você pode pesquisar o motorista pelo nome ou CPF." onChange={this.filterList}/>
                     <span id="box_icone_busca">
                         <i id="icone_busca" className="fa fa-search"></i>
                     </span> 
@@ -173,7 +171,7 @@ class Motoristas extends Component {
             </form>
                     <div className="adc-rem">
                 Adicionar motorista: 
-               <Link to={'./incluir-moto'}> <button className="adc"></button></Link>
+               <Link to={'/incluir-moto'}> <button className="adc"></button></Link>
             </div>
                     <div className="table-responsive">
                   <table className="table table-md" style={{ marginTop: 20 }}>
@@ -189,7 +187,10 @@ class Motoristas extends Component {
                                     <th colSpan="2">Ações</th>
                                 </tr>
                             </thead>
-                            <tbody>{this.tabRow() }
+                            <tbody> {this.state.items.map(function(item, i){
+                              return <TableRow obj={item} key={i} />;
+                          })
+                      }
                             </tbody>
                         </table> 
                     </div>

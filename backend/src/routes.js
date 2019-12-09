@@ -84,6 +84,16 @@ routes.get("/qtveiculos/", function(req, res){
     })
 });
 
+routes.get("/qtviagens/:id", function(req, res){
+
+    connection.query('select COUNT(*) as qt_viagens from tb_viagem where id_motorista = ? ', [req.params.id], function(err, rows, fields){
+        if (!err)
+            res.json(rows);
+        else
+            res.json(err);
+    })
+});
+
 routes.get("/frota-veic/:id", function(req, res){
 
     connection.query('select F.ds_frota, V.ds_placa from tb_frota F, tb_veiculo V where F.id_frota = V.id_frota and id_veiculo = ?', [req.params.id], function(err, rows, fields){

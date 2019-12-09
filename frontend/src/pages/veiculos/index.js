@@ -176,7 +176,7 @@ class Veiculos extends Component {
             </form>
             <div className="adc-rem">
                 Adicionar veículo: 
-               <Link to={'./incluir-veic'}> <button className="adc"></button></Link>
+               <Link to={'/incluir-veic'}> <button className="adc"></button></Link>
             </div>
           <div className="table-responsive">
           <table className="table  table-sm">
